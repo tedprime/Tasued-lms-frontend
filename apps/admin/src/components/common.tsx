@@ -1,0 +1,154 @@
+import { useState, type ReactNode } from "react";
+import type { UseQueryResult } from "@tanstack/react-query";
+import { Check, Copy } from "lucide-react";
+import { errorMessage, type AttendanceSheetStatus, type ClassSessionStatus, type HealthState, type PublishState, type RecordingStatus } from "@tasued/api-client";
+import { Badge, Card, ErrorState, Skeleton, cn, type Tone } from "@tasued/ui";
+
+/* ───────── Query rendering helper: loading / error / data ───────── */
+
+export function QueryView<T>({
+  query,
+  children,
+  loading,
+  isEmpty,
+  empty,
+}: {
+  query: UseQueryResult<T>;
+  children: (data: T) => ReactNode;
+  loading?: ReactNode;
+  isEmpty?: (data: T) => boolean;
+  empty?: ReactNode;
+}) {
+  if (query.isPending) return <>{loading ?? <ListSkeleton />}</>;
+  if (query.isError) return <ErrorState description={errorMessage(query.error)} onRetry={() => query.refetch()} />;
+  if (isEmpty?.(query.data) && empty) return <>{empty}</>;
+  return <>{children(query.data)}</>;
+}
+
+export function ListSkeleton({ rows = 5 }: { rows?: number }) {
+  return (
+    <div className="space-y-3 p-5" aria-busy="true" aria-label="Loading">
+      {Array.from({ length: rows }, (_, i) => (
+        <Skeleton key={i} className="h-10 w-full" />
+      ))}
+    </div>
+  );
+}
+
+export function SectionCard({ title, subtitle, action, children, className, bodyClassName }: { title?: ReactNode; subtitle?: ReactNode; action?: ReactNode; children: ReactNode; className?: string; bodyClassName?: string }) {
+  return (
+    <Card className={cn("overflow-hidden", className)}>
+      {(title || action) && (
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-neutral-100 px-5 py-4">
+          <div className="min-w-0">
+            {title && <h2 className="font-headline text-[15px] font-bold text-tertiary-500">{title}</h2>}
+            {subtitle && <p className="mt-0.5 text-sm text-neutral-500">{subtitle}</p>}
+          </div>
+          {action && <div className="flex flex-wrap items-center gap-2">{action}</div>}
+        </div>
+      )}
+      <div className={bodyClassName}>{children}</div>
+    </Card>
+  );
+}
+
+/* ───────── Status pills (text + colour; colour is never the only signal) ───────── */
+
+const classTone: Record<ClassSessionStatus, Tone> = { scheduled: "blue", live: "red", ended: "neutral", cancelled: "amber" };
+export function ClassStatusBadge({ status }: { status: ClassSessionStatus }) {
+  return <Badge tone={classTone[status]} dot>{status === "live" ? "Live now" : cap(status)}</Badge>;
+}
+
+const recTone: Record<RecordingStatus | "none", Tone> = { pending: "gold", ready: "green", failed: "red", none: "neutral" };
+const recLabel: Record<RecordingStatus | "none", string> = { pending: "Pending", ready: "Ready", failed: "Failed", none: "No recording" };
+/** Recording status: pending (waiting for Teams to save to OneDrive), ready (linked), failed (file not found). */
+export function RecordingStatusBadge({ status }: { status: RecordingStatus | "none" }) {
+  return <Badge tone={recTone[status]} dot>{recLabel[status]}</Badge>;
+}
+
+const attTone: Record<AttendanceSheetStatus | "not_started", Tone> = { not_started: "neutral", pending_import: "gold", imported: "blue", in_review: "amber", finalised: "green" };
+export function AttendanceStatusBadge({ status }: { status: AttendanceSheetStatus | "not_started" }) {
+  return <Badge tone={attTone[status]} dot>{cap(status.replace(/_/g, " "))}</Badge>;
+}
+
+export function PublishBadge({ state }: { state: PublishState }) {
+  return <Badge tone={state === "published" ? "green" : "neutral"}>{state === "published" ? "Published" : "Draft"}</Badge>;
+}
+
+const healthTone: Record<HealthState, Tone> = { ok: "green", degraded: "amber", down: "red" };
+export function HealthBadge({ state, label }: { state: HealthState; label?: string }) {
+  return <Badge tone={healthTone[state]} dot>{label ?? (state === "ok" ? "Healthy" : cap(state))}</Badge>;
+}
+
+export function cap(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/* ───────── Copy to clipboard ───────── */
+
+export function CopyButton({ value, label = "Copy", className }: { value: string; label?: string; className?: string }) {
+  const [done, setDone] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(value);
+          setDone(true);
+          setTimeout(() => setDone(false), 1500);
+        } catch {
+          /* clipboard blocked */
+        }
+      }}
+      className={cn("inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-primary-500 hover:bg-primary-50", className)}
+      aria-label={done ? "Copied" : label}
+    >
+      {done ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+      {done ? "Copied" : label}
+    </button>
+  );
+}
+
+/* ───────── Simple inline SVG bar chart ───────── */
+
+export function MiniBars({ data, max, format = (v) => String(v), label, color = "var(--color-primary-500)" }: { data: { label: string; value: number }[]; max?: number; format?: (v: number) => string; label: string; color?: string }) {
+  const top = max ?? Math.max(1, ...data.map((d) => d.value));
+  const h = 120;
+  const bw = 28;
+  const gap = 14;
+  const w = Math.max(1, data.length) * (bw + gap);
+  return (
+    <figure className="overflow-x-auto">
+      <svg role="img" aria-label={label} viewBox={`0 0 ${w} ${h + 34}`} width={w} height={h + 34} className="max-w-none">
+        {data.map((d, i) => {
+          const bh = Math.max(2, (d.value / top) * h);
+          const x = i * (bw + gap) + gap / 2;
+          return (
+            <g key={d.label}>
+              <title>{`${d.label}: ${format(d.value)}`}</title>
+              <rect x={x} y={h - bh + 14} width={bw} height={bh} rx={4} fill={color} />
+              <text x={x + bw / 2} y={h - bh + 10} textAnchor="middle" fontSize="10" fill="var(--color-tertiary-500)" fontWeight={600}>{format(d.value)}</text>
+              <text x={x + bw / 2} y={h + 30} textAnchor="middle" fontSize="10" fill="var(--color-neutral-500)">{d.label}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </figure>
+  );
+}
+
+/* ───────── Download a CSV built in the browser ───────── */
+
+export function downloadCsv(filename: string, rows: (string | number | null | undefined)[][]) {
+  const esc = (v: string | number | null | undefined) => {
+    const s = v == null ? "" : String(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const blob = new Blob([rows.map((r) => r.map(esc).join(",")).join("\n")], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@tasued/editor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "description": "Rich text editor ported from SLAN admin (Lexical). Image uploads go through the LMS API.",
+  "scripts": { "typecheck": "tsc -p tsconfig.json" },
+  "peerDependencies": { "react": "^19.2.0", "react-dom": "^19.2.0" },
+  "dependencies": {
+    "@lexical/html": "^0.49.0",
+    "@lexical/list": "^0.49.0",
+    "@lexical/react": "^0.49.0",
+    "@lexical/rich-text": "^0.49.0",
+    "@lexical/selection": "^0.49.0",
+    "@lexical/table": "^0.49.0",
+    "@lexical/utils": "^0.49.0",
+    "lexical": "^0.49.0",
+    "lucide-react": "^1.16.0"
+  },
+  "devDependencies": { "typescript": "~6.0.2", "vite": "^8.0.12", "@types/react": "^19.2.14", "@types/react-dom": "^19.2.3" }
+}

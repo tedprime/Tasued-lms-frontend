@@ -1,0 +1,221 @@
+/*
+ * TASUED LMS design tokens — TASUED brand colours on SLAN's type, radii and component structure.
+ * To re-brand, change the primary / secondary / tertiary scales here; every app picks them up.
+ *
+ * Apps import this file after `@import "tailwindcss";` and add
+ * `@source "../../../packages/ui/src";` so Tailwind scans the shared components.
+ */
+
+@theme {
+  /*
+   * TASUED brand — from "TASUED Brand Color Theme & Design Tokens" v1.0 (13 Oct 2026).
+   * Blue and gold are working values from a third-party brand profile; green and black are
+   * proposed approximations. Verify against the approved logo artwork, then change them here only.
+   *
+   * Scale note: the document numbers its blue scale with the core #192F59 at step 600.
+   * Components here use step 500 as "the" brand shade, so #192F59 sits at 500 and the
+   * lighter document steps shift down one place. Hex values are unchanged.
+   */
+
+  /* Primary: TASUED blue — actions, navigation, links, selected states */
+  --color-primary: #192f59;
+  --color-primary-dark: #142647; /* --color-primary-hover */
+  --color-primary-light: #3d5b87;
+  --color-primary-50: #f2f5fa; /* --color-primary-subtle */
+  --color-primary-100: #e2e8f2;
+  --color-primary-200: #c4d0e3;
+  --color-primary-300: #94a9c8;
+  --color-primary-400: #617fa9;
+  --color-primary-500: #192f59;
+  --color-primary-600: #142647;
+  --color-primary-700: #0f1d36;
+  --color-primary-800: #0c1830;
+  --color-primary-900: #091222;
+
+  /* Accent: TASUED gold — highlights, active indicators, sparing calls to action */
+  --color-secondary: #bf7c09;
+  --color-secondary-dark: #a56808; /* --color-accent-hover */
+  --color-secondary-light: #dfa43a;
+  --color-secondary-50: #fff9eb;
+  --color-secondary-100: #fbeccb;
+  --color-secondary-200: #f4d89c;
+  --color-secondary-300: #ebc16a;
+  --color-secondary-400: #dfa43a;
+  --color-secondary-500: #bf7c09;
+  --color-secondary-600: #a56808;
+  --color-secondary-700: #835306;
+  --color-secondary-800: #624005;
+
+  /* Ink: TASUED black — body text, strong headings, icons */
+  --color-tertiary: #171717;
+  --color-tertiary-dark: #0a0a0a;
+  --color-tertiary-light: #2e2e2e;
+  --color-tertiary-50: #f2f5fa;
+  --color-tertiary-100: #e1e5eb;
+  --color-tertiary-200: #c2c8d1;
+  --color-tertiary-300: #8a929e;
+  --color-tertiary-400: #626b78;
+  --color-tertiary-500: #171717;
+
+  /* Neutrals: surfaces, borders, muted text (all muted text meets 4.5:1 on white) */
+  --color-neutral: #f7f8fa; /* --color-surface (page canvas) */
+  --color-neutral-50: #ffffff;
+  --color-neutral-100: #f2f4f7;
+  --color-neutral-200: #e1e5eb; /* --color-border */
+  --color-neutral-300: #cdd3dc;
+  --color-neutral-400: #8a929e;
+  --color-neutral-500: #626b78; /* --color-text-muted */
+  --color-neutral-600: #4b535e;
+  --color-neutral-700: #363c45;
+  --color-neutral-800: #22262c;
+  --color-neutral-900: #171717;
+
+  --color-surface: #f7f8fa;
+  --color-surface-card: #ffffff;
+  --color-border-subtle: #e1e5eb;
+
+  /* Semantic */
+  --color-success: #2f7d46; /* institutional green — success, completion, progress */
+  --color-success-50: #eff8f0;
+  --color-success-100: #dcefe0;
+  --color-success-200: #b9dfc2;
+  --color-success-500: #2f7d46;
+  --color-success-700: #20512f;
+  --color-danger: #b42318;
+  --color-danger-50: #fef3f2;
+  --color-warning: #835306; /* gold family, darkened for text contrast */
+  --color-warning-50: #fff9eb;
+  --color-info: #3d5b87;
+  --color-info-50: #f2f5fa;
+  --color-focus-ring: #3d5b87;
+
+  --font-headline: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-label: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 12px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 8px 32px 0 rgba(25, 47, 89, 0.15);
+  --shadow-cta: 0 4px 24px 0 rgba(25, 47, 89, 0.28);
+  --shadow-pop: 0 12px 40px rgba(9, 18, 34, 0.18);
+
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --animate-fade-in-up: fadeInUp 0.4s var(--ease-smooth) both;
+  --animate-fade-in: fadeIn 0.2s ease both;
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-neutral);
+    color: var(--color-tertiary);
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-headline);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-neutral-100); }
+::-webkit-scrollbar-thumb { background: var(--color-neutral-300); border-radius: 3px; }
+
+/* Course text / rich content rendering (output of the editor) */
+.rich-content { color: var(--color-tertiary); font-size: 1rem; line-height: 1.75; overflow-wrap: break-word; }
+.rich-content > * + * { margin-top: 0.9em; }
+.rich-content h1 { font-size: 1.6rem; font-weight: 800; margin-top: 1.6em; }
+.rich-content h2 { font-size: 1.3rem; font-weight: 800; margin-top: 1.5em; }
+.rich-content h3 { font-size: 1.1rem; font-weight: 700; margin-top: 1.3em; }
+.rich-content h4 { font-size: 1rem; font-weight: 700; margin-top: 1.1em; }
+.rich-content ul { list-style: disc; padding-left: 1.4em; }
+.rich-content ol { list-style: decimal; padding-left: 1.4em; }
+.rich-content li + li { margin-top: 0.3em; }
+.rich-content a { color: var(--color-primary-500); text-decoration: underline; }
+.rich-content blockquote { border-left: 4px solid var(--color-secondary-400); background: var(--color-secondary-50); padding: 0.75em 1em; border-radius: 0 8px 8px 0; }
+.rich-content blockquote > * + *, .rich-content li > * + * { margin-top: 0.6em; }
+.rich-content ul ul, .rich-content ol ol, .rich-content ul ol, .rich-content ol ul { margin-top: 0.4em; }
+.rich-content table { width: 100%; border-collapse: collapse; font-size: 0.92em; display: block; overflow-x: auto; }
+.rich-content th, .rich-content td { border: 1px solid var(--color-neutral-200); padding: 0.5em 0.7em; text-align: left; vertical-align: top; min-width: 8.5rem; overflow-wrap: normal; word-break: normal; hyphens: auto; }
+/* Tables scroll sideways on phones instead of squeezing words */
+.rich-content table { -webkit-overflow-scrolling: touch; }
+.rich-content th { background: var(--color-neutral-100); font-weight: 600; }
+.rich-content img { max-width: 100%; height: auto; border-radius: 8px; }
+.rich-content figure { margin: 1.4em 0; padding: 1em; border: 1px solid var(--color-neutral-200); border-radius: 12px; background: #fff; }
+.rich-content figure img { display: block; margin: 0 auto; border-radius: 4px; width: auto; max-height: 520px; object-fit: contain; cursor: zoom-in; }
+@media (max-width: 640px) {
+  /* Wide diagrams scroll sideways on phones instead of shrinking to an unreadable size */
+  .rich-content figure { padding: 0.75em; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .rich-content figure img.fig-wide { max-width: none; width: 600px; height: auto; max-height: none; margin: 0; }
+  .rich-content figcaption { position: sticky; left: 0; text-align: left; }
+  .rich-content figcaption::after { content: " · Tap the image to enlarge"; color: var(--color-neutral-500); font-weight: 400; }
+}
+.rich-content figcaption { margin-top: 0.75em; font-size: 0.875rem; line-height: 1.5; color: var(--color-neutral-600); text-align: center; }
+.rich-content figcaption strong { color: var(--color-tertiary); }
+.rich-content details { margin-top: 0.6em; border: 1px dashed var(--color-neutral-300); border-radius: 8px; padding: 0.5em 0.9em; font-size: 0.95em; }
+.rich-content details > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--color-primary-500); }
+.rich-content details[open] > summary { margin-bottom: 0.6em; }
+.rich-content details > * + * { margin-top: 0.6em; }
+.rich-content code { font-family: ui-monospace, monospace; background: var(--color-neutral-100); padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.9em; }
+.rich-content pre { background: var(--color-tertiary); color: #fff; padding: 1em; border-radius: 8px; overflow-x: auto; }
+
+/* Low-data mode: figure images wait for a tap */
+.rich-content img[data-deferred-src] { display: none; }
+.rich-content figure:has(img[data-deferred-src]) { cursor: pointer; }
+.rich-content figure:has(img[data-deferred-src])::before {
+  content: "Image not loaded to save data — tap to load";
+  display: block; padding: 1.4em 1em; border-radius: 8px; text-align: center;
+  background: var(--color-neutral-100); color: var(--color-primary-500); font-size: 0.875rem; font-weight: 600;
+}
+.rich-content figure:has(img[data-deferred-src]) figcaption::after { content: none; }
+
+/* Low-data mode: hide decorative imagery */
+.low-data .decorative-img { display: none !important; }
+
+/* Semantic aliases using the names in the TASUED design-token document (for non-Tailwind CSS). */
+:root {
+  --tasued-blue: #192f59;
+  --tasued-gold: #bf7c09;
+  --tasued-green: #2f7d46;
+  --tasued-black: #171717;
+  --color-primary-hover: var(--color-primary-dark);
+  --color-primary-subtle: var(--color-primary-50);
+  --color-primary-foreground: #ffffff;
+  --color-accent: var(--color-secondary-500);
+  --color-accent-hover: var(--color-secondary-600);
+  /* White on gold is below 4.5:1 for normal text, so accent buttons use dark text. */
+  --color-accent-foreground: var(--color-tertiary-500);
+  --color-background: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-border: var(--color-neutral-200);
+  --color-text: var(--color-tertiary-500);
+  --color-text-muted: var(--color-neutral-500);
+  --color-text-inverse: #ffffff;
+  --color-disabled: var(--color-neutral-200);
+}
