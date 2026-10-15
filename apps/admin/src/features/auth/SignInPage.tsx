@@ -51,8 +51,8 @@ export function SignInPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-neutral-100 via-white to-primary-50 p-3 sm:p-6 md:p-8">
-      <div className="grid w-full max-w-5xl animate-fade-in-up overflow-hidden rounded-3xl bg-white shadow-pop lg:grid-cols-2">
-        <div className="relative flex flex-col justify-between overflow-hidden bg-linear-to-br from-primary-600 via-primary-700 to-primary-800 p-8 text-white sm:p-10 lg:p-12">
+      <div className="grid w-full max-w-5xl animate-fade-in-up grid-cols-1 overflow-hidden rounded-3xl bg-white shadow-pop lg:grid-cols-2">
+        <div className="relative flex min-w-0 flex-col justify-between overflow-hidden bg-linear-to-br from-primary-600 via-primary-700 to-primary-800 p-6 text-white sm:p-10 lg:p-12">
           <div className="absolute top-0 right-0 size-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5" aria-hidden />
           <div className="absolute bottom-0 left-0 size-48 -translate-x-1/2 translate-y-1/2 rounded-full bg-white/5" aria-hidden />
           <div className="relative z-10">
@@ -72,7 +72,7 @@ export function SignInPage() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-12">
+        <div className="flex min-w-0 flex-col justify-center p-6 sm:p-8 lg:p-12">
           <h2 className="font-headline text-2xl font-extrabold text-tertiary-500">Sign in</h2>
           <p className="mt-1 mb-7 text-sm text-neutral-500">Use your TASFUED Microsoft 365 staff account.</p>
 

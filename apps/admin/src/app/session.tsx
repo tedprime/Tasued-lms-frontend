@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useOutletContext, useParams } from "react-router-dom";
 import type { ReactNode } from "react";
 import { ShieldAlert } from "lucide-react";
 import { api, can as canFn, isApiError, type Permission, type Session } from "@tasued/api-client";
@@ -104,14 +104,16 @@ export function NoAccess({ what }: { what?: string }) {
 /** Route/section guard: renders children (or <Outlet/>) only when the session has the permission (any of, for arrays). */
 export function RequirePermission({ perm, children, what }: { perm: Permission | Permission[]; children?: ReactNode; what?: string }) {
   const can = useCan();
+  const outletContext = useOutletContext();
   if (!can(perm)) return <NoAccess what={what} />;
-  return <>{children ?? <Outlet />}</>;
+  return <>{children ?? <Outlet context={outletContext} />}</>;
 }
 
 /** Route guard for a course's teaching pages: only its lecturer and teaching assistants get through. */
 export function RequireTeaching() {
   const { courseId } = useParams();
   const teaches = useTeaches();
+  const outletContext = useOutletContext();
   if (!teaches(courseId)) {
     return (
       <EmptyState
@@ -122,7 +124,7 @@ export function RequireTeaching() {
       />
     );
   }
-  return <Outlet />;
+  return <Outlet context={outletContext} />;
 }
 
 /** Inline helper: render children only when allowed. */
