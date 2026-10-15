@@ -7,6 +7,7 @@
 export * from "../../../../packages/ui/src/components/primitives";
 export * from "../../../../packages/ui/src/components/overlays";
 export * from "../../../../packages/ui/src/components/Brand";
+export * from "../../../../packages/ui/src/components/ErrorRecovery";
 export * from "../../../../packages/ui/src/hooks/useCountdown";
 export * from "../../../../packages/ui/src/hooks/useMediaQuery";
 export { cn } from "../../../../packages/ui/src/lib/cn";

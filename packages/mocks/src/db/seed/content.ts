@@ -2,17 +2,17 @@ import { DAY, HOUR, iso } from "../../lib/dates";
 import type { Random } from "../../lib/random";
 import type { DB } from "../schema";
 import { AIIE_COURSE_ID, moduleId, unitId } from "./ids";
-import raw from "./aiie111-content.json";
+import raw from "./aiie111-outline.json";
 
 /**
- * Course text of the AIIE 111 student handout, extracted from the PDF by
- * scripts/extract-aiie111.py (re-run it if the handout changes).
+ * Outline of the AIIE 111 student handout (modules, units, objectives, word counts), extracted from
+ * the PDF by scripts/extract-aiie111.py (re-run it if the handout changes). The unit text itself is in
+ * aiie111-text.json and is loaded on demand (see course-text.ts).
  */
 export interface HandoutUnit {
   code: string;
   title: string;
   objective: string;
-  html: string;
   words: number;
 }
 export interface HandoutModule {
@@ -53,7 +53,8 @@ export function seedContent(db: DB, now: number, r: Random) {
         state: "published",
         estimatedReadMinutes: Math.ceil(u.words / 200),
         objectives: [u.objective],
-        courseTextHtml: u.html,
+        courseTextHtml: "",
+        textRef: u.code,
         attachments: [],
         updatedAt: iso(now - r.int(30, 45) * DAY - r.int(0, 23) * HOUR),
       });

@@ -3,7 +3,7 @@ import { Link, useLocation, useMatch, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Bell, ChevronDown, LogOut, Menu as MenuIcon, UserRound } from "lucide-react";
 import { api, fromNow, ROLE_LABELS, type RoleAssignment } from "@tasued/api-client";
-import { Avatar, Badge, Select, cn } from "@tasued/ui";
+import { Avatar, Select, cn } from "@tasued/ui";
 import { useSession, useSignOut } from "../app/session";
 import { useCoursesInScope } from "../components/queries";
 import { useApiMutation } from "../components/mutation";
@@ -132,8 +132,15 @@ function Notifications() {
   );
 }
 
+/** Where a role applies, in full: "Platform management" or "Course: AIIE 111 — Foundation of …". */
 export function scopeLabel(r: RoleAssignment) {
-  return r.scopeType === "global" ? "All courses" : `Course: ${r.scopeName ?? r.scopeId}`;
+  return r.scopeType === "global" ? "Platform management" : `Course: ${r.scopeName ?? r.scopeId}`;
+}
+
+/** Compact scope for tight spaces: "Platform" or just the course code ("AIIE 111"). */
+export function scopeShort(r: RoleAssignment) {
+  if (r.scopeType === "global") return "Platform";
+  return (r.scopeName ?? r.scopeId ?? "").split(" — ")[0];
 }
 
 function ProfileMenu() {
@@ -166,12 +173,15 @@ function ProfileMenu() {
             </div>
           </div>
           <div className="border-b border-neutral-100 px-4 py-3">
-            <p className="mb-2 text-[11px] font-bold tracking-wider text-neutral-500 uppercase">Your roles</p>
-            <ul className="space-y-1.5">
+            <p className="mb-2 text-[11px] font-bold tracking-wider text-neutral-500 uppercase">{staffRoles.length > 1 ? "Your roles" : "Your role"}</p>
+            <ul className="space-y-2">
               {staffRoles.map((r) => (
-                <li key={r.id} className="flex flex-wrap items-center gap-1.5 text-xs">
-                  <Badge tone={r.role === "super_admin" ? "gold" : "green"}>{ROLE_LABELS[r.role]}</Badge>
-                  <span className="text-neutral-600">{scopeLabel(r)}</span>
+                <li key={r.id} className="flex items-center justify-between gap-3 text-sm" title={scopeLabel(r)}>
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className={cn("size-2 shrink-0 rounded-full", r.role === "super_admin" ? "bg-secondary-500" : "bg-success")} aria-hidden />
+                    <span className="truncate font-semibold text-tertiary-500">{ROLE_LABELS[r.role]}</span>
+                  </span>
+                  <span className="shrink-0 rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">{scopeShort(r)}</span>
                 </li>
               ))}
               {!staffRoles.length && <li className="text-xs text-neutral-500">No staff roles</li>}

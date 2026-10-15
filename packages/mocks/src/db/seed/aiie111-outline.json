@@ -1,0 +1,630 @@
+{
+ "course": {
+  "code": "AIIE 111",
+  "title": "Foundation of Artificial Intelligence and Digital Productivity",
+  "description": "Artificial intelligence has moved from research laboratories into phones, classrooms, offices and markets. Knowing what it is, how it works, where it fails and how to use it well is now part of being an educated person.\n\nThis course introduces AI from the ground up: what it is, how it developed, how machine learning and generative AI work, and how to instruct it. It then shows how to use AI for documents, presentations, spreadsheets, study and research; connects AI to entrepreneurship; and covers the responsibilities that come with it, from ethics and academic integrity to data protection under Nigerian law. It closes with the future of work, your portfolio, and revision.\n\nNo technical background is needed: most of it can be done with a phone and a free AI tool.",
+  "outcomes": [
+   "Explain what AI is, its scope and history, and correct common myths about it.",
+   "Distinguish types of AI and describe how machine learning and generative AI work.",
+   "Write effective prompts and refine AI output through iteration.",
+   "Use AI to produce and improve documents, presentations and spreadsheets.",
+   "Use AI to support study and research while verifying its output.",
+   "Apply an entrepreneurial mindset to identify real problems and opportunities.",
+   "Recognise ethical risks, bias, and intellectual property and integrity issues in AI use.",
+   "Apply the principles of the Nigeria Data Protection Act 2023 and good digital citizenship.",
+   "Plan for an AI-augmented career and present a portfolio of your work."
+  ]
+ },
+ "parts": [
+  {
+   "letter": "A",
+   "title": "Understanding AI",
+   "summary": "What AI is, where it came from, how it works and how to instruct it. These foundations underpin everything else in the course.",
+   "modules": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "letter": "B",
+   "title": "AI for Productivity and Learning",
+   "summary": "Using AI to produce documents, presentations and spreadsheets, and to support study and research, with verification at every step.",
+   "modules": [
+    6,
+    7
+   ]
+  },
+  {
+   "letter": "C",
+   "title": "Entrepreneurship and Opportunity",
+   "summary": "Thinking like an entrepreneur: recognising opportunities, finding real problems and testing ideas cheaply, with AI in a supporting role.",
+   "modules": [
+    8,
+    9
+   ]
+  },
+  {
+   "letter": "D",
+   "title": "Responsible and Lawful Use",
+   "summary": "The ethical, legal and personal responsibilities that come with AI: bias, misinformation, intellectual property, academic integrity and data protection.",
+   "modules": [
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "letter": "E",
+   "title": "Future, Practice and Assessment",
+   "summary": "Preparing for an AI-augmented career, presenting your work in a portfolio, and revising for the examination.",
+   "modules": [
+    13,
+    14,
+    15
+   ]
+  }
+ ],
+ "modules": [
+  {
+   "number": 1,
+   "title": "Introduction to AI",
+   "part": "A",
+   "intro": "AI is already part of daily life, often unnoticed: in the phone that unlocks with your face, the map that reroutes around traffic, and the feed that decides which posts you see. This module defines AI, maps what it can do and where it is used, corrects the most common myths about it, and explains why understanding AI now matters for students, future teachers and citizens.",
+   "units": [
+    {
+     "code": "1.1",
+     "title": "What Is Artificial Intelligence?",
+     "objective": "Define AI in everyday and technical terms, and explain how AI, machine learning and deep learning relate.",
+     "words": 588
+    },
+    {
+     "code": "1.2",
+     "title": "The Scope of AI",
+     "objective": "Describe the core capabilities of AI, the fields it draws on, and where it is applied.",
+     "words": 350
+    },
+    {
+     "code": "1.3",
+     "title": "Common Myths about AI",
+     "objective": "Recognise common myths about AI and replace them with accurate understanding.",
+     "words": 287
+    },
+    {
+     "code": "1.4",
+     "title": "Why AI Literacy Matters",
+     "objective": "Explain why AI literacy matters for students, future teachers and citizens.",
+     "words": 244
+    }
+   ]
+  },
+  {
+   "number": 2,
+   "title": "History and Evolution of AI",
+   "part": "A",
+   "intro": "AI is older than most people think. Its progress has come in waves: bursts of optimism and investment followed by periods of disappointment, known as AI winters. This module traces that history from early ideas about thinking machines to today’s generative AI, and explains why AI has advanced so quickly in the past decade.",
+   "units": [
+    {
+     "code": "2.1",
+     "title": "Early Ideas and Foundations",
+     "objective": "Describe the early ideas and events that founded AI as a field.",
+     "words": 313
+    },
+    {
+     "code": "2.2",
+     "title": "Booms and Winters",
+     "objective": "Explain the cycles of optimism and disappointment in AI’s history.",
+     "words": 297
+    },
+    {
+     "code": "2.3",
+     "title": "The Machine Learning Era",
+     "objective": "Identify the milestones that led from rule-based AI to today’s generative AI.",
+     "words": 340
+    },
+    {
+     "code": "2.4",
+     "title": "Why AI Matured Now",
+     "objective": "Explain the factors that together caused AI’s recent rapid progress.",
+     "words": 271
+    }
+   ]
+  },
+  {
+   "number": 3,
+   "title": "Types of AI and Foundations of Machine Learning",
+   "part": "A",
+   "intro": "“AI” covers very different systems, from a chess program to a chat assistant. This module classifies AI in two ways, by what it can do and by how it is built, then explains in plain language how machine learning works, its three main types, and the neural networks that make deep learning possible. No mathematics is required.",
+   "units": [
+    {
+     "code": "3.1",
+     "title": "Classifying AI by Capability",
+     "objective": "Distinguish narrow AI, general AI and superintelligence.",
+     "words": 266
+    },
+    {
+     "code": "3.2",
+     "title": "Classifying AI by Approach",
+     "objective": "Compare rule-based, machine learning and hybrid approaches to building AI.",
+     "words": 281
+    },
+    {
+     "code": "3.3",
+     "title": "How Machine Learning Works",
+     "objective": "Explain the basic process of machine learning, from data to prediction.",
+     "words": 453
+    },
+    {
+     "code": "3.4",
+     "title": "Types of Machine Learning",
+     "objective": "Distinguish supervised, unsupervised and reinforcement learning, with examples.",
+     "words": 261
+    },
+    {
+     "code": "3.5",
+     "title": "Neural Networks and Deep Learning",
+     "objective": "Describe in simple terms how neural networks work and what deep learning made possible.",
+     "words": 356
+    }
+   ]
+  },
+  {
+   "number": 4,
+   "title": "Generative AI: Mechanisms, Strengths and Limits",
+   "part": "A",
+   "intro": "Generative AI produces new text, images, audio, video and code on request, and it is the kind of AI most students now use directly. This module explains what generative AI is, how large language models and image generators work, what they do well, and where and why they fail. Understanding the mechanism is the best protection against misusing the tool.",
+   "units": [
+    {
+     "code": "4.1",
+     "title": "What Generative AI Is",
+     "objective": "Explain what generative AI is and identify its main forms and tools.",
+     "words": 217
+    },
+    {
+     "code": "4.2",
+     "title": "How Large Language Models Work",
+     "objective": "Explain tokens, next-token prediction, training stages, context windows and knowledge cutoffs.",
+     "words": 552
+    },
+    {
+     "code": "4.3",
+     "title": "How Image and Media Generation Works",
+     "objective": "Describe how image, audio and video generators produce content.",
+     "words": 248
+    },
+    {
+     "code": "4.4",
+     "title": "Strengths of Generative AI",
+     "objective": "Identify the tasks at which generative AI is most useful.",
+     "words": 143
+    },
+    {
+     "code": "4.5",
+     "title": "Limits and Risks",
+     "objective": "Explain the main limits of generative AI and why they occur.",
+     "words": 425
+    }
+   ]
+  },
+  {
+   "number": 5,
+   "title": "Prompt Engineering Fundamentals",
+   "part": "A",
+   "intro": "The quality of AI output depends heavily on the quality of the request. A vague prompt gets a generic answer; a clear, well-structured prompt gets something you can use. This module breaks an effective prompt into its components, introduces core prompting techniques, shows how to improve output through follow-up, and identifies the most common prompting mistakes.",
+   "units": [
+    {
+     "code": "5.1",
+     "title": "What a Prompt Is",
+     "objective": "Explain what a prompt is and why wording changes AI output.",
+     "words": 203
+    },
+    {
+     "code": "5.2",
+     "title": "Components of an Effective Prompt",
+     "objective": "Build prompts from role, task, context, format and constraints.",
+     "words": 227
+    },
+    {
+     "code": "5.3",
+     "title": "Core Prompting Techniques",
+     "objective": "Apply zero-shot, few-shot, step-by-step, source-grounded and clarifying prompts.",
+     "words": 362
+    },
+    {
+     "code": "5.4",
+     "title": "Iterating and Refining",
+     "objective": "Improve AI output through critical reading and follow-up prompts.",
+     "words": 306
+    },
+    {
+     "code": "5.5",
+     "title": "Common Prompting Mistakes",
+     "objective": "Recognise and correct common prompting mistakes.",
+     "words": 170
+    }
+   ]
+  },
+  {
+   "number": 6,
+   "title": "AI for Productivity: Documents, Slides and Spreadsheets",
+   "part": "B",
+   "intro": "Most academic and professional work is done in three kinds of tools: word processors, presentation software and spreadsheets. This module shows how to use AI to draft, edit, design and analyse in each, and how to combine these uses into efficient workflows, while keeping your own judgement, voice and responsibility for the result.",
+   "units": [
+    {
+     "code": "6.1",
+     "title": "AI in Everyday Productivity Tools",
+     "objective": "Identify the ways AI is available in productivity tools, and plan around access constraints.",
+     "words": 232
+    },
+    {
+     "code": "6.2",
+     "title": "Documents",
+     "objective": "Use AI to draft, edit and structure documents while keeping your own voice.",
+     "words": 393
+    },
+    {
+     "code": "6.3",
+     "title": "Presentations",
+     "objective": "Use AI to plan, draft and improve presentations.",
+     "words": 328
+    },
+    {
+     "code": "6.4",
+     "title": "Spreadsheets",
+     "objective": "Use AI to write, explain and check spreadsheet formulas, organise data and create charts.",
+     "words": 479
+    },
+    {
+     "code": "6.5",
+     "title": "Productive Workflows",
+     "objective": "Combine AI uses into efficient workflows and recognise when not to use AI.",
+     "words": 226
+    }
+   ]
+  },
+  {
+   "number": 7,
+   "title": "AI as a Research and Study Assistant",
+   "part": "B",
+   "intro": "Used well, AI can explain difficult ideas, generate practice material and speed up research. Used carelessly, it produces fabricated sources and shallow learning that disappears before the examination. This module covers AI’s uses for learning, study and research, how to verify what it tells you, and how to study with AI in ways that build real understanding.",
+   "units": [
+    {
+     "code": "7.1",
+     "title": "AI for Learning",
+     "objective": "Use AI to get explanations, examples and tutoring that support understanding.",
+     "words": 279
+    },
+    {
+     "code": "7.2",
+     "title": "AI-Supported Study Techniques",
+     "objective": "Use AI to support study methods that are known to work.",
+     "words": 318
+    },
+    {
+     "code": "7.3",
+     "title": "AI for Research",
+     "objective": "Use AI and academic search tools to find, read and organise sources.",
+     "words": 331
+    },
+    {
+     "code": "7.4",
+     "title": "Verifying AI Research Output",
+     "objective": "Detect fabricated references and verify claims and sources.",
+     "words": 377
+    },
+    {
+     "code": "7.5",
+     "title": "Studying Responsibly with AI",
+     "objective": "Use AI in ways that support learning and follow institutional rules.",
+     "words": 251
+    }
+   ]
+  },
+  {
+   "number": 8,
+   "title": "Entrepreneurial Mindset and Opportunity Thinking",
+   "part": "C",
+   "intro": "Entrepreneurship is a way of thinking before it is a way of doing business: noticing problems, seeing possibilities, and taking initiative to create value. This module introduces what entrepreneurship is, the mindset behind it, where opportunities come from, how AI is creating new ones, and how to screen an idea before investing time and money in it.",
+   "units": [
+    {
+     "code": "8.1",
+     "title": "What Entrepreneurship Is",
+     "objective": "Define entrepreneurship and distinguish its main types.",
+     "words": 281
+    },
+    {
+     "code": "8.2",
+     "title": "The Entrepreneurial Mindset",
+     "objective": "Describe the traits and attitudes that make up an entrepreneurial mindset.",
+     "words": 225
+    },
+    {
+     "code": "8.3",
+     "title": "Opportunity Thinking",
+     "objective": "Identify sources of opportunity, including those created by AI.",
+     "words": 325
+    },
+    {
+     "code": "8.4",
+     "title": "Evaluating Opportunities",
+     "objective": "Screen an idea for need, market, feasibility and resources, and state its value proposition.",
+     "words": 304
+    },
+    {
+     "code": "8.5",
+     "title": "Case Examples",
+     "objective": "Analyse examples of ventures using the ideas in this module.",
+     "words": 230
+    }
+   ]
+  },
+  {
+   "number": 9,
+   "title": "Problem Identification and Needs Finding",
+   "part": "C",
+   "intro": "Most failed ideas solve a problem nobody really has, or solve a real problem in a way nobody wants. This module teaches you to start from real problems, find out what people need through observation and interviews, frame problems using design thinking, use AI to support the process without replacing it, and test your assumptions cheaply before building anything.",
+   "units": [
+    {
+     "code": "9.1",
+     "title": "Starting with Problems, Not Solutions",
+     "objective": "Explain why problem-first thinking matters and identify problems worth solving.",
+     "words": 234
+    },
+    {
+     "code": "9.2",
+     "title": "Needs-Finding Methods",
+     "objective": "Use observation, interviews, surveys and secondary research to understand needs.",
+     "words": 320
+    },
+    {
+     "code": "9.3",
+     "title": "Design Thinking Basics",
+     "objective": "Apply the stages of design thinking, empathy maps, personas and problem statements.",
+     "words": 398
+    },
+    {
+     "code": "9.4",
+     "title": "Using AI in Needs Finding",
+     "objective": "Use AI to support needs finding while recognising its limits.",
+     "words": 209
+    },
+    {
+     "code": "9.5",
+     "title": "Validating Problems and Ideas",
+     "objective": "Test assumptions and ideas quickly and cheaply using prototypes and feedback.",
+     "words": 252
+    }
+   ]
+  },
+  {
+   "number": 10,
+   "title": "AI Ethics, Bias and Responsible Use",
+   "part": "D",
+   "intro": "AI systems increasingly influence decisions about people: who is shortlisted for a job, who receives a loan, what information appears in a news feed. This module introduces the core principles of AI ethics, explains where bias comes from and how to recognise it, examines misinformation and synthetic media, considers AI’s wider effects on society and the environment, and sets out practical habits for using AI responsibly.",
+   "units": [
+    {
+     "code": "10.1",
+     "title": "Why AI Ethics Matters",
+     "objective": "Explain why AI raises ethical questions and state the core principles of AI ethics.",
+     "words": 371
+    },
+    {
+     "code": "10.2",
+     "title": "Bias in AI",
+     "objective": "Explain the sources of bias in AI, with examples, and recognise bias in outputs.",
+     "words": 447
+    },
+    {
+     "code": "10.3",
+     "title": "Misinformation and Synthetic Media",
+     "objective": "Recognise AI-generated misinformation and synthetic media, and verify suspicious content.",
+     "words": 271
+    },
+    {
+     "code": "10.4",
+     "title": "Wider Impacts",
+     "objective": "Describe AI’s environmental, labour and power-related impacts.",
+     "words": 225
+    },
+    {
+     "code": "10.5",
+     "title": "Responsible Use in Practice",
+     "objective": "Apply practical habits for responsible AI use in study, teaching and daily life.",
+     "words": 264
+    }
+   ]
+  },
+  {
+   "number": 11,
+   "title": "Intellectual Property, Plagiarism and Academic Integrity",
+   "part": "D",
+   "intro": "AI makes it easy to produce work that is not really yours, and it raises new questions about who owns what. This module explains the basics of intellectual property and Nigerian copyright law, how AI complicates ownership, the forms plagiarism takes, how to use AI with academic integrity, and how to reference sources, including AI, correctly.",
+   "units": [
+    {
+     "code": "11.1",
+     "title": "Intellectual Property Basics",
+     "objective": "Distinguish the main types of intellectual property and outline copyright law in Nigeria.",
+     "words": 410
+    },
+    {
+     "code": "11.2",
+     "title": "AI and Intellectual Property",
+     "objective": "Explain the main intellectual property questions raised by generative AI.",
+     "words": 277
+    },
+    {
+     "code": "11.3",
+     "title": "Plagiarism",
+     "objective": "Identify the forms of plagiarism, including AI-assisted plagiarism, and understand how detection works.",
+     "words": 325
+    },
+    {
+     "code": "11.4",
+     "title": "Academic Integrity with AI",
+     "objective": "Use AI within institutional and course rules, disclose its use, and cite it correctly.",
+     "words": 397
+    },
+    {
+     "code": "11.5",
+     "title": "Proper Referencing",
+     "objective": "Explain why referencing matters and apply basic citation practice.",
+     "words": 263
+    }
+   ]
+  },
+  {
+   "number": 12,
+   "title": "Data Protection and Digital Citizenship (NDPA Context)",
+   "part": "D",
+   "intro": "Every app you install, form you complete and prompt you type involves personal data. This module explains what personal data is, the main provisions of the Nigeria Data Protection Act 2023, how data protection applies when you use AI tools, and what it means to be a safe, respectful and responsible digital citizen.",
+   "units": [
+    {
+     "code": "12.1",
+     "title": "Personal Data",
+     "objective": "Define personal data and sensitive personal data, and recognise where they are collected.",
+     "words": 264
+    },
+    {
+     "code": "12.2",
+     "title": "The Nigeria Data Protection Act 2023",
+     "objective": "Describe the purpose, principles, lawful bases and rights set out in the NDPA.",
+     "words": 688
+    },
+    {
+     "code": "12.3",
+     "title": "Data Protection and AI Tools",
+     "objective": "Use AI tools without exposing personal, confidential or institutional data.",
+     "words": 335
+    },
+    {
+     "code": "12.4",
+     "title": "Digital Citizenship",
+     "objective": "Manage your digital footprint, stay safe online and behave respectfully within the law.",
+     "words": 340
+    },
+    {
+     "code": "12.5",
+     "title": "Being a Responsible Digital Citizen",
+     "objective": "Consume information critically, look after your digital wellbeing, and help others do the same.",
+     "words": 164
+    }
+   ]
+  },
+  {
+   "number": 13,
+   "title": "The Future of Work and AI-Augmented Careers",
+   "part": "E",
+   "intro": "AI is changing what work involves more than whether work exists. This module examines how jobs are changing, what AI means for careers in education, which skills are becoming more valuable, where opportunities lie in the digital economy, and how to plan a personal path through a working life in which AI will keep changing.",
+   "units": [
+    {
+     "code": "13.1",
+     "title": "How AI Is Changing Work",
+     "objective": "Explain how AI affects jobs through the tasks they contain.",
+     "words": 374
+    },
+    {
+     "code": "13.2",
+     "title": "AI in Education Careers",
+     "objective": "Describe how AI is changing the work of teachers and what remains distinctively human.",
+     "words": 256
+    },
+    {
+     "code": "13.3",
+     "title": "Skills for an AI-Augmented Career",
+     "objective": "Identify the skills that are becoming more valuable, and plan how to keep learning.",
+     "words": 247
+    },
+    {
+     "code": "13.4",
+     "title": "Opportunities in the Digital Economy",
+     "objective": "Describe remote, freelance and creator opportunities, and their realistic challenges.",
+     "words": 234
+    },
+    {
+     "code": "13.5",
+     "title": "Planning Your Path",
+     "objective": "Audit your skills, build a learning plan, and use AI for career development.",
+     "words": 333
+    }
+   ]
+  },
+  {
+   "number": 14,
+   "title": "Portfolio Clinic and Demonstration",
+   "part": "E",
+   "intro": "A portfolio turns the work of this course into evidence of what you can do. This module explains what a portfolio is, how to select and document AI-assisted work so that your process and judgement are visible, how to write reflections that show growth, how to demonstrate your work to an audience, and how portfolios are reviewed and improved.",
+   "units": [
+    {
+     "code": "14.1",
+     "title": "What a Portfolio Is",
+     "objective": "Explain the purpose and types of portfolios and choose a suitable platform.",
+     "words": 227
+    },
+    {
+     "code": "14.2",
+     "title": "Building Your AI Portfolio",
+     "objective": "Select artefacts and document your process and responsible AI use.",
+     "words": 327
+    },
+    {
+     "code": "14.3",
+     "title": "Writing Reflections",
+     "objective": "Write structured reflections that show learning and evaluate AI’s contribution honestly.",
+     "words": 287
+    },
+    {
+     "code": "14.4",
+     "title": "Demonstrating Your Work",
+     "objective": "Plan and deliver a clear demonstration of your work and respond to questions.",
+     "words": 219
+    },
+    {
+     "code": "14.5",
+     "title": "Portfolio Review",
+     "objective": "Apply review criteria to portfolios, give and receive feedback, and maintain your portfolio.",
+     "words": 221
+    }
+   ]
+  },
+  {
+   "number": 15,
+   "title": "Revision and Examination Preparation",
+   "part": "E",
+   "intro": "This module brings the course together for revision. It summarises each part of the course, gathers the essential terms and the pairs most often confused, explains the kinds of examination questions to expect, provides practice questions with model answers, and sets out effective revision and examination technique.",
+   "units": [
+    {
+     "code": "15.1",
+     "title": "Course Review",
+     "objective": "Recall the main ideas of each part of the course.",
+     "words": 479
+    },
+    {
+     "code": "15.2",
+     "title": "Key Concepts and Terms",
+     "objective": "Define the essential terms of the course and distinguish commonly confused pairs.",
+     "words": 475
+    },
+    {
+     "code": "15.3",
+     "title": "Examination Question Types",
+     "objective": "Recognise the main types of examination question and what each requires.",
+     "words": 147
+    },
+    {
+     "code": "15.4",
+     "title": "Practice Questions",
+     "objective": "Test your knowledge and practise answering each type of question.",
+     "words": 1037
+    },
+    {
+     "code": "15.5",
+     "title": "Examination Technique",
+     "objective": "Plan effective revision and apply good technique in the examination.",
+     "words": 306
+    }
+   ]
+  }
+ ]
+}

@@ -4,7 +4,8 @@
 Usage:
     python3 packages/mocks/scripts/extract-aiie111.py [handout.pdf] [out.json]
 
-Output: packages/mocks/src/db/seed/aiie111-content.json
+Output: packages/mocks/src/db/seed/aiie111-outline.json (structure, objectives, word counts)
+        packages/mocks/src/db/seed/aiie111-text.json (course text HTML per unit, loaded on demand)
     { course: {code, title, description, outcomes},
       parts:   [{letter, title, summary, modules}],
       modules: [{number, title, part, intro, units: [{code, title, objective, html, words}]}] }
@@ -38,7 +39,7 @@ import pymupdf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_PDF = "/root/.claude/uploads/0c60a4a3-44e3-5606-b24d-10f574ea1701/6ac2e495-AIIE111_Foundation_of_AI_and_Digital_Productivity_Student_Handout_1.pdf"
-DEFAULT_OUT = os.path.join(HERE, "..", "src", "db", "seed", "aiie111-content.json")
+DEFAULT_OUT = os.path.join(HERE, "..", "src", "db", "seed", "aiie111-outline.json")
 
 HYPH = "‐"
 TEAL = (0.0549, 0.4314, 0.4078)
@@ -1149,8 +1150,15 @@ def main() -> None:
         "modules": modules,
     }
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    # The course text is ~200 KB; it lives in its own file so the app only downloads it when a
+    # unit is opened (aiie111-text.json, keyed by unit code). The outline stays small.
+    text = {u["code"]: u["html"] for m in modules for u in m["units"]}
+    outline = {**data, "modules": [{**m, "units": [{k: v for k, v in u.items() if k != "html"} for u in m["units"]]} for m in modules]}
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=1)
+        json.dump(outline, f, ensure_ascii=False, indent=1)
+        f.write("\n")
+    with open(os.path.join(os.path.dirname(out_path), "aiie111-text.json"), "w", encoding="utf-8") as f:
+        json.dump(text, f, ensure_ascii=False)
         f.write("\n")
     print(f"wrote {out_path}: {len(parts)} parts, {len(modules)} modules, {n_units} units, "
           f"{sum(u['words'] for m in modules for u in m['units'])} words")

@@ -3,11 +3,13 @@ import { configureApi } from "@tasued/api-client";
 
 async function boot() {
   configureApi({ baseUrl: import.meta.env.VITE_API_BASE_URL ?? "/api/v1" });
+  // Download the app while the mock API starts, instead of one after the other.
+  const app = import("./app/render");
   if (import.meta.env.VITE_USE_MOCKS === "true") {
     const { startMocks } = await import("@tasued/mocks");
     await startMocks({ app: "student" });
   }
-  const { renderApp } = await import("./app/render");
+  const { renderApp } = await app;
   renderApp(document.getElementById("root")!);
 }
 

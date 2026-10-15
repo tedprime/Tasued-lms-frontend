@@ -48,7 +48,8 @@ async function call<T = any>(method: string, path: string, body?: unknown): Prom
 resetDb();
 const db = getDb();
 const { classStatus } = await import("../src/db/ops/classes");
-const handout = (await import("../src/db/seed/aiie111-content.json")).default as { course: { title: string; description: string }; modules: { number: number; title: string; intro: string; units: { code: string; title: string; objective: string; html: string; words: number }[] }[] };
+const handout = (await import("../src/db/seed/aiie111-outline.json")).default as { course: { title: string; description: string }; modules: { number: number; title: string; intro: string; units: { code: string; title: string; objective: string; words: number }[] }[] };
+const handoutText = (await import("../src/db/seed/aiie111-text.json")).default as Record<string, string>;
 const lagos = (iso: string) => new Date(new Date(iso).getTime() + 3600e3);
 
 console.log(`Seeded: ${db.users.length} users, ${db.courses.length} courses, ${db.units.length} units, ${db.classes.length} classes, ${db.recordings.length} recordings, ${db.questions.length} questions, ${db.threads.length} threads, ${db.audit.length} audit entries; ~${Math.round(JSON.stringify(db).length / 1024)} KB`);
@@ -61,15 +62,15 @@ check(db.users.every((u) => !("departmentId" in u) && u.roles.every((x) => ["glo
 check(db.users.find((u) => u.id === "stu-adaeze")?.department === "Computer Science", "student department is plain text");
 check(!db.users.some((u) => u.id === "stf-facadmin" || u.id === "stf-deptadmin"), "faculty/department admin accounts removed");
 check(db.courses[0]!.description === handout.course.description && db.courses[0]!.description.startsWith("Artificial intelligence has moved"), "course description = handout “About this course”");
-check(db.modules.length === 15 && db.units.length === 73 && db.units.every((u) => u.state === "published" && u.courseTextHtml.length > 200), `${db.modules.length} modules, ${db.units.length} published units with course text`);
+check(db.modules.length === 15 && db.units.length === 73 && db.units.every((u) => u.state === "published" && !!u.textRef && handoutText[u.textRef]!.length > 200 && u.courseTextHtml === ""), `${db.modules.length} modules, ${db.units.length} published units (course text loaded on demand)`);
 check(db.modules.every((m) => m.title === `Module ${m.order}: ${handout.modules[m.order - 1]!.title}` && m.summary === handout.modules[m.order - 1]!.intro), "module titles “Module N: …”, summary = module introduction");
 {
   const hu = handout.modules.flatMap((m) => m.units);
   const ok = hu.every((h) => {
     const u = db.units.find((x) => x.id === `unt-aiie111-${h.code.replace(".", "-")}`);
-    return !!u && u.title === `${h.code} ${h.title}` && u.objectives[0] === h.objective && u.courseTextHtml === h.html && u.estimatedReadMinutes === Math.ceil(h.words / 200);
+    return !!u && u.title === `${h.code} ${h.title}` && u.objectives[0] === h.objective && u.textRef === h.code && u.estimatedReadMinutes === Math.ceil(h.words / 200);
   });
-  check(ok, "units: “m.u Title”, objective, handout HTML, read minutes = ceil(words/200)");
+  check(ok, "units: “m.u Title”, objective, text reference, read minutes = ceil(words/200)");
 }
 check(new Set(db.enrolments.map((e) => e.userId)).size === db.users.filter((u) => u.id.startsWith("stu-")).length && db.enrolments.some((e) => e.userId === "stu-ifeoluwa"), `all ${db.enrolments.length} students enrolled (incl. invited Ifeoluwa)`);
 {

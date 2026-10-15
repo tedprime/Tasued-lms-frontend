@@ -101,7 +101,7 @@ function UserDetail({ user: u }: { user: User }) {
 
       {assigning && <AssignRoleModal user={u} onClose={() => setAssigning(false)} />}
       {editing && <EditUserModal user={u} onClose={() => setEditing(false)} />}
-      <ConfirmDialog open={!!removeRole} onClose={() => setRemoveRole(null)} onConfirm={() => removeRole && remove.mutate(removeRole.id)} loading={remove.isPending} tone="danger" title="Remove this role?" description={removeRole ? `${u.fullName} will no longer be ${ROLE_LABELS[removeRole.role]} for ${scopeLabel(removeRole)}.` : undefined} confirmLabel="Remove role" />
+      <ConfirmDialog open={!!removeRole} onClose={() => setRemoveRole(null)} onConfirm={() => removeRole && remove.mutate(removeRole.id)} loading={remove.isPending} tone="danger" title="Remove this role?" description={removeRole ? `${u.fullName} will no longer be ${ROLE_LABELS[removeRole.role]} ${removeRole.scopeType === "global" ? "" : ` on ${scopeLabel(removeRole).replace(/^Course: /, "")}`}.` : undefined} confirmLabel="Remove role" />
       <ConfirmDialog
         open={toggling}
         onClose={() => setToggling(false)}

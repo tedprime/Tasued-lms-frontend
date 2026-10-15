@@ -35,6 +35,8 @@ export interface UnitRow {
   estimatedReadMinutes: number;
   objectives: string[];
   courseTextHtml: string;
+  /** Handout unit code whose text hasn't been loaded yet (see seed/course-text.ts). */
+  textRef?: string;
   courseTextJson?: string;
   attachments: T.Attachment[];
   updatedAt: ISODate;
@@ -253,4 +255,4 @@ export const DEFAULT_PREFERENCES: T.UserPreferences = {
   playbackSpeed: 1,
 };
 
-export const DB_VERSION = 6;
+export const DB_VERSION = 7;

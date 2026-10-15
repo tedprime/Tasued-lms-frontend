@@ -2,6 +2,7 @@ import type { Attachment, PublishState, Unit, UnitProgress } from "@tasued/api-c
 import { audit, find } from "../db/ops/common";
 import type { ModuleRow, UnitRow } from "../db/schema";
 import { moduleView, unitView } from "../db/views/core";
+import { ensureUnitText } from "../db/seed/course-text";
 import { asString, readableCourse } from "../lib/access";
 import { isStaffFor, requirePerm } from "../lib/auth";
 import { iso } from "../lib/dates";
@@ -102,8 +103,9 @@ export function registerContent(r: Router) {
     reorder(c.db.modules.filter((m) => m.courseId === o.id), b.ids);
   });
 
-  r.get("/units/:id", (c) => {
+  r.get("/units/:id", async (c) => {
     const { unit, staff } = readableUnit(c, c.params.id);
+    await ensureUnitText(unit);
     return unitView(c.db, unit, staff);
   });
 
@@ -136,6 +138,7 @@ export function registerContent(r: Router) {
     const unit = find(c.db.units, c.params.id, "unit");
     requirePerm(c.viewer, "content.edit", unit.courseId);
     const b = await c.json<Partial<Pick<Unit, "title" | "objectives" | "courseTextHtml" | "courseTextJson" | "state" | "estimatedReadMinutes">>>();
+    await ensureUnitText(unit);
     requirePublishIfStateChange(c, unit.courseId, unit.state, b.state);
     if (b.title !== undefined) unit.title = asString(b.title) || unit.title;
     if (Array.isArray(b.objectives)) unit.objectives = b.objectives.map((x) => String(x).trim()).filter(Boolean);
