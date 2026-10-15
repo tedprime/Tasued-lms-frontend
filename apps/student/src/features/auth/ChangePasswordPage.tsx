@@ -32,7 +32,7 @@ export default function ChangePasswordPage() {
           </p>
           {forced && (
             <Alert tone="amber" className="mt-4">
-              You signed in with a temporary password. Choose your own password before using TASUED LMS — enter the temporary one as your current password.
+              You signed in with a temporary password. Choose your own password before using TASFUED LMS — enter the temporary one as your current password.
             </Alert>
           )}
           <div className="mt-6">

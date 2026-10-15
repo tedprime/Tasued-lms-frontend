@@ -167,7 +167,7 @@ function CreatePersonModal({ onClose }: { onClose: () => void }) {
         <SegmentedControl<F["kind"]> value={f.kind} onChange={(kind) => setF({ ...f, kind })} options={[{ key: "student", label: "Student" }, { key: "staff", label: "Staff" }]} />
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Full name" required error={errors.fullName} htmlFor="np-name"><Input id="np-name" value={f.fullName} onChange={set("fullName")} invalid={!!errors.fullName} /></Field>
-          <Field label={f.kind === "student" ? "Email (from TASUED's list)" : "Microsoft work email"} required error={errors.email} htmlFor="np-email" hint={f.kind === "student" ? "Invitations go here. It's also their Teams guest identity." : undefined}><Input id="np-email" type="email" value={f.email} onChange={set("email")} invalid={!!errors.email} placeholder={f.kind === "student" ? "student@example.com" : "name@tasued.edu.ng"} /></Field>
+          <Field label={f.kind === "student" ? "Email (from TASFUED's list)" : "Microsoft work email"} required error={errors.email} htmlFor="np-email" hint={f.kind === "student" ? "Invitations go here. It's also their Teams guest identity." : undefined}><Input id="np-email" type="email" value={f.email} onChange={set("email")} invalid={!!errors.email} placeholder={f.kind === "student" ? "student@example.com" : "name@tasued.edu.ng"} /></Field>
           {f.kind === "student" ? (
             <>
               <Field label="Matric number" required error={errors.matricNumber} htmlFor="np-matric"><Input id="np-matric" value={f.matricNumber} onChange={set("matricNumber")} invalid={!!errors.matricNumber} /></Field>
@@ -177,7 +177,7 @@ function CreatePersonModal({ onClose }: { onClose: () => void }) {
             <Field label="Staff ID" required error={errors.staffId} htmlFor="np-staff"><Input id="np-staff" value={f.staffId} onChange={set("staffId")} invalid={!!errors.staffId} /></Field>
           )}
           {f.kind === "student" && (
-            <Field className="sm:col-span-2" label="Department" htmlFor="np-dep" hint="As written in TASUED's list.">
+            <Field className="sm:col-span-2" label="Department" htmlFor="np-dep" hint="As written in TASFUED's list.">
               <Input id="np-dep" value={f.department} onChange={set("department")} />
             </Field>
           )}

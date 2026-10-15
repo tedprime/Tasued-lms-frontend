@@ -84,9 +84,9 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   const { data, isPending, isError, refetch, fetchStatus } = useSessionQuery();
   const location = useLocation();
   if (isPending && fetchStatus === "paused")
-    return <div className="p-6"><ErrorState title="You're offline" description="Connect to the internet to sign in to TASUED LMS." onRetry={() => void refetch()} /></div>;
+    return <div className="p-6"><ErrorState title="You're offline" description="Connect to the internet to sign in to TASFUED LMS." onRetry={() => void refetch()} /></div>;
   if (isPending) return <PageLoader label="Checking your session…" />;
-  if (isError) return <div className="p-6"><ErrorState title="Couldn't reach TASUED LMS" onRetry={() => void refetch()} /></div>;
+  if (isError) return <div className="p-6"><ErrorState title="Couldn't reach TASFUED LMS" onRetry={() => void refetch()} /></div>;
   if (!data) return <Navigate to={signInPath(location.pathname + location.search)} replace />;
   if (data.mustChangePassword && location.pathname !== "/change-password") {
     const here = location.pathname + location.search;

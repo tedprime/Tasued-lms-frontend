@@ -1,5 +1,5 @@
 /**
- * TASUED LMS — shared API contract (types).
+ * TASFUED LMS — shared API contract (types).
  * Mirrors the NestJS OpenAPI contract. Both apps and the mock layer build against these.
  * Dates are ISO 8601 strings. Ids are opaque strings.
  */
@@ -82,13 +82,13 @@ export type InviteStatus = "not_sent" | "sent" | "accepted" | "expired";
 export interface User {
   id: ID;
   fullName: string;
-  /** Students: the email TASUED supplied (also their Teams guest identity). Staff: Microsoft 365 address. */
+  /** Students: the email TASFUED supplied (also their Teams guest identity). Staff: Microsoft 365 address. */
   email: string;
   matricNumber?: string; // students
   staffId?: string; // staff
   avatarUrl?: string;
   phone?: string;
-  /** Students: department and level as supplied in TASUED's list (plain details, nothing to manage). */
+  /** Students: department and level as supplied in TASFUED's list (plain details, nothing to manage). */
   department?: string;
   level?: number; // 100, 200 ...
   status: AccountStatus;

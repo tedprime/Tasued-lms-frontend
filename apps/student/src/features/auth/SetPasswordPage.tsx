@@ -61,7 +61,7 @@ export default function SetPasswordPage() {
   }
 
   return (
-    <AuthLayout title="Set your password" description="Welcome to TASUED LMS. Choose a password — you'll use it with your email to sign in.">
+    <AuthLayout title="Set your password" description="Welcome to TASFUED LMS. Choose a password — you'll use it with your email to sign in.">
       {info.isPending ? (
         <div className="mt-8 space-y-3" aria-busy="true" aria-label="Loading your invitation">
           <Skeleton className="h-16 rounded-xl" />

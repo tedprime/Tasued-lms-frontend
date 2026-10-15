@@ -13,7 +13,7 @@ export default function WelcomePage() {
   const steps = [
     {
       icon: CheckCircle2,
-      title: "You're in TASUED LMS",
+      title: "You're in TASFUED LMS",
       body: <>Sign in here any time with <span className="font-semibold break-all text-tertiary-500">{user.email}</span> and the password you just set. Your courses, recordings, course text, assignments and quizzes are all here.</>,
     },
     {

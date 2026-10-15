@@ -25,7 +25,7 @@ export function seedDatabase(now: number): DB {
     announcements: [], notifications: [], audit: [], imports: [],
     health: makeHealth(now),
     settings: {
-      institutionName: "Tai Solarin University of Education, Ijebu-Ode",
+      institutionName: "Tai Solarin Federal University of Education, Ijebu-Ode",
       attendanceRule: { presentThresholdPercent: 75, lateAfterMinutes: 10 },
       defaultLatePolicy: "accepted_with_penalty",
       maxUploadMb: 50,

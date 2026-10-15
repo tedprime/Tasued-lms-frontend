@@ -15,7 +15,7 @@ declare global {
 }
 
 /**
- * Start the MSW browser worker with the full TASUED mock API.
+ * Start the MSW browser worker with the full TASFUED mock API.
  * Requests to `/api/v1/...` are answered from an in-memory DB persisted to localStorage
  * (`tasued-mock-db-v7`); the signed-in demo account is kept per app (`tasued-mock-session-${app}`).
  */

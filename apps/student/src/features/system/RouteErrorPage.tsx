@@ -11,7 +11,7 @@ export function RouteErrorPage({ inline }: { inline?: boolean }) {
   const body = is404
     ? "The page you're looking for doesn't exist."
     : chunkFailed
-      ? "A newer version of TASUED LMS may be available, or you may be offline. Reload to try again."
+      ? "A newer version of TASFUED LMS may be available, or you may be offline. Reload to try again."
       : "An unexpected error occurred. Reloading usually fixes it — if not, please contact support.";
 
   const content = (

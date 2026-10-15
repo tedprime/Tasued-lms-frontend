@@ -92,7 +92,7 @@ function SignInError({ error }: { error: unknown }) {
     case "ACCOUNT_NOT_ACTIVATED":
       return (
         <Alert tone="amber" title={message}>
-          You haven't set your password yet. Open the invitation email from TASUED LMS and use the link in it to choose a password. Can't find it? Check your spam folder, or contact the course team to send it again.
+          You haven't set your password yet. Open the invitation email from TASFUED LMS and use the link in it to choose a password. Can't find it? Check your spam folder, or contact the course team to send it again.
         </Alert>
       );
     case "ACCOUNT_DEACTIVATED":
@@ -129,7 +129,7 @@ export default function SignInPage() {
   const emailOk = /^\S+@\S+\.\S+$/.test(email.trim());
 
   return (
-    <AuthLayout title="Sign in" description="Sign in with your email and the password you set for TASUED LMS.">
+    <AuthLayout title="Sign in" description="Sign in with your email and the password you set for TASFUED LMS.">
       <form
         noValidate
         className="mt-8 space-y-4"
@@ -172,10 +172,10 @@ export default function SignInPage() {
 
       {/* <p id={ids.note} className="mt-4 flex gap-2 rounded-lg bg-neutral-50 px-3 py-2.5 text-xs text-neutral-600">
         <Info className="mt-0.5 size-3.5 shrink-0 text-primary-500" aria-hidden />
-        <span>Use the email TASUED gave us for you — the same one your Teams invitation was sent to.</span>
+        <span>Use the email TASFUED gave us for you — the same one your Teams invitation was sent to.</span>
       </p> */}
       <p className="mt-3 text-center text-xs text-neutral-500">
-        New student? Open the invitation email from TASUED LMS to set your password.
+        New student? Open the invitation email from TASFUED LMS to set your password.
       </p>
 
       {/* {USE_MOCKS && <DemoAccounts returnTo={returnTo} />} */}

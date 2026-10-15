@@ -144,7 +144,7 @@ function seedRecordingsAndAttendance(db: DB, now: number, r: Random) {
     for (const rec of sim.records) {
       if (rec.mark === "absent" && participates(db, rec.userId) && r.chance(0.12)) {
         rec.mark = "excused";
-        rec.note = r.pick(["Medical — letter submitted to HOD", "Representing TASUED at inter-varsity games", "Approved family emergency"]);
+        rec.note = r.pick(["Medical — letter submitted to HOD", "Representing TASFUED at inter-varsity games", "Approved family emergency"]);
       }
     }
     const lecturer = db.users.find((u) => u.id === c.lecturerId);

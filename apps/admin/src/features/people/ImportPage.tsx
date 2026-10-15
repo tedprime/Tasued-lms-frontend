@@ -63,7 +63,7 @@ export function ImportPage() {
         title={kind === "students" ? "Invite students" : "Import staff"}
         description={
           kind === "students"
-            ? "TASUED sends the student list. Importing it creates LMS accounts, emails each student a link to set their LMS password, and sends a Microsoft Teams guest invitation to our organisation so they can join classes."
+            ? "TASFUED sends the student list. Importing it creates LMS accounts, emails each student a link to set their LMS password, and sends a Microsoft Teams guest invitation to our organisation so they can join classes."
             : "Staff are members of our Microsoft 365 organisation and sign in with Microsoft. Importing adds them to the LMS — no invitations or passwords are needed."
         }
         breadcrumb={<Link to="/people" className="hover:text-primary-500">People</Link>}

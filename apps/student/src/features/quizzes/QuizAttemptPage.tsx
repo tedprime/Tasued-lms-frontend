@@ -27,7 +27,7 @@ import { OfflineBanner } from "../../layout/OfflineBanner";
 /**
  * Quiz attempt — a port of SLAN's AssessmentView exam UX (full-screen takeover, one question per
  * screen, navigator grid, mark for review, progress bar, results breakdown), re-wired to
- * TASUED's server-authoritative quiz API: per-answer autosave, absolute deadline, auto-submit.
+ * TASFUED's server-authoritative quiz API: per-answer autosave, absolute deadline, auto-submit.
  */
 export default function QuizAttemptPage() {
   const { attemptId } = useParams();

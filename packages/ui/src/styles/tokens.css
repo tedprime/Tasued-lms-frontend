@@ -1,5 +1,5 @@
 /*
- * TASUED LMS design tokens — TASUED brand colours on SLAN's type, radii and component structure.
+ * TASFUED LMS design tokens — TASFUED brand colours on SLAN's type, radii and component structure.
  * To re-brand, change the primary / secondary / tertiary scales here; every app picks them up.
  *
  * Apps import this file after `@import "tailwindcss";` and add
@@ -8,7 +8,7 @@
 
 @theme {
   /*
-   * TASUED brand — from "TASUED Brand Color Theme & Design Tokens" v1.0 (13 Oct 2026).
+   * TASFUED brand — from "TASFUED Brand Color Theme & Design Tokens" v1.0 (13 Oct 2026).
    * Blue and gold are working values from a third-party brand profile; green and black are
    * proposed approximations. Verify against the approved logo artwork, then change them here only.
    *
@@ -17,7 +17,7 @@
    * lighter document steps shift down one place. Hex values are unchanged.
    */
 
-  /* Primary: TASUED blue — actions, navigation, links, selected states */
+  /* Primary: TASFUED blue — actions, navigation, links, selected states */
   --color-primary: #192f59;
   --color-primary-dark: #142647; /* --color-primary-hover */
   --color-primary-light: #3d5b87;
@@ -32,7 +32,7 @@
   --color-primary-800: #0c1830;
   --color-primary-900: #091222;
 
-  /* Accent: TASUED gold — highlights, active indicators, sparing calls to action */
+  /* Accent: TASFUED gold — highlights, active indicators, sparing calls to action */
   --color-secondary: #bf7c09;
   --color-secondary-dark: #a56808; /* --color-accent-hover */
   --color-secondary-light: #dfa43a;
@@ -46,7 +46,7 @@
   --color-secondary-700: #835306;
   --color-secondary-800: #624005;
 
-  /* Ink: TASUED black — body text, strong headings, icons */
+  /* Ink: TASFUED black — body text, strong headings, icons */
   --color-tertiary: #171717;
   --color-tertiary-dark: #0a0a0a;
   --color-tertiary-light: #2e2e2e;
@@ -198,7 +198,7 @@
 /* Low-data mode: hide decorative imagery */
 .low-data .decorative-img { display: none !important; }
 
-/* Semantic aliases using the names in the TASUED design-token document (for non-Tailwind CSS). */
+/* Semantic aliases using the names in the TASFUED design-token document (for non-Tailwind CSS). */
 :root {
   --tasued-blue: #192f59;
   --tasued-gold: #bf7c09;

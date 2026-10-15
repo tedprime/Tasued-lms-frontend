@@ -65,8 +65,8 @@ const THREADS: TSpec[] = [
     replies: [["stf-ogunleye", "<p>There is nothing to buy for this course — the whole handout is the course text on the LMS, and you can save it for offline reading. Locking this thread.</p>"]] },
 
   { course: null, title: "Teams says I can’t join the class meeting", author: "S", daysAgo: 26, upvotes: 15, tags: ["tech-help"],
-    body: "<p>I can sign in to the LMS but Teams says I don’t have access to the TASUED organisation.</p>",
-    replies: [["stf-super", "<p>You need to accept the Teams guest invitation first. Look for the email from Microsoft on behalf of TASUED (check Spam) and accept it with the same email you use for the LMS. If you can’t find it, email lms-support@tasued.edu.ng and we’ll resend it.</p>", true], ["S", "<p>Found it in spam. Worked for me, thanks.</p>"]] },
+    body: "<p>I can sign in to the LMS but Teams says I don’t have access to the TASFUED organisation.</p>",
+    replies: [["stf-super", "<p>You need to accept the Teams guest invitation first. Look for the email from Microsoft on behalf of TASFUED (check Spam) and accept it with the same email you use for the LMS. If you can’t find it, email lms-support@tasued.edu.ng and we’ll resend it.</p>", true], ["S", "<p>Found it in spam. Worked for me, thanks.</p>"]] },
   { course: null, title: "Low-data tips for watching recordings", author: "stu-tunde", daysAgo: 20, upvotes: 22, pinned: true, tags: ["tips"],
     body: "<p>Turn on Low-data mode in Settings — recordings don’t autoplay and pages load lighter. Watch on campus Wi-Fi when you can, and read the course text offline before going home.</p>",
     replies: [["S", "<p>This saved me so much data, thank you!</p>"], ["S", "<p>If I stop halfway, does it remember where I was?</p>"], ["stu-tunde", "<p>Yes, it picks up from where you stopped.</p>"]] },

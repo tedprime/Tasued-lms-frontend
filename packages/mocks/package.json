@@ -8,7 +8,7 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "description": "MSW mock API with seeded TASUED data. Implements every endpoint in @tasued/api-client.",
+  "description": "MSW mock API with seeded TASFUED data. Implements every endpoint in @tasued/api-client.",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
     "smoke": "tsx scripts/smoke.ts"

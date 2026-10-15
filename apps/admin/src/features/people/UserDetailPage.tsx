@@ -72,7 +72,7 @@ function UserDetail({ user: u }: { user: User }) {
             { label: u.matricNumber ? "Matric number" : "Staff ID", value: <span className="font-mono">{u.matricNumber ?? u.staffId ?? "—"}</span> },
             ...(student ? [{ label: "Department", value: u.department ?? "—" }, { label: "Level", value: u.level ? `${u.level} level` : "—" }] : []),
             { label: "Phone", value: u.phone ?? "—" },
-            { label: "Signs in with", value: u.authMethod === "microsoft" ? "Microsoft (TASUED work account)" : "LMS password" },
+            { label: "Signs in with", value: u.authMethod === "microsoft" ? "Microsoft (TASFUED work account)" : "LMS password" },
             { label: "Created", value: fmtDateTime(u.createdAt) },
             { label: "Last seen", value: u.lastSeenAt ? fromNow(u.lastSeenAt) : "Never" },
           ]} />
@@ -156,11 +156,11 @@ function EditUserModal({ user, onClose }: { user: User; onClose: () => void }) {
     if (!hasErrors(e)) save.mutate(undefined);
   };
   return (
-    <Modal open onClose={onClose} title="Edit details" description={isStudentUser ? "Email and matric number come from TASUED's student list." : "Email and staff ID come from our Microsoft 365 organisation."} footer={<><Button variant="outline" onClick={onClose}>Cancel</Button><Button onClick={submit} loading={save.isPending}>Save</Button></>}>
+    <Modal open onClose={onClose} title="Edit details" description={isStudentUser ? "Email and matric number come from TASFUED's student list." : "Email and staff ID come from our Microsoft 365 organisation."} footer={<><Button variant="outline" onClick={onClose}>Cancel</Button><Button onClick={submit} loading={save.isPending}>Save</Button></>}>
       <div className="space-y-4">
         <Field label="Full name" required error={errors.fullName} htmlFor="eu-name"><Input id="eu-name" value={fullName} onChange={(e) => setFullName(e.target.value)} invalid={!!errors.fullName} /></Field>
         <Field label="Phone" error={errors.phone} htmlFor="eu-phone"><Input id="eu-phone" value={phone} onChange={(e) => setPhone(e.target.value)} invalid={!!errors.phone} /></Field>
-        {isStudentUser && <Field label="Department" htmlFor="eu-dep" hint="As written in TASUED's list."><Input id="eu-dep" value={department} onChange={(e) => setDepartment(e.target.value)} /></Field>}
+        {isStudentUser && <Field label="Department" htmlFor="eu-dep" hint="As written in TASFUED's list."><Input id="eu-dep" value={department} onChange={(e) => setDepartment(e.target.value)} /></Field>}
         {isStudentUser && <Field label="Level" htmlFor="eu-level"><Select id="eu-level" value={level} onChange={(e) => setLevel(e.target.value)}>{[100, 200, 300, 400, 500].map((l) => <option key={l} value={l}>{l} level</option>)}</Select></Field>}
       </div>
     </Modal>
@@ -207,7 +207,7 @@ function StudentAccessCard({ user: u }: { user: User }) {
   const teamsAccepted = u.teamsGuest?.status === "accepted";
   const when = (x?: { sentAt?: string; acceptedAt?: string }) => (x?.acceptedAt ? `Accepted ${fmtDateTime(x.acceptedAt)}` : x?.sentAt ? `Sent ${fmtDateTime(x.sentAt)}` : "Not sent yet");
   return (
-    <SectionCard title="Sign-in & Teams access" subtitle="Students sign in to the LMS with a password and join Teams classes as guests of our organisation, using the email TASUED supplied." bodyClassName="grid gap-4 p-5 md:grid-cols-3">
+    <SectionCard title="Sign-in & Teams access" subtitle="Students sign in to the LMS with a password and join Teams classes as guests of our organisation, using the email TASFUED supplied." bodyClassName="grid gap-4 p-5 md:grid-cols-3">
       <div className="space-y-2">
         <p className="flex items-center gap-2 text-sm font-semibold text-tertiary-500"><Mail className="size-4 text-primary-500" /> LMS account</p>
         <LmsAccountPill user={u} />

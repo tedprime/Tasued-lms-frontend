@@ -551,7 +551,7 @@ check(r.status === 200 && r.data.created === 1 && r.data.lmsInvitesSent === 1 &&
 }
 const staffImp = new FormData();
 staffImp.append("kind", "staff");
-staffImp.append("file", new File(["fullName,email,staffId\nDr. Sade Oyewole,sade.oyewole@tasued.edu.ng,TASUED/CSC/0301\n"], "staff.csv", { type: "text/csv" }));
+staffImp.append("file", new File(["fullName,email,staffId\nDr. Sade Oyewole,sade.oyewole@tasued.edu.ng,TASFUED/CSC/0301\n"], "staff.csv", { type: "text/csv" }));
 r = await call("POST", "/imports/preview", staffImp);
 r = await call("POST", `/imports/${r.data.importId}/commit`);
 check(r.status === 200 && r.data.created === 1 && r.data.lmsInvitesSent === 0 && r.data.teamsGuestInvitesSent === 0, `staff import commit: ${JSON.stringify(r.data)}`);

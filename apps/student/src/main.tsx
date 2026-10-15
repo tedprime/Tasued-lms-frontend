@@ -11,4 +11,24 @@ async function boot() {
   renderApp(document.getElementById("root")!);
 }
 
-void boot();
+function showBootError() {
+  const root = document.getElementById("root");
+  if (!root) return;
+
+  const state = document.createElement("main");
+  state.className = "boot-screen";
+  state.setAttribute("role", "alert");
+
+  const message = document.createElement("p");
+  message.textContent = "TASFUED LMS could not start. Check your connection and try again.";
+
+  const retry = document.createElement("button");
+  retry.className = "boot-retry";
+  retry.textContent = "Reload";
+  retry.addEventListener("click", () => window.location.reload());
+
+  state.append(message, retry);
+  root.replaceChildren(state);
+}
+
+void boot().catch(showBootError);

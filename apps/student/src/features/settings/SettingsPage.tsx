@@ -64,7 +64,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader
             title={<span id="change-password" className="flex items-center gap-2"><KeyRound className="size-4 text-primary-500" /> Change password</span>}
-            subtitle={<>The password you use with <span className="break-all">{user.email}</span> to sign in to TASUED LMS. Your Microsoft/Teams password is separate.</>}
+            subtitle={<>The password you use with <span className="break-all">{user.email}</span> to sign in to TASFUED LMS. Your Microsoft/Teams password is separate.</>}
           />
           <CardBody className="max-w-md">
             <ChangePasswordForm onDone={() => toast.success("Password changed", "Use your new password next time you sign in.")} />

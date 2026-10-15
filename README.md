@@ -1,6 +1,6 @@
-# TASUED LMS — frontend
+# TASFUED LMS — frontend
 
-Teams-first learning management system for TASUED. Live classes run on Microsoft Teams; each class recording stays in the organiser's OneDrive and is streamed into the LMS under the units the class covered (nothing is copied). Students sign in to the LMS with email + password and join Teams classes as guests of our organisation. Students can open any course, any time.
+Teams-first learning management system for TASFUED (Tai Solarin Federal University of Education). Live classes run on Microsoft Teams; each class recording stays in the organiser's OneDrive and is streamed into the LMS under the units the class covered (nothing is copied). Students sign in to the LMS with email + password and join Teams classes as guests of our organisation. Students can open any course, any time.
 
 This repository holds the two web apps and their shared packages. The NestJS API (`apps/api`) and worker (`apps/worker`) are added in the backend build.
 
@@ -9,11 +9,11 @@ This repository holds the two web apps and their shared packages. The NestJS API
 | `apps/student` | Student app — dashboard, courses, unit page (recording first, course text underneath), classes, assignments (single final submission), quizzes, grades, attendance, forum, announcements, notifications, settings. Installable PWA with offline course text. Port 5173. |
 | `apps/admin` | Admin portal with role-based access — academic structure, courses, offerings, content editor, Teams class scheduling with unit coverage, recordings pipeline, attendance, assignments & grading, quizzes & question banks, gradebook, forum moderation, announcements, people & CSV import (creates Microsoft 365 accounts), roles, reports, audit log, integration health, settings. Port 5174. |
 | `packages/api-client` | The API contract: types, every REST endpoint (`api.*`), formatting helpers. |
-| `packages/ui` | TASUED brand tokens (`src/styles/tokens.css`, from `docs/brand/`), the crest, components carried over from SLAN, and the video player (streams OneDrive links, renews them when they expire). |
+| `packages/ui` | TASFUED brand tokens (`src/styles/tokens.css`, from `docs/brand/`), the crest, components carried over from SLAN, and the video player (streams OneDrive links, renews them when they expire). |
 | `packages/editor` | Rich text editor ported from SLAN admin (Lexical). Image uploads go through the LMS API. |
-| `packages/mocks` | Mock API (MSW) with seeded TASUED data, so both apps run without a backend. |
+| `packages/mocks` | Mock API (MSW) with seeded TASFUED data, so both apps run without a backend. |
 | `docs/FRONTEND_SPEC.md` | Product decisions and conventions. |
-| `docs/brand/` | TASUED brand colour document and original crest. Colours are working values — verify against approved logo artwork, then update `tokens.css` only. |
+| `docs/brand/` | TASFUED brand colour document and original crest. Colours are working values — verify against approved logo artwork, then update `tokens.css` only. |
 
 ## Run it
 

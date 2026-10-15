@@ -58,13 +58,13 @@ export function SignInPage() {
           <div className="relative z-10">
             <div className="mb-10 flex items-center gap-2 lg:mb-20">
               <span className="rounded-xl bg-white p-1.5"><Crest size={44} /></span>
-              <p className="text-sm font-bold tracking-widest uppercase opacity-90">TASUED LMS Admin</p>
+              <p className="text-sm font-bold tracking-widest uppercase opacity-90">TASFUED LMS Admin</p>
             </div>
             <h1 className="font-headline text-3xl leading-tight font-extrabold lg:text-5xl">
               Staff<br />administration<br /><span className="text-secondary-400">portal</span>
             </h1>
             <p className="mt-4 max-w-sm text-sm text-white/70 lg:text-base">
-              Schedule Teams classes, publish recordings and course text, review attendance and grade work for Tai Solarin University of Education.
+              Schedule Teams classes, publish recordings and course text, review attendance and grade work for Tai Solarin Federal University of Education.
             </p>
           </div>
           <div className="relative z-10 mt-8 flex gap-1.5" aria-hidden>
@@ -74,7 +74,7 @@ export function SignInPage() {
 
         <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-12">
           <h2 className="font-headline text-2xl font-extrabold text-tertiary-500">Sign in</h2>
-          <p className="mt-1 mb-7 text-sm text-neutral-500">Use your TASUED Microsoft 365 staff account.</p>
+          <p className="mt-1 mb-7 text-sm text-neutral-500">Use your TASFUED Microsoft 365 staff account.</p>
 
           {error && <Alert tone="red" className="mb-4" title="Sign-in didn't complete">{error === "not_staff" ? "This account doesn't have a staff role in the LMS." : "Please try again. If it keeps failing, contact LMS support."}</Alert>}
 

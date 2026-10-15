@@ -6,7 +6,7 @@ import { NAV } from "./nav";
 
 /**
  * Ported from SLAN admin's components/Sidebar.tsx: fixed rail on md+, slide-in drawer on mobile,
- * pill nav items with icon chips. Re-skinned white (TASUED spec) with grouped, permission-filtered nav.
+ * pill nav items with icon chips. Re-skinned white (TASFUED spec) with grouped, permission-filtered nav.
  */
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const can = useCan();

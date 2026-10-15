@@ -13,7 +13,7 @@ function greeting() {
   return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
 }
 
-/** Dashboard — SLAN's Overview hero + resume banner, extended with TASUED's Teams-first widgets. */
+/** Dashboard — SLAN's Overview hero + resume banner, extended with TASFUED's Teams-first widgets. */
 export default function DashboardPage() {
   const { user } = useSession();
   const q = useQuery({ queryKey: ["dashboard", "student"], queryFn: () => api.dashboards.student(), refetchInterval: 60_000 });

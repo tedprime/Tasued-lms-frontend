@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { CalendarClock, PlayCircle, BookOpenText, ShieldCheck } from "lucide-react";
 import { Logo, Crest } from "@tasued/ui";
 
-/** Brand panel modelled on SLAN's AuthLeftPanel, re-themed for TASUED. */
+/** Brand panel modelled on SLAN's AuthLeftPanel, re-themed for TASFUED. */
 export function BrandPanel() {
   const points = [
     { icon: CalendarClock, text: "Join your live classes on Microsoft Teams" },
@@ -17,10 +17,10 @@ export function BrandPanel() {
       </div>
       <div className="relative z-10 mx-auto max-w-md">
         <span className="inline-flex rounded-2xl bg-white p-3 shadow-pop"><Crest size={96} /></span>
-        <p className="mt-5 text-xs font-semibold tracking-wide text-secondary-300 uppercase">Tai Solarin University of Education</p>
+        <p className="mt-5 text-xs font-semibold tracking-wide text-secondary-300 uppercase">Tai Solarin Federal University of Education</p>
         <h1 className="mt-3 font-headline text-4xl leading-tight font-bold tracking-tight">Learning that follows your classes.</h1>
         <p className="mt-4 text-sm leading-relaxed text-primary-100">
-          TASUED LMS brings your Teams classes, recordings, course text, assignments, quizzes and course forums into one place — on any device.
+          TASFUED LMS brings your Teams classes, recordings, course text, assignments, quizzes and course forums into one place — on any device.
         </p>
         <ul className="mt-10 space-y-4">
           {points.map((p) => (
@@ -43,7 +43,7 @@ export function AuthLayout({ title, description, children }: { title: ReactNode;
       <BrandPanel />
       <main className="flex flex-1 flex-col items-center justify-center px-4 py-10 sm:px-10">
         <div className="w-full max-w-sm">
-          <Logo subtitle="Tai Solarin University of Education" />
+          <Logo subtitle="Tai Solarin Federal University of Education" />
           <h1 className="mt-10 font-headline text-[28px] font-extrabold tracking-tight text-tertiary-500">{title}</h1>
           {description && <div className="mt-1.5 text-sm text-neutral-500">{description}</div>}
           {children}

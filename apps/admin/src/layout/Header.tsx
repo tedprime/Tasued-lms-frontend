@@ -203,7 +203,7 @@ export function Header({ onMenu }: { onMenu: () => void }) {
           </button>
           <div className="min-w-0">
             <p className="truncate font-headline text-lg leading-none font-extrabold text-tertiary-500 sm:text-xl">{title}</p>
-            <p className="hidden text-[11px] font-medium tracking-widest text-neutral-400 uppercase sm:block">TASUED admin workspace</p>
+            <p className="hidden text-[11px] font-medium tracking-widest text-neutral-400 uppercase sm:block">TASFUED admin workspace</p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">

@@ -16,9 +16,9 @@ interface StaffSpec {
 }
 
 const STAFF: StaffSpec[] = [
-  { id: "stf-super", fullName: "Dr. Kehinde Ogundipe", email: "kehinde.ogundipe@tasued.edu.ng", staffId: "TASUED/ICT/0112", department: "Computer Science", roles: [{ role: "super_admin", scopeType: "global", scopeId: null }] },
-  { id: "stf-ogunleye", fullName: "Dr. Adebayo Ogunleye", email: "adebayo.ogunleye@tasued.edu.ng", staffId: "TASUED/CSC/0131", department: "Computer Science", roles: [] },
-  { id: "stf-nwosu", fullName: "Mr. Emeka Nwosu", email: "emeka.nwosu@tasued.edu.ng", staffId: "TASUED/CSC/0207", department: "Computer Science", roles: [] },
+  { id: "stf-super", fullName: "Dr. Kehinde Ogundipe", email: "kehinde.ogundipe@tasued.edu.ng", staffId: "TASFUED/ICT/0112", department: "Computer Science", roles: [{ role: "super_admin", scopeType: "global", scopeId: null }] },
+  { id: "stf-ogunleye", fullName: "Dr. Adebayo Ogunleye", email: "adebayo.ogunleye@tasued.edu.ng", staffId: "TASFUED/CSC/0131", department: "Computer Science", roles: [] },
+  { id: "stf-nwosu", fullName: "Mr. Emeka Nwosu", email: "emeka.nwosu@tasued.edu.ng", staffId: "TASFUED/CSC/0207", department: "Computer Science", roles: [] },
 ];
 
 const FIRST = ["Oluwaseun", "Chinedu", "Aisha", "Ifeoluwa", "Emeka", "Fatima", "Damilola", "Chukwuemeka", "Bisola", "Ibrahim", "Ngozi", "Temitope", "Uchenna", "Zainab", "Babatunde", "Kemi", "Obinna", "Hadiza", "Folake", "Ikechukwu", "Yetunde", "Musa", "Chioma", "Olamide", "Amaka", "Sodiq", "Precious", "Femi", "Blessing", "Abdullahi", "Nneka", "Kehinde", "Taiwo", "Godwin", "Mariam", "Tobiloba", "Ebuka", "Funke", "Ayomide", "Efe", "Gbenga", "Ruth", "Victor", "Halimat", "Somto"];
