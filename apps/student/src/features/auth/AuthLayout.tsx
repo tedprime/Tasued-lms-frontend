@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { CalendarClock, PlayCircle, BookOpenText, ShieldCheck } from "lucide-react";
-import { Logo, Crest } from "@tasued/ui";
+import { Logo, Crest, DeveloperCredit } from "@tasued/ui";
 
 /** Brand panel modelled on SLAN's AuthLeftPanel, re-themed for TASFUED. */
 export function BrandPanel() {
@@ -30,6 +30,7 @@ export function BrandPanel() {
             </li>
           ))}
         </ul>
+        <DeveloperCredit className="mt-10 w-fit rounded-xl bg-white px-4 py-2" />
       </div>
       <ShieldCheck className="pointer-events-none absolute right-12 bottom-6 size-32 text-secondary-500 opacity-10" aria-hidden />
     </div>
@@ -47,6 +48,7 @@ export function AuthLayout({ title, description, children }: { title: ReactNode;
           <h1 className="mt-10 font-headline text-[28px] font-extrabold tracking-tight text-tertiary-500">{title}</h1>
           {description && <div className="mt-1.5 text-sm text-neutral-500">{description}</div>}
           {children}
+          <DeveloperCredit className="mt-8 border-t border-neutral-100 pt-5 lg:hidden" />
         </div>
       </main>
     </div>

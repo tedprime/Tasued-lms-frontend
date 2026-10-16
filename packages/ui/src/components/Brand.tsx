@@ -1,3 +1,4 @@
+import tedprime from "../assets/tedprime.png";
 import crestMark from "../assets/tasued-crest-128.png";
 import crestFull from "../assets/tasued-crest.png";
 import { cn } from "../lib/cn";
@@ -30,5 +31,15 @@ export function Crest({ className, size = 160 }: { className?: string; size?: nu
       className={cn("object-contain", className)}
       style={{ width: size, height: size }}
     />
+  );
+}
+
+/** Shared developer attribution; the university remains the primary platform brand. */
+export function DeveloperCredit({ className }: { className?: string }) {
+  return (
+    <div className={cn("flex items-center justify-center gap-3", className)}>
+      <span className="text-[11px] font-medium tracking-wide text-neutral-500">Developed by</span>
+      <img src={tedprime} alt="TedPrime" width={981} height={445} className="h-10 w-[88px] shrink-0 object-contain" />
+    </div>
   );
 }

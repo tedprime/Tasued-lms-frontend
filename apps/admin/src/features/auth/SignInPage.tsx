@@ -2,7 +2,7 @@ import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, FlaskConical, ShieldCheck } from "lucide-react";
 import { api, apiBaseUrl, errorMessage, ROLE_LABELS, type Session } from "@tasued/api-client";
-import { Alert, Avatar, Badge, Button, Spinner, Crest } from "@tasued/ui";
+import { Alert, Avatar, Badge, Button, Spinner, Crest, DeveloperCredit } from "@tasued/ui";
 import { USE_MOCKS } from "../../app/env";
 import { SESSION_KEY, useSessionQuery } from "../../app/session";
 import { scopeLabel } from "../../layout/Header";
@@ -67,8 +67,13 @@ export function SignInPage() {
               Schedule Teams classes, publish recordings and course text, review attendance and grade work for Tai Solarin Federal University of Education.
             </p>
           </div>
-          <div className="relative z-10 mt-8 flex gap-1.5" aria-hidden>
-            {[0, 1, 2, 3, 4].map((i) => <span key={i} className={i === 0 ? "size-2 rounded-full bg-secondary-500" : "size-2 rounded-full bg-white/30"} />)}
+          <div className="relative z-10 mt-8">
+            <div className="flex gap-1.5" aria-hidden>
+              {[0, 1, 2, 3, 4].map((i) => <span key={i} className={i === 0 ? "size-2 rounded-full bg-secondary-500" : "size-2 rounded-full bg-white/30"} />)}
+            </div>
+            <div className="mt-8 hidden lg:block">
+              <DeveloperCredit className="w-fit rounded-xl bg-white px-4 py-2" />
+            </div>
           </div>
         </div>
 
@@ -121,6 +126,7 @@ export function SignInPage() {
               </div>
             </div>
           )}
+          <DeveloperCredit className="mt-8 border-t border-neutral-100 pt-5 lg:hidden" />
         </div>
       </div>
     </div>

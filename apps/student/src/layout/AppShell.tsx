@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { cn, useIsMobile } from "@tasued/ui";
+import { cn, useIsMobile, DeveloperCredit } from "@tasued/ui";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { OfflineBanner } from "./OfflineBanner";
@@ -83,6 +83,9 @@ export function AppShell() {
         <main id="main" tabIndex={-1} className={cn("flex-1 outline-none", isMobile && "pb-16")}>
           <Outlet />
         </main>
+        <footer className={cn("border-t border-neutral-200 bg-white px-4 py-3", isMobile && "mb-[calc(4rem+env(safe-area-inset-bottom))]")}>
+          <DeveloperCredit />
+        </footer>
       </div>
       {isMobile && <MobileTabBar onMore={() => setDrawerOpen(true)} />}
     </div>

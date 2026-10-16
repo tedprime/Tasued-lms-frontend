@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigation } from "react-router-dom";
-import { PageLoader } from "@tasued/ui";
+import { PageLoader, DeveloperCredit } from "@tasued/ui";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 
@@ -23,6 +23,9 @@ export function AppShell() {
             <Outlet />
           </Suspense>
         </main>
+        <footer className="border-t border-neutral-200 bg-white px-4 py-3">
+          <DeveloperCredit />
+        </footer>
       </div>
     </div>
   );
