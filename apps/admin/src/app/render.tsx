@@ -1,3 +1,4 @@
+import { clearDevice } from "../pwa/device";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,12 +23,14 @@ export function renderApp(rootEl: HTMLElement) {
   // A 401 anywhere means the cookie session has expired → drop to signed-out; RequireAuth redirects to /sign-in.
   configureApi({
     onUnauthorized: () => {
+      void clearDevice(false).catch(()=>undefined);
       if (!window.location.pathname.startsWith("/sign-in") && queryClient.getQueryData(SESSION_KEY)) {
         queryClient.setQueryData(SESSION_KEY, null);
       }
     },
   });
 
+  if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('lms-admin-account');channel.onmessage=()=>{queryClient.clear();location.replace('/sign-in');};}
   const router = createAppRouter();
 
   createRoot(rootEl).render(

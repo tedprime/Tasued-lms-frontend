@@ -1,7 +1,10 @@
+import "./pwa/install";
+import { removeLegacyCaches } from "./pwa/device";
 import "./index.css";
 import { configureApi } from "@tasued/api-client";
 
 async function boot() {
+  await removeLegacyCaches().catch(() => undefined);
   configureApi({ baseUrl: import.meta.env.VITE_API_BASE_URL ?? "/api/v1" });
   // Download the app while the mock API starts, instead of one after the other.
   const app = import("./app/render");
@@ -22,7 +25,8 @@ function showBootError() {
   state.setAttribute("role", "alert");
 
   const message = document.createElement("p");
-  message.textContent = "TASFUED LMS could not start. Check your connection and try again.";
+  message.textContent =
+    "TASFUED LMS could not start. Check your connection and try again.";
 
   const retry = document.createElement("button");
   retry.className = "boot-retry";

@@ -1,4 +1,9 @@
-import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react";
+import {
+  lazy,
+  Suspense,
+  type ComponentType,
+  type LazyExoticComponent,
+} from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { PageLoader } from "@tasued/ui";
 import { RequireAuth } from "./session";
@@ -27,17 +32,22 @@ const BrowseCoursesPage = () => import("../features/courses/BrowseCoursesPage");
 const CourseLayout = () => import("../features/courses/CourseLayout");
 const CourseOverviewTab = () => import("../features/courses/tabs/OverviewTab");
 const CourseClassesTab = () => import("../features/courses/tabs/ClassesTab");
-const CourseRecordingsTab = () => import("../features/courses/tabs/RecordingsTab");
-const CourseAssignmentsTab = () => import("../features/courses/tabs/AssignmentsTab");
+const CourseRecordingsTab = () =>
+  import("../features/courses/tabs/RecordingsTab");
+const CourseAssignmentsTab = () =>
+  import("../features/courses/tabs/AssignmentsTab");
 const CourseQuizzesTab = () => import("../features/courses/tabs/QuizzesTab");
 const CourseForumTab = () => import("../features/courses/tabs/ForumTab");
 const CourseGradesTab = () => import("../features/courses/tabs/GradesTab");
-const CourseAttendanceTab = () => import("../features/courses/tabs/AttendanceTab");
-const CourseAnnouncementsTab = () => import("../features/courses/tabs/AnnouncementsTab");
+const CourseAttendanceTab = () =>
+  import("../features/courses/tabs/AttendanceTab");
+const CourseAnnouncementsTab = () =>
+  import("../features/courses/tabs/AnnouncementsTab");
 const UnitPage = () => import("../features/units/UnitPage");
 const ClassesPage = () => import("../features/classes/ClassesPage");
 const AssignmentsPage = () => import("../features/assignments/AssignmentsPage");
-const AssignmentDetailPage = () => import("../features/assignments/AssignmentDetailPage");
+const AssignmentDetailPage = () =>
+  import("../features/assignments/AssignmentDetailPage");
 const QuizzesPage = () => import("../features/quizzes/QuizzesPage");
 const QuizDetailPage = () => import("../features/quizzes/QuizDetailPage");
 const QuizAttemptPage = () => import("../features/quizzes/QuizAttemptPage");
@@ -46,8 +56,10 @@ const AttendancePage = () => import("../features/attendance/AttendancePage");
 const ForumPage = () => import("../features/forum/ForumPage");
 const NewThreadPage = () => import("../features/forum/NewThreadPage");
 const ThreadPage = () => import("../features/forum/ThreadPage");
-const AnnouncementsPage = () => import("../features/announcements/AnnouncementsPage");
-const NotificationsPage = () => import("../features/notifications/NotificationsPage");
+const AnnouncementsPage = () =>
+  import("../features/announcements/AnnouncementsPage");
+const NotificationsPage = () =>
+  import("../features/notifications/NotificationsPage");
 const SearchPage = () => import("../features/search/SearchPage");
 const ProfilePage = () => import("../features/profile/ProfilePage");
 const SettingsPage = () => import("../features/settings/SettingsPage");
@@ -57,13 +69,20 @@ export const router = createBrowserRouter([
   {
     errorElement: <RouteErrorPage />,
     children: [
+      { path: "/offline", element: page(() => import("../pwa/OfflinePage")) },
       { path: "/sign-in", element: page(SignInPage) },
       { path: "/set-password", element: page(SetPasswordPage) },
       { path: "/forgot-password", element: page(ForgotPasswordPage) },
       { path: "/reset-password", element: page(ResetPasswordPage) },
       // Focused, signed-in pages without the app shell.
-      { path: "/change-password", element: <RequireAuth>{page(ChangePasswordPage)}</RequireAuth> },
-      { path: "/welcome", element: <RequireAuth>{page(WelcomePage)}</RequireAuth> },
+      {
+        path: "/change-password",
+        element: <RequireAuth>{page(ChangePasswordPage)}</RequireAuth>,
+      },
+      {
+        path: "/welcome",
+        element: <RequireAuth>{page(WelcomePage)}</RequireAuth>,
+      },
       {
         // Full-screen quiz takeover (no sidebar), as in SLAN's AssessmentView.
         path: "/quizzes/attempts/:attemptId",
@@ -83,7 +102,10 @@ export const router = createBrowserRouter([
               { index: true, element: page(DashboardPage) },
               { path: "courses", element: page(MyCoursesPage) },
               { path: "courses/browse", element: page(BrowseCoursesPage) },
-              { path: "courses/:courseId/units/:unitId", element: page(UnitPage) },
+              {
+                path: "courses/:courseId/units/:unitId",
+                element: page(UnitPage),
+              },
               {
                 path: "courses/:courseId",
                 element: page(CourseLayout),
@@ -96,12 +118,18 @@ export const router = createBrowserRouter([
                   { path: "forum", element: page(CourseForumTab) },
                   { path: "grades", element: page(CourseGradesTab) },
                   { path: "attendance", element: page(CourseAttendanceTab) },
-                  { path: "announcements", element: page(CourseAnnouncementsTab) },
+                  {
+                    path: "announcements",
+                    element: page(CourseAnnouncementsTab),
+                  },
                 ],
               },
               { path: "classes", element: page(ClassesPage) },
               { path: "assignments", element: page(AssignmentsPage) },
-              { path: "assignments/:assignmentId", element: page(AssignmentDetailPage) },
+              {
+                path: "assignments/:assignmentId",
+                element: page(AssignmentDetailPage),
+              },
               { path: "quizzes", element: page(QuizzesPage) },
               { path: "quizzes/:quizId", element: page(QuizDetailPage) },
               { path: "grades", element: page(GradesPage) },
@@ -122,4 +150,3 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
-

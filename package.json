@@ -3,13 +3,23 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev:student": "npm run dev -w @tasued/student",
     "dev:admin": "npm run dev -w @tasued/admin",
     "build": "npm run build -w @tasued/student && npm run build -w @tasued/admin",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "test:pwa": "tsx --test test/*.test.ts"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.2.6",
+    "tsx": "^4.23.15"
+  }
 }

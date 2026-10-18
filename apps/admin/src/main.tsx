@@ -1,3 +1,4 @@
+import "./pwa/install";
 import "./index.css";
 import { configureApi } from "@tasued/api-client";
 

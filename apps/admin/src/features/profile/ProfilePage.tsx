@@ -1,3 +1,4 @@
+import { DeviceSettings } from "../../pwa/DeviceSettings";
 import { useState } from "react";
 import { api, ROLE_LABELS } from "@tasued/api-client";
 import { Avatar, Badge, Button, Field, Input, KeyValue, PageHeader, Switch } from "../../components/ui";
@@ -44,6 +45,7 @@ export function ProfilePage() {
             </ul>
             <p className="border-t border-neutral-100 px-5 py-3 text-xs text-neutral-500">{session.permissions.length} permissions · staff on {session.staffCourseIds.length} course(s)</p>
           </SectionCard>
+          <DeviceSettings />
           <SectionCard title="Notifications" bodyClassName="p-5">
             <Switch checked={session.preferences.emailNotifications} onChange={(v) => prefs.mutate(v)} disabled={prefs.isPending} label="Email notifications" description="Recording failures, attendance to review and new reports." />
           </SectionCard>

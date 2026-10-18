@@ -1,3 +1,4 @@
+import { SaveCourse } from '../../pwa/DeviceSettings';
 import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom";
 import type { Course } from "@tasued/api-client";
 import { Avatar, Badge, Card, Skeleton, cn } from "@tasued/ui";
@@ -74,6 +75,7 @@ export default function CourseLayout() {
                 <p className="text-xs text-neutral-500">{o.moduleCount} modules · {o.unitCount} units · {o.enrolledCount} students</p>
               </div>
             </Card>
+            <SaveCourse courseId={o.id} />
 
             <nav aria-label="Course sections" className="sticky top-16 z-20 -mx-4 mt-5 overflow-x-auto overflow-y-hidden bg-neutral/95 px-4 shadow-[inset_0_-1px_0_var(--color-neutral-200)] backdrop-blur sm:mx-0 sm:px-0">
               <ul className="flex gap-1">

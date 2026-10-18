@@ -1,3 +1,4 @@
+import { activateAccount } from '../../pwa/device';
 import { useId, useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -23,7 +24,8 @@ export function DemoAccounts({ returnTo }: { returnTo: string }) {
   const login = useMutation({
     mutationFn: (id: string) => api.auth.devLogin(id),
     onMutate: (id) => setPending(id),
-    onSuccess: (session) => {
+    onSuccess: async (session) => {
+      await activateAccount(session.user.id).catch(()=>undefined);
       qc.setQueryData(SESSION_KEY, session);
       navigate(afterSignIn(session, returnTo), { replace: true });
     },
@@ -117,7 +119,8 @@ export default function SignInPage() {
 
   const login = useMutation({
     mutationFn: () => api.auth.passwordLogin({ email: email.trim(), password }),
-    onSuccess: (s) => {
+    onSuccess: async (s) => {
+      await activateAccount(s.user.id).catch(()=>undefined);
       qc.setQueryData(SESSION_KEY, s);
       navigate(afterSignIn(s, returnTo), { replace: true });
     },

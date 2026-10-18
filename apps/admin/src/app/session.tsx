@@ -1,3 +1,4 @@
+import { activateAccount, clearDevice } from "../pwa/device";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navigate, Outlet, useLocation, useOutletContext, useParams } from "react-router-dom";
 import type { ReactNode } from "react";
@@ -8,11 +9,11 @@ import { Link } from "react-router-dom";
 
 export const SESSION_KEY = ["auth", "session"] as const;
 
-async function fetchSession(): Promise<Session | null> {
+async function fetchSession({signal}:{signal:AbortSignal}): Promise<Session | null> {
   try {
-    return await api.auth.session();
+    const session=await api.auth.session(); signal.throwIfAborted(); await activateAccount(session.user.id).catch(()=>undefined); return session;
   } catch (e) {
-    if (isApiError(e) && (e.status === 401 || e.status === 403)) return null;
+    if (isApiError(e) && (e.status === 401 || e.status === 403)) {await clearDevice(false).catch(()=>undefined); return null;}
     throw e;
   }
 }
@@ -58,6 +59,8 @@ export function useIsSuperAdmin() {
 export function useSignOut() {
   const qc = useQueryClient();
   return async () => {
+    await qc.cancelQueries();
+    await clearDevice().catch(()=>undefined);
     try {
       await api.auth.logout();
     } catch {

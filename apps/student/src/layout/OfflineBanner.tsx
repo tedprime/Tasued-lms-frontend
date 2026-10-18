@@ -22,7 +22,7 @@ export function OfflineBanner() {
   return (
     <div role="status" className="flex items-center gap-2 border-b border-amber-200 bg-warning-50 px-4 py-2 text-xs font-medium text-warning">
       <WifiOff className="size-4 shrink-0" aria-hidden />
-      You're offline. Course text you've opened before is still available; videos, submissions and quizzes need a connection.
+      You're offline. Use Saved course text to read your downloaded courses; videos, submissions and quizzes need a connection.
     </div>
   );
 }

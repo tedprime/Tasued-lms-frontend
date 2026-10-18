@@ -1,3 +1,4 @@
+import { activateAccount } from "../../pwa/device";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, FlaskConical, ShieldCheck } from "lucide-react";
@@ -34,7 +35,8 @@ export function SignInPage() {
   const accounts = useQuery({ queryKey: ["auth", "dev-accounts"], queryFn: () => api.auth.devAccounts(), enabled: USE_MOCKS });
   const devLogin = useMutation({
     mutationFn: (id: string) => api.auth.devLogin(id),
-    onSuccess: (s: Session) => {
+    onSuccess: async (s: Session) => {
+      await activateAccount(s.user.id).catch(()=>undefined);
       qc.clear();
       qc.setQueryData(SESSION_KEY, s);
       navigate(returnTo, { replace: true });

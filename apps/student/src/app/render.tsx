@@ -1,3 +1,4 @@
+import { clearDevice } from "../pwa/device";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -12,10 +13,19 @@ export function renderApp(rootEl: HTMLElement) {
   // Any 401 from any endpoint means the cookie session has gone: drop it so the guard redirects.
   configureApi({
     onUnauthorized: () => {
-      if (queryClient.getQueryData(SESSION_KEY)) queryClient.setQueryData(SESSION_KEY, null);
+      void clearDevice(false).catch(() => undefined);
+      if (queryClient.getQueryData(SESSION_KEY))
+        queryClient.setQueryData(SESSION_KEY, null);
     },
   });
 
+  if (typeof BroadcastChannel !== "undefined") {
+    const channel = new BroadcastChannel("lms-account");
+    channel.onmessage = () => {
+      queryClient.clear();
+      if (location.pathname !== "/offline") location.replace("/sign-in");
+    };
+  }
   createRoot(rootEl).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
