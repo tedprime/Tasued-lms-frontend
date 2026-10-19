@@ -11,6 +11,8 @@ const q = (o: object) => o as Record<string, string | number | boolean | undefin
 
 /* ── Auth ─────────────────────────────────────────────── */
 export const auth = {
+  teamsSetup: () => request<T.TeamsSetup>('/me/teams-invitation'),
+  checkTeamsSetup: () => request<T.TeamsSetup>('/me/teams-invitation/check', { method: 'POST' }),
   /* ── Students: platform email + password ── */
   passwordLogin: (b: { email: string; password: string }) => request<T.Session>("/auth/login", { method: "POST", body: b }),
   /** Details for the "set your password" page opened from the invitation email. */

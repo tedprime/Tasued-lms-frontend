@@ -827,3 +827,9 @@ export interface PlatformSettings {
   minPasswordLength: number;
   supportEmail: string;
 }
+
+export interface TeamsSetup {
+ status: 'preparing' | 'action_required' | 'connected' | 'unavailable';
+ invitationUrl?: string;
+ checkedAt?: string;
+}

@@ -1,3 +1,4 @@
+import { TeamsSetupCard } from '../../components/TeamsSetupCard';
 import { DeviceSettings } from '../../pwa/DeviceSettings';
 import { useId } from "react";
 import { Gauge, KeyRound, Mail, Signal, MonitorPlay } from "lucide-react";
@@ -27,6 +28,7 @@ export default function SettingsPage() {
     <Page narrow>
       <PageHeader title="Settings" description="Preferences are saved to your account and follow you to any device." />
       <div className="space-y-6">
+        <TeamsSetupCard settings />
         <DeviceSettings />
         <Card>
           <CardHeader title={<span className="flex items-center gap-2"><Signal className="size-4 text-primary-500" /> Data saving</span>} />
