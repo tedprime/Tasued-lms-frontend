@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, KeyRound, Mail, Pencil, Plus, ShieldOff, Trash2, UserCheck, UserX, Users } from "lucide-react";
 import { api, errorMessage, fmtDateTime, fromNow, ROLE_LABELS, type RoleAssignment, type User } from "@tasued/api-client";
@@ -14,13 +14,22 @@ import { isStudent, LmsAccountPill, TeamsGuestPill } from "./invites";
 
 export function UserDetailPage() {
   const { userId } = useParams();
-  const q = useQuery({ queryKey: ["people", "get", userId], queryFn: () => api.people.get(userId!), enabled: !!userId });
+  const q = useQuery({ queryKey: ["people", "get", userId], queryFn: () => api.people.get(userId!), enabled: !!userId, refetchInterval: 15000 });
   if (q.isPending) return <PageLoader />;
   if (q.isError) return <ErrorState title="Couldn't load this person" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   return <UserDetail user={q.data} />;
 }
 
 function UserDetail({ user: u }: { user: User }) {
+  const navigate = useNavigate();
+  const [deleting, setDeleting] = useState(false);
+  const deleteAccount = useApiMutation({
+    mutationFn: () => api.people.deleteUnused(u.id),
+    success: 'Unused staff account permanently deleted',
+    errorTitle: "Couldn't delete account",
+    invalidate: [["people"]],
+    onSuccess: () => navigate('/people', { replace: true }),
+  });
   const can = useCan();
   const session = useSession();
   const isSelf = session.user.id === u.id;
@@ -59,10 +68,12 @@ function UserDetail({ user: u }: { user: User }) {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          {!isSelf && !student && !u.lastSeenAt && session.user.roles.some(r => r.role === 'super_admin') && <Button variant="danger" icon={<Trash2 className="size-4" />} onClick={() => setDeleting(true)}>Delete permanently</Button>}
           <Button variant="outline" icon={<Pencil className="size-4" />} onClick={() => setEditing(true)}>Edit details</Button>
           {!isSelf && (deactivated ? <Button icon={<UserCheck className="size-4" />} onClick={() => setToggling(true)}>Reactivate</Button> : <Button variant="danger" icon={<UserX className="size-4" />} onClick={() => setToggling(true)}>Deactivate</Button>)}
         </div>
       </div>
+      <ConfirmDialog open={deleting} onClose={() => setDeleting(false)} onConfirm={() => deleteAccount.mutate()} loading={deleteAccount.isPending} tone="danger" title={`Permanently delete ${u.fullName}?`} description="This cannot be undone. Only an unused staff account with no sign-ins, course assignments or linked activity can be deleted. Their Microsoft account will remain unchanged. Administrative audit records are retained." confirmLabel="Delete permanently" />
       {deactivated && <Alert tone="neutral" icon={<ShieldOff className="size-4" />}>{student ? "This account is deactivated. They can't sign in to the LMS and their Teams guest access has been removed. Their records are kept." : "This account is deactivated. They can't use the LMS. Their records are kept."}</Alert>}
       {student && !deactivated && can("people.manage") && <StudentAccessCard user={u} />}
 
@@ -174,19 +185,19 @@ const ACCESS_COPY: Record<AccessAction, { title: string; body: (u: User) => stri
     title: "Resend LMS invite?",
     body: (u) => `We'll email ${u.email} a new link to set their LMS password. Any earlier link stops working.`,
     confirm: "Resend LMS invite",
-    success: "LMS invite sent",
+    success: "LMS invite queued",
   },
   teams: {
     title: "Resend Teams invitation?",
     body: (u) => `We'll send a new Microsoft Teams guest invitation to ${u.email}. They must accept it with this email to join classes.`,
     confirm: "Resend Teams invitation",
-    success: "Teams invitation sent",
+    success: "Teams invitation queued",
   },
   reset: {
     title: "Send password reset email?",
     body: (u) => `We'll email ${u.email} a link to choose a new LMS password. Their current password keeps working until they change it.`,
     confirm: "Send reset email",
-    success: "Password reset email sent",
+    success: "Password reset email queued",
   },
 };
 
@@ -205,20 +216,26 @@ function StudentAccessCard({ user: u }: { user: User }) {
   });
   const lmsAccepted = u.lmsInvite?.status === "accepted" || (!u.lmsInvite && u.status === "active");
   const teamsAccepted = u.teamsGuest?.status === "accepted";
-  const when = (x?: { sentAt?: string; acceptedAt?: string }) => (x?.acceptedAt ? `Accepted ${fmtDateTime(x.acceptedAt)}` : x?.sentAt ? `Sent ${fmtDateTime(x.sentAt)}` : "Not sent yet");
+  const when = (x?: User['lmsInvite']) => {
+    if (x?.status === 'queued') return 'Waiting for the delivery worker.';
+    if (x?.status === 'retrying') return 'Delivery failed; an automatic retry is scheduled. See Integration health for details.';
+    if (x?.status === 'failed') return 'Delivery stopped. Check Integration health, resolve the issue, then resend.';
+    return x?.acceptedAt ? `Accepted ${fmtDateTime(x.acceptedAt)}` : x?.sentAt ? `Sent ${fmtDateTime(x.sentAt)}` : 'No invitation queued.';
+  };
+  const pending = (x?: User['lmsInvite']) => x?.status === 'queued' || x?.status === 'retrying';
   return (
     <SectionCard title="Sign-in & Teams access" subtitle="Students sign in to the LMS with a password and join Teams classes as guests of our organisation, using the email TASFUED supplied." bodyClassName="grid gap-4 p-5 md:grid-cols-3">
       <div className="space-y-2">
         <p className="flex items-center gap-2 text-sm font-semibold text-tertiary-500"><Mail className="size-4 text-primary-500" /> LMS account</p>
         <LmsAccountPill user={u} />
         <p className="text-xs text-neutral-500">{when(u.lmsInvite)}</p>
-        {!lmsAccepted && <Button size="sm" variant="outline" onClick={() => setAction("lms")}>Resend LMS invite</Button>}
+        {!lmsAccepted && <Button size="sm" variant="outline" disabled={pending(u.lmsInvite)} onClick={() => setAction("lms")}>Resend LMS invite</Button>}
       </div>
       <div className="space-y-2">
         <p className="flex items-center gap-2 text-sm font-semibold text-tertiary-500"><Users className="size-4 text-primary-500" /> Teams guest</p>
         <TeamsGuestPill user={u} />
         <p className="text-xs text-neutral-500">{when(u.teamsGuest)}</p>
-        {!teamsAccepted && <Button size="sm" variant="outline" onClick={() => setAction("teams")}>Resend Teams invitation</Button>}
+        {!teamsAccepted && <Button size="sm" variant="outline" disabled={pending(u.teamsGuest)} onClick={() => setAction("teams")}>Resend Teams invitation</Button>}
       </div>
       <div className="space-y-2">
         <p className="flex items-center gap-2 text-sm font-semibold text-tertiary-500"><KeyRound className="size-4 text-primary-500" /> Password</p>

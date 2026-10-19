@@ -77,7 +77,7 @@ export type AccountStatus = "active" | "invited" | "suspended" | "deactivated";
  * Students are invited by email: (1) an LMS invitation to set a platform password and
  * (2) a Microsoft Teams guest invitation to our tenant so they can join classes.
  */
-export type InviteStatus = "not_sent" | "sent" | "accepted" | "expired";
+export type InviteStatus = "not_sent" | "sent" | "accepted" | "expired" | 'queued' | 'retrying' | 'failed';
 
 export interface User {
   id: ID;

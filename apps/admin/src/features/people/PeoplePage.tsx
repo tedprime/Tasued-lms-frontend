@@ -145,7 +145,7 @@ function CreatePersonModal({ onClose }: { onClose: () => void }) {
         level: f.kind === "student" ? Number(f.level) : undefined,
         roles: f.kind === "student" ? [{ role: "student", scopeType: "global", scopeId: null }] : [role],
       }),
-    success: (u) => (isStudent(u) ? "Student created — LMS invitation and Teams guest invitation sent" : "Staff member added — they sign in with Microsoft"),
+    success: (u) => (isStudent(u) ? "Student created — LMS invitation and Teams guest invitation queued" : "Staff member added — they sign in with Microsoft"),
     invalidate: [["people"]],
     onSuccess: (u) => navigate(`/people/${u.id}`),
   });

@@ -292,6 +292,7 @@ export const people = {
   update: (id: T.ID, b: Partial<Pick<T.User, "fullName" | "phone" | "department" | "level" | "status">>) =>
     request<T.User>(`/users/${id}`, { method: "PATCH", body: b }),
   /** Deactivating blocks LMS sign-in and removes the Teams guest account. */
+  deleteUnused: (id: T.ID) => request<void>(`/users/${id}`, { method: "DELETE" }),
   deactivate: (id: T.ID) => request<T.User>(`/users/${id}/deactivate`, { method: "POST" }),
   reactivate: (id: T.ID) => request<T.User>(`/users/${id}/reactivate`, { method: "POST" }),
   assignRole: (id: T.ID, b: Omit<T.RoleAssignment, "id" | "scopeName">) =>
