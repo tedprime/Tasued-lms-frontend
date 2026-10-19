@@ -15,7 +15,7 @@ const TEMPLATES: Record<Kind, string[][]> = {
   ],
   staff: [
     ["fullName", "email", "staffId", "department"],
-    ["Dr. Tunde Bakare", "tunde.bakare@tasued.edu.ng", "TAS/1234", "CSC"],
+    ["Dr. Tunde Bakare", "tunde.bakare@tedprimehub.org", "TAS/1234", "CSC"],
   ],
 };
 const ACTION_TONE: Record<ImportRowResult["action"], Tone> = { create: "green", update: "blue", skip: "neutral", error: "red" };

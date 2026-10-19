@@ -103,7 +103,6 @@ export function registerPeople(r: Router) {
     if (!fullName) errs.fullName = "Full name is required";
     const studentAccount = Array.isArray(b.roles) && b.roles.length > 0 && b.roles.every((x) => x?.role === "student");
     if (!EMAIL_RE.test(email)) errs.email = "Enter a valid email address";
-    else if (!studentAccount && !/@tasued\.edu\.ng$/.test(email)) errs.email = "Staff need their @tasued.edu.ng Microsoft 365 address";
     if (!Array.isArray(b.roles) || !b.roles.length) errs.roles = "Assign at least one role";
     if (Object.keys(errs).length) throw validation(errs);
     if (c.db.users.some((u) => u.email.toLowerCase() === email)) throw conflict("EMAIL_EXISTS", "An account with that email already exists.");
