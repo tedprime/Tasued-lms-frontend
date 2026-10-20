@@ -793,7 +793,7 @@ export interface AuditEntry {
   ip?: string;
 }
 
-export type HealthState = "ok" | "degraded" | "down";
+export type HealthState = "ok" | "degraded" | "down" | "unknown" | "waiting" | "disabled";
 
 export interface IntegrationHealth {
   checkedAt: ISODate;

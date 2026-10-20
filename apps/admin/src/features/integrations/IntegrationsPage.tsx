@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Activity, RefreshCw } from "lucide-react";
 import { api, fmtDateTime, fromNow, type IntegrationHealth } from "@tasued/api-client";
 import { Badge, Button, EmptyState, PageHeader, Table, TBody, TD, TH, THead, TR, cn } from "../../components/ui";
-import { HealthBadge, ListSkeleton, QueryView, SectionCard } from "../../components/common";
+import { HealthBadge, healthLabel, ListSkeleton, QueryView, SectionCard } from "../../components/common";
 import { useApiMutation } from "../../components/mutation";
 
 const JOB_TONE = { queued: "neutral", running: "blue", succeeded: "green", failed: "red" } as const;
@@ -12,7 +12,7 @@ export function IntegrationsPage() {
   const q = useQuery({ queryKey: ["integrations", "health"], queryFn: () => api.integrations.health(), refetchInterval: 60_000 });
   const run = useApiMutation({
     mutationFn: () => api.integrations.runCheck(),
-    success: (h) => (h.overall === "ok" ? "All checks passed" : `Checks finished: ${h.overall}`),
+    success: "Integration status refreshed",
     errorTitle: "Couldn't run checks",
     onSuccess: (h) => qc.setQueryData<IntegrationHealth>(["integrations", "health"], h),
   });
@@ -20,18 +20,18 @@ export function IntegrationsPage() {
     <div className="space-y-5">
       <PageHeader
         title="Integration health"
-        description="Microsoft Graph and email: staff sign-in, Teams meeting creation, change notifications, finding recordings in OneDrive, streaming them, attendance import, Teams guest invitations and email delivery."
+        description="Microsoft authentication and recent integration activity. Working means a successful operation was recorded; it does not guarantee every future request."
         actions={<Button icon={<RefreshCw className={cn("size-4", run.isPending && "animate-spin")} />} onClick={() => run.mutate(undefined)} disabled={run.isPending}>Run checks now</Button>}
       />
       <QueryView query={q} loading={<SectionCard><ListSkeleton /></SectionCard>}>
         {(h) => (
           <>
-            <div className={cn("flex flex-wrap items-center justify-between gap-3 rounded-xl border px-5 py-4", h.overall === "ok" ? "border-primary-100 bg-primary-50" : h.overall === "degraded" ? "border-amber-200 bg-warning-50" : "border-red-200 bg-danger-50")}>
+            <div className={cn("flex flex-wrap items-center justify-between gap-3 rounded-xl border px-5 py-4", h.overall === "ok" ? "border-primary-100 bg-primary-50" : h.overall === "degraded" ? "border-amber-200 bg-warning-50" : h.overall === "down" ? "border-red-200 bg-danger-50" : "border-neutral-200 bg-white")}>
               <div className="flex items-center gap-3">
                 <Activity className="size-5" />
-                <p className="font-headline text-lg font-extrabold text-tertiary-500">Overall: {h.overall === "ok" ? "Healthy" : h.overall === "degraded" ? "Degraded" : "Down"}</p>
+                <p className="font-headline text-lg font-extrabold text-tertiary-500">Overall: {healthLabel(h.overall)}</p>
               </div>
-              <p className="text-sm text-neutral-600">Checked {fmtDateTime(h.checkedAt)} ({fromNow(h.checkedAt)})</p>
+              <p className="text-sm text-neutral-600">Last authentication check {fmtDateTime(h.checkedAt)} ({fromNow(h.checkedAt)})</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {h.checks.map((c) => (
@@ -46,8 +46,8 @@ export function IntegrationsPage() {
               ))}
             </div>
             <div className="grid gap-5 lg:grid-cols-2">
-              <SectionCard title="Graph subscriptions" subtitle="Change notifications for meetings and recordings; renewed before expiry.">
-                {h.subscriptions.length === 0 ? <EmptyState title="No subscriptions" /> : (
+              <SectionCard title="Graph subscriptions" subtitle="This deployment uses background polling instead of webhook subscriptions.">
+                {h.subscriptions.length === 0 ? <EmptyState title="Webhooks are not used" description="No subscription setup is required for the current polling workflow." /> : (
                   <Table>
                     <THead><tr><TH>Resource</TH><TH>Expires</TH><TH>State</TH></tr></THead>
                     <TBody>

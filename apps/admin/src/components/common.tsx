@@ -75,9 +75,10 @@ export function PublishBadge({ state }: { state: PublishState }) {
   return <Badge tone={state === "published" ? "green" : "neutral"}>{state === "published" ? "Published" : "Draft"}</Badge>;
 }
 
-const healthTone: Record<HealthState, Tone> = { ok: "green", degraded: "amber", down: "red" };
+const healthTone: Record<HealthState, Tone> = { ok: "green", degraded: "amber", down: "red", unknown: "neutral", waiting: "blue", disabled: "neutral" };
+export function healthLabel(state: HealthState) { return { ok: "Working", degraded: "Needs attention", down: "Failed", unknown: "Not verified", waiting: "Waiting", disabled: "Not used" }[state]; }
 export function HealthBadge({ state, label }: { state: HealthState; label?: string }) {
-  return <Badge tone={healthTone[state]} dot>{label ?? (state === "ok" ? "Healthy" : cap(state))}</Badge>;
+  return <Badge tone={healthTone[state]} dot>{label ?? healthLabel(state)}</Badge>;
 }
 
 export function cap(s: string) {
