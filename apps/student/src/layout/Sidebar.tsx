@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   BookOpen,
-  Compass,
   CalendarClock,
   ClipboardList,
   Timer,
@@ -20,7 +19,6 @@ import { CourseTree } from "./CourseTree";
 export const NAV: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/courses", label: "My courses", icon: BookOpen, end: true },
-  { to: "/courses/browse", label: "Search my courses", icon: Compass },
   { to: "/classes", label: "Classes", icon: CalendarClock },
   { to: "/assignments", label: "Assignments", icon: ClipboardList },
   { to: "/quizzes", label: "Quizzes", icon: Timer },

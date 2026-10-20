@@ -4,7 +4,7 @@ import {
   type ComponentType,
   type LazyExoticComponent,
 } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import { PageLoader } from "@tasued/ui";
 import { RequireAuth } from "./session";
 import { AppShell } from "../layout/AppShell";
@@ -28,7 +28,6 @@ const ChangePasswordPage = () => import("../features/auth/ChangePasswordPage");
 const WelcomePage = () => import("../features/auth/WelcomePage");
 const DashboardPage = () => import("../features/dashboard/DashboardPage");
 const MyCoursesPage = () => import("../features/courses/MyCoursesPage");
-const BrowseCoursesPage = () => import("../features/courses/BrowseCoursesPage");
 const CourseLayout = () => import("../features/courses/CourseLayout");
 const CourseOverviewTab = () => import("../features/courses/tabs/OverviewTab");
 const CourseClassesTab = () => import("../features/courses/tabs/ClassesTab");
@@ -101,7 +100,7 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: page(DashboardPage) },
               { path: "courses", element: page(MyCoursesPage) },
-              { path: "courses/browse", element: page(BrowseCoursesPage) },
+              { path: "courses/browse", loader: ({ request }) => redirect("/courses" + new URL(request.url).search) },
               {
                 path: "courses/:courseId/units/:unitId",
                 element: page(UnitPage),

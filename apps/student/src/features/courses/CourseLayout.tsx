@@ -1,8 +1,8 @@
 import { SaveCourse } from '../../pwa/DeviceSettings';
 import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom";
 import type { Course } from "@tasued/api-client";
-import { Avatar, Badge, Card, Skeleton, cn } from "@tasued/ui";
-import { useMyCourses, useCourse } from "../../app/queries";
+import { Avatar, Card, Skeleton, cn } from "@tasued/ui";
+import { useCourse } from "../../app/queries";
 import { Async } from "../../components/Async";
 import { Breadcrumbs, Page } from "../../components/bits";
 import { courseFacts } from "./CourseCard";
@@ -26,8 +26,8 @@ export function useCourseContext() {
 export default function CourseLayout() {
   const { courseId } = useParams();
   const q = useCourse(courseId);
-  const mine = useMyCourses();
-  const enrolled = !!mine.data?.some((o) => o.id === courseId);
+  // A successful student course response already requires active enrolment.
+  const enrolled = true;
 
   return (
     <Page>
@@ -43,13 +43,12 @@ export default function CourseLayout() {
       >
         {(o) => (
           <>
-            <Breadcrumbs items={[{ label: enrolled ? "My courses" : "Browse courses", to: enrolled ? "/courses" : "/courses/browse" }, { label: o.code }]} />
+            <Breadcrumbs items={[{ label: "My courses", to: "/courses" }, { label: o.code }]} />
             <Card className="mt-3 overflow-hidden">
               <div className="relative bg-[linear-gradient(135deg,#091222_0%,#142647_55%,#192f59_100%)] px-5 py-6 text-white sm:px-7">
                 <div aria-hidden className="absolute -top-10 -right-10 size-40 rounded-full border border-white/10" />
                 <div className="relative flex flex-wrap items-center gap-2">
                   <span className="rounded-md bg-white/10 px-2 py-0.5 font-headline text-sm font-extrabold text-secondary-300">{o.code}</span>
-                  {!enrolled && <Badge tone="gold">Not registered — open access</Badge>}
                 </div>
                 <h1 className="relative mt-2 font-headline text-2xl font-extrabold tracking-tight sm:text-[28px]">{o.title}</h1>
                 {courseFacts(o) && <p className="relative mt-1 text-sm text-white/75">{courseFacts(o)}</p>}

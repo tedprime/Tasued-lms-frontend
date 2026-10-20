@@ -13,7 +13,7 @@ export default function NotFoundPage() {
       <p className="mt-2 text-sm text-neutral-500">The link may be broken or the page may have moved.</p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">
         <Link to="/" className={buttonClasses("primary")}>Go to dashboard</Link>
-        <Link to="/courses/browse" className={buttonClasses("outline")}>Browse courses</Link>
+        <Link to="/courses" className={buttonClasses("outline")}>My courses</Link>
       </div>
     </div>
   );
