@@ -24,7 +24,7 @@ export function ClassList({ classes, showCourse }: { classes: ClassSession[]; sh
     <>
       {[...groups.entries()].map(([day, list]) => (
         <section key={day} aria-label={day}>
-          <h3 className="sticky top-16 z-[1] border-b border-neutral-100 bg-neutral-50/95 px-5 py-2 text-xs font-bold tracking-wide text-neutral-500 uppercase backdrop-blur">{day}</h3>
+          <h3 className="border-b border-neutral-100 bg-neutral-50 px-5 py-2 text-xs font-bold tracking-wide text-neutral-500 uppercase">{day}</h3>
           <ul className="divide-y divide-neutral-100">
             {list.map((c) => (
               <li key={c.id} className="grid gap-3 px-5 py-4 md:grid-cols-[110px_minmax(0,1fr)_auto] md:items-center">
