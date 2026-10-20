@@ -51,6 +51,30 @@ function requirePublishIfStateChange(c: Ctx, courseId: string, current: PublishS
 const words = (html: string) => html.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
 
 export function registerContent(r: Router) {
+  r.post('/courses/:id/publish-content', (c) => {
+    const course = find(c.db.courses, c.params.id, 'course');
+    requirePerm(c.viewer, 'content.publish', course.id);
+    if (course.status === 'archived') throw invalid('COURSE_ARCHIVED', 'Restore this course from the archive before publishing its content.');
+    const modules = c.db.modules.filter(m => m.courseId === course.id);
+    if (!modules.length) throw validation({modules: 'Add a module before publishing this course.'});
+    const moduleIds = new Set(modules.map(m => m.id));
+    const units = c.db.units.filter(u => u.courseId === course.id && moduleIds.has(u.moduleId));
+    const modulesPublished = modules.filter(m => m.state !== 'published').length;
+    const unitsPublished = units.filter(u => u.state !== 'published').length;
+    const courseChanged = course.status !== 'published';
+    course.status = 'published';
+    for (const module of modules) module.state = 'published';
+    for (const unit of units) {
+      if (unit.state !== 'published') {
+        unit.state = 'published';
+        unit.updatedAt = iso(c.now);
+      }
+    }
+    if (courseChanged || modulesPublished || unitsPublished) audit(c.db, c.viewer.user, 'content.course_published', 'course', course.id,
+      'Published course ' + course.code + ' with ' + modulesPublished + ' draft module(s) and ' + unitsPublished + ' draft unit(s)', c.now);
+    return { modulesPublished, unitsPublished };
+  });
+
   r.get("/courses/:id/modules", (c) => {
     const o = readableCourse(c, c.params.id);
     const staff = isStaffFor(c.viewer, o.id);

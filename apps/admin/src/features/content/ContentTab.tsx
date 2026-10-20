@@ -5,10 +5,11 @@ import { api, type ID, type Module, type UnitSummary } from "@tasued/api-client"
 import { Badge, Button, ConfirmDialog, EmptyState, Field, IconButton, Input, Menu, Modal, Textarea } from "../../components/ui";
 import { ListSkeleton, PublishBadge, QueryView, SectionCard } from "../../components/common";
 import { hasErrors, useApiMutation } from "../../components/mutation";
-import { useModules, useCourseId } from "../../components/queries";
+import { useModules, useCourseId, useCourse } from "../../components/queries";
 import { useCan, useTeaches } from "../../app/session";
 
 type Dialog =
+  | { kind: "publish-course" }
   | { kind: "module"; module?: Module }
   | { kind: "unit"; moduleId: ID; unit?: UnitSummary }
   | { kind: "delete-module"; module: Module }
@@ -19,10 +20,18 @@ type Dialog =
 export function ContentTab() {
   const courseId = useCourseId();
   const q = useModules(courseId);
+  const course = useCourse(courseId);
   const can = useCan();
   const [dialog, setDialog] = useState<Dialog>(null);
   const keys = [["content", "modules", courseId], ["courses", "get", courseId]];
 
+  const publishCourse = useApiMutation({
+    mutationFn: () => api.content.publishCourse(courseId),
+    success: "Course and all saved modules and units published",
+    errorTitle: "Couldn't publish course",
+    invalidate: [["content"], ["courses"]],
+    onSuccess: () => setDialog(null),
+  });
   const reorderModules = useApiMutation({ mutationFn: (ids: ID[]) => api.content.reorderModules(courseId, ids), errorTitle: "Couldn't reorder", invalidate: keys });
   const reorderUnits = useApiMutation({ mutationFn: (v: { moduleId: ID; ids: ID[] }) => api.content.reorderUnits(v.moduleId, v.ids), errorTitle: "Couldn't reorder", invalidate: keys });
   const setModuleState = useApiMutation({ mutationFn: (v: { id: ID; state: Module["state"] }) => api.content.updateModule(v.id, { state: v.state }), success: (m) => (m.state === "published" ? "Module published" : "Module unpublished"), invalidate: keys });
@@ -44,9 +53,10 @@ export function ContentTab() {
 
   return (
     <div className="space-y-4">
-      {canEdit && (
-        <div className="flex justify-end">
-          <Button icon={<FolderPlus className="size-4" />} onClick={() => setDialog({ kind: "module" })}>Add module</Button>
+      {(canEdit || canPublish) && (
+        <div className="flex flex-wrap justify-end gap-2">
+          {canPublish && <Button variant="outline" icon={<Eye className="size-4" />} disabled={!q.data?.length || !course.data || course.data.status === "archived" || publishCourse.isPending} onClick={() => setDialog({kind: "publish-course"})}>Publish entire course</Button>}
+          {canEdit && <Button icon={<FolderPlus className="size-4" />} onClick={() => setDialog({ kind: "module" })}>Add module</Button>}
         </div>
       )}
 
@@ -149,6 +159,15 @@ export function ContentTab() {
         }}
       </QueryView>
 
+      <ConfirmDialog
+        open={dialog?.kind === "publish-course"}
+        onClose={() => { if (!publishCourse.isPending) setDialog(null); }}
+        onConfirm={() => publishCourse.mutate()}
+        loading={publishCourse.isPending}
+        title="Publish the entire course?"
+        description={`Students will be able to access this course and all ${q.data?.length ?? 0} saved modules and ${q.data?.reduce((n, m) => n + m.units.length, 0) ?? 0} units, including their course text and attachments. Save any open edits first. Quizzes, assignments, recordings and grades keep their own release settings.`}
+        confirmLabel="Publish entire course"
+      />
       {dialog?.kind === "module" && <ModuleModal courseId={courseId} module={dialog.module} onClose={() => setDialog(null)} />}
       {dialog?.kind === "unit" && <UnitModal courseId={courseId} moduleId={dialog.moduleId} unit={dialog.unit} onClose={() => setDialog(null)} />}
       <ConfirmDialog

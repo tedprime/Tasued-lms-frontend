@@ -64,6 +64,7 @@ export const courses = {
 
 /* ── Content: modules & units ─────────────────────────── */
 export const content = {
+  publishCourse: (courseId: T.ID) => request<{ modulesPublished: number; unitsPublished: number }>(`/courses/${courseId}/publish-content`, { method: "POST" }),
   modules: (courseId: T.ID) => request<T.Module[]>(`/courses/${courseId}/modules`),
   createModule: (courseId: T.ID, b: Pick<T.Module, "title" | "summary">) =>
     request<T.Module>(`/courses/${courseId}/modules`, { method: "POST", body: b }),
