@@ -45,9 +45,12 @@ export async function clearDevice(notifyServer = true) {
     typeof BroadcastChannel !== "undefined"
       ? new BroadcastChannel("lms-account")
       : null;
-  if (changed) channel?.postMessage("clear");
-  channel?.close();
-  await disablePush(notifyServer);
+  try {
+    await disablePush(notifyServer);
+  } finally {
+    if (changed) channel?.postMessage("clear");
+    channel?.close();
+  }
 }
 export async function activateAccount(id: string) {
   const generation = ++accountGeneration;

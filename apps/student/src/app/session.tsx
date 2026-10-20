@@ -5,11 +5,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import {
   api,
+  logoutAndClearDevice,
+  errorMessage,
   isApiError,
   type Session,
   type UserPreferences,
 } from "@tasued/api-client";
-import { PageLoader, ErrorState } from "@tasued/ui";
+import { PageLoader, ErrorState, useToast } from "@tasued/ui";
 
 export const SESSION_KEY = ["auth", "session"] as const;
 
@@ -26,6 +28,7 @@ async function fetchSession({
       await clearDevice(false).catch(() => undefined); return null;
     }
     await activateAccount(session.user.id).catch(() => undefined);
+    signal.throwIfAborted();
     return session;
   } catch (e) {
     if (isApiError(e) && (e.status === 401 || e.status === 403)) {
@@ -85,14 +88,16 @@ export function useUpdatePreferences() {
 
 export function useLogout() {
   const qc = useQueryClient();
+  const toast = useToast();
   const navigate = useNavigate();
   return useMutation({
     mutationFn: async () => {
       await qc.cancelQueries();
-      await clearDevice().catch(() => undefined);
-      return api.auth.logout();
+      await logoutAndClearDevice(() => clearDevice(false));
+      await qc.cancelQueries();
     },
-    onSettled: () => {
+    onError: (error) => toast.error("Couldn’t sign out", errorMessage(error, "Check your connection and try again.")),
+    onSuccess: () => {
       qc.clear();
       qc.setQueryData(SESSION_KEY, null);
       navigate("/sign-in", { replace: true });

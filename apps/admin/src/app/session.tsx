@@ -3,8 +3,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navigate, Outlet, useLocation, useOutletContext, useParams } from "react-router-dom";
 import type { ReactNode } from "react";
 import { ShieldAlert } from "lucide-react";
-import { api, can as canFn, isApiError, type Permission, type Session } from "@tasued/api-client";
-import { buttonClasses, EmptyState, PageLoader } from "@tasued/ui";
+import { api, logoutAndClearDevice, errorMessage, can as canFn, isApiError, type Permission, type Session } from "@tasued/api-client";
+import { buttonClasses, EmptyState, PageLoader, useToast } from "@tasued/ui";
 import { Link } from "react-router-dom";
 
 export const SESSION_KEY = ["auth", "session"] as const;
@@ -15,7 +15,7 @@ async function fetchSession({signal}:{signal:AbortSignal}): Promise<Session | nu
     if (session.user.authMethod !== 'microsoft' || !session.user.roles.some(r => r.role !== 'student')) {
       await clearDevice(false).catch(()=>undefined); return null;
     }
-    await activateAccount(session.user.id).catch(()=>undefined); return session;
+    await activateAccount(session.user.id).catch(()=>undefined); signal.throwIfAborted(); return session;
   } catch (e) {
     if (isApiError(e) && (e.status === 401 || e.status === 403)) {await clearDevice(false).catch(()=>undefined); return null;}
     throw e;
@@ -62,17 +62,19 @@ export function useIsSuperAdmin() {
 
 export function useSignOut() {
   const qc = useQueryClient();
+  const toast = useToast();
   return async () => {
     await qc.cancelQueries();
-    await clearDevice().catch(()=>undefined);
     try {
-      await api.auth.logout();
-    } catch {
-      /* ignore */
+      await logoutAndClearDevice(() => clearDevice(false));
+    } catch (error) {
+      toast.error("Couldn't sign out", errorMessage(error, "Check your connection and try again."));
+      return;
     }
+    await qc.cancelQueries();
     qc.clear();
     qc.setQueryData(SESSION_KEY, null);
-    window.location.assign("/sign-in");
+    window.location.replace("/sign-in");
   };
 }
 
