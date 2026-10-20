@@ -18,7 +18,7 @@ const MARKS: { key: AttendanceMark; label: string; tone: string }[] = [
 
 export function AttendanceSheetPage() {
   const { classId } = useParams();
-  const q = useQuery({ queryKey: ["attendance", "sheet", classId], queryFn: () => api.attendance.sheet(classId!), enabled: !!classId });
+  const q = useQuery({ queryKey: ["attendance", "sheet", classId], queryFn: () => api.attendance.sheet(classId!), enabled: !!classId, refetchInterval: (query) => query.state.data?.status === "pending_import" ? 30000 : false });
   if (q.isPending) return <PageLoader label="Loading attendance…" />;
   if (q.isError) return <ErrorState title="Couldn't load the attendance sheet" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   return <Sheet sheet={q.data} />;
@@ -94,7 +94,7 @@ function Sheet({ sheet }: { sheet: AttendanceSheet }) {
       </div>
 
       {locked && <Alert tone="green" icon={<Lock className="size-4" />} title="Finalised">Finalised {fmtDateTime(sheet.finalisedAt)}{sheet.finalisedBy ? ` by ${sheet.finalisedBy}` : ""}. The register is locked and counts towards students' attendance.</Alert>}
-      {!locked && sheet.status === "pending_import" && sheet.mode === "teams" && <Alert tone="gold" title="Waiting for the Teams attendance report">Teams publishes the report shortly after the meeting ends. Import it, or switch to manual if the class wasn't held in Teams.</Alert>}
+      {!locked && sheet.status === "pending_import" && sheet.mode === "teams" && <Alert tone="gold" title="Waiting for the Teams attendance report">Attendance imports automatically after the scheduled class ends, with retries while Teams prepares the report. You can also import now, or switch to manual if the class wasn't held in Teams.</Alert>}
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
         <SectionCard

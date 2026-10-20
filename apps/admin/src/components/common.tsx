@@ -109,30 +109,23 @@ export function CopyButton({ value, label = "Copy", className }: { value: string
   );
 }
 
-/* ───────── Simple inline SVG bar chart ───────── */
+/* ───────── Responsive bar chart ───────── */
 
 export function MiniBars({ data, max, format = (v) => String(v), label, color = "var(--color-primary-500)" }: { data: { label: string; value: number }[]; max?: number; format?: (v: number) => string; label: string; color?: string }) {
   const top = max ?? Math.max(1, ...data.map((d) => d.value));
-  const h = 120;
-  const bw = 28;
-  const gap = 14;
-  const w = Math.max(1, data.length) * (bw + gap);
   return (
-    <figure className="overflow-x-auto">
-      <svg role="img" aria-label={label} viewBox={`0 0 ${w} ${h + 34}`} width={w} height={h + 34} className="max-w-none">
-        {data.map((d, i) => {
-          const bh = Math.max(2, (d.value / top) * h);
-          const x = i * (bw + gap) + gap / 2;
-          return (
-            <g key={d.label}>
-              <title>{`${d.label}: ${format(d.value)}`}</title>
-              <rect x={x} y={h - bh + 14} width={bw} height={bh} rx={4} fill={color} />
-              <text x={x + bw / 2} y={h - bh + 10} textAnchor="middle" fontSize="10" fill="var(--color-tertiary-500)" fontWeight={600}>{format(d.value)}</text>
-              <text x={x + bw / 2} y={h + 30} textAnchor="middle" fontSize="10" fill="var(--color-neutral-500)">{d.label}</text>
-            </g>
-          );
-        })}
-      </svg>
+    <figure className="min-w-0 overflow-x-auto pb-2" aria-label={label}>
+      <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.max(1, data.length)}, minmax(88px, 1fr))` }}>
+        {data.map((d) => (
+          <div key={d.label} className="min-w-0 text-center">
+            <div className="flex h-40 flex-col items-center justify-end">
+              <span className="mb-1 text-xs font-semibold text-tertiary-500">{format(d.value)}</span>
+              <div aria-hidden className="w-8 shrink-0 rounded-t" style={{ height: Math.max(2, Math.min(1, d.value / top) * 120), backgroundColor: color }} />
+            </div>
+            <p className="mt-2 whitespace-normal break-words text-xs leading-5 text-neutral-500">{d.label}</p>
+          </div>
+        ))}
+      </div>
     </figure>
   );
 }
