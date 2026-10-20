@@ -105,7 +105,7 @@ export function registerRecordings(r: Router) {
     const rec = find(c.db.recordings, c.params.id, "recording");
     const staff = isStaffFor(c.viewer, rec.courseId);
     const cid = c.db.courses.find((o) => o.id === rec.courseId);
-    const courseOk = staff || cid?.status === "published" || (cid?.status === "archived" && c.viewer.enrolledCourseIds.has(rec.courseId));
+    const courseOk = staff || (cid?.status === 'published' && c.viewer.enrolledCourseIds.has(rec.courseId)) || (cid?.status === "archived" && c.viewer.enrolledCourseIds.has(rec.courseId));
     if (!courseOk) throw forbidden("You can't watch recordings for this course.");
     if (rec.status !== "ready" || !rec.oneDrive) throw conflict("RECORDING_NOT_READY", rec.status === "failed" ? "This recording couldn't be found in OneDrive." : "This recording isn't available yet. Try again in a few minutes.");
     if (!staff && !rec.published) throw forbidden("This recording hasn't been published yet.");

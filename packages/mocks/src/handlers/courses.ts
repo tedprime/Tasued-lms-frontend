@@ -98,9 +98,9 @@ export function registerCourses(r: Router) {
     return paginate(listFilter(c, rows).map((o) => courseView(c.db, o, isStaffFor(v, o.id))), c.url);
   });
 
-  /** Students may open any published course, any time. */
+  /** Catalogue is restricted to courses assigned to the viewer. */
   r.get("/courses/catalogue", (c) => {
-    const rows = c.db.courses.filter((o) => o.status === "published");
+    const rows = c.db.courses.filter((o) => o.status === 'published' && (c.viewer.isStaff ? c.viewer.staffCourseIds.has(o.id) : c.viewer.enrolledCourseIds.has(o.id)));
     return paginate(listFilter(c, rows).map((o) => courseView(c.db, o, isStaffFor(c.viewer, o.id))), c.url);
   });
 

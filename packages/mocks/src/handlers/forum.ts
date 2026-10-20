@@ -9,7 +9,7 @@ import { matches, paginate } from "../lib/pagination";
 import { newId } from "../lib/random";
 import type { Ctx, Router } from "../lib/route";
 
-/** Forum courses visible by default: general + enrolled/scope. Any published course's forum is readable via filter. */
+/** Forum courses visible by default: general + enrolled/scope. Filters do not bypass course access. */
 function visibleCourseIds(c: Ctx): Set<string | null> {
   const ids = new Set<string | null>([null]);
   (c.viewer.isStaff ? c.viewer.staffCourseIds : c.viewer.enrolledCourseIds).forEach((id) => ids.add(id));
@@ -67,7 +67,7 @@ export function registerForum(r: Router) {
         (!unit || t.unitId === unit) &&
         matches(term, t.title, excerpt(t.bodyHtml), ...t.tags),
     );
-    rows = rows.filter((t) => !t.courseId || c.db.courses.find((o) => o.id === t.courseId)?.status === "published" || c.viewer.staffCourseIds.has(t.courseId));
+    rows = rows.filter((t) => !t.courseId || (c.viewer.enrolledCourseIds.has(t.courseId) && c.db.courses.some(o => o.id === t.courseId && o.status !== 'draft')) || c.viewer.staffCourseIds.has(t.courseId));
     const views = rows.map((t) => threadView(c.db, t, c.viewer));
     if (sort === "top") views.sort((a, b) => b.upvotes - a.upvotes || b.lastActivityAt.localeCompare(a.lastActivityAt));
     else if (sort === "unanswered") {

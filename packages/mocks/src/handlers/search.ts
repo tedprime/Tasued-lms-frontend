@@ -12,7 +12,7 @@ export function registerSearch(r: Router) {
     const has = (s: string) => s.toLowerCase().includes(term);
     const readable = (cid: string) => {
       const o = db.courses.find((x) => x.id === cid);
-      return !!o && (isStaffFor(v, cid) || o.status === "published");
+      return !!o && (isStaffFor(v, cid) || (v.enrolledCourseIds.has(cid) && o.status !== 'draft'));
     };
     const mineFirst = (cid: string | null) => (cid && (v.enrolledCourseIds.has(cid) || v.staffCourseIds.has(cid)) ? 0 : 1);
     const hits: (SearchHit & { rank: number })[] = [];

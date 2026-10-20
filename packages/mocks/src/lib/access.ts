@@ -5,11 +5,11 @@ import { isStaffFor, type Viewer } from "./auth";
 import { forbidden, notFound } from "./http";
 import type { Ctx } from "./route";
 
-/** A course the viewer may read: staff in scope see anything; others see published (or archived they took). */
+/** Staff in scope and actively enrolled students may read a course; drafts stay staff-only. */
 export function readableCourse(c: Ctx, id: ID | undefined): CourseRow {
   const o = find(c.db.courses, id, "course");
   if (isStaffFor(c.viewer, o.id)) return o;
-  if (o.status === "published") return o;
+  if (o.status === 'published' && c.viewer.enrolledCourseIds.has(o.id)) return o;
   if (o.status === "archived" && c.viewer.enrolledCourseIds.has(o.id)) return o;
   throw notFound("course");
 }

@@ -6,6 +6,7 @@ export interface SavedUnit {
   objectives: string[];
 }
 export interface SavedCourse {
+  accessPolicy?: "enrolled-v1";
   id: string;
   owner: string;
   title: string;
@@ -73,7 +74,7 @@ export async function saveCourse(course: SavedCourse) {
           tx.abort();
           return;
         }
-        tx.objectStore("courses").put(course);
+        tx.objectStore("courses").put({ ...course, accessPolicy: "enrolled-v1" });
       };
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
@@ -96,7 +97,7 @@ export async function savedCourses(): Promise<SavedCourse[]> {
       tx.oncomplete = () =>
         resolve(
           (all.result as SavedCourse[]).filter(
-            (c) => c.owner === who.result && c.expiresAt > Date.now(),
+            (c) => c.accessPolicy === "enrolled-v1" && c.owner === who.result && c.expiresAt > Date.now(),
           ),
         );
       tx.onerror = () => reject(tx.error);

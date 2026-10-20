@@ -22,7 +22,7 @@ export default function MyCoursesPage() {
       <PageHeader
         title="My courses"
         description="Courses you're registered for."
-        actions={<Link to="/courses/browse" className={buttonClasses("outline", "sm")}><Compass className="size-4" /> Browse all courses</Link>}
+        actions={<Link to="/courses/browse" className={buttonClasses("outline", "sm")}><Compass className="size-4" /> Search my courses</Link>}
       />
       <Async
         query={courses}
@@ -33,7 +33,7 @@ export default function MyCoursesPage() {
             <EmptyState
               icon={<BookOpen className="size-6" />}
               title="No registered courses yet"
-              description="Once your course registration is synced you'll see your courses here. You can still open any course from the catalogue."
+              description="Your enrolled courses will appear here once published. Contact your course administrator if a course is missing."
               action={<Link to="/courses/browse" className={buttonClasses("primary", "sm")}>Browse courses</Link>}
             />
           </Card>
