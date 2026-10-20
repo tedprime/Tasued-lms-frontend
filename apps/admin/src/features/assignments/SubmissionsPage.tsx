@@ -1,3 +1,4 @@
+import { portalUrl } from "@tasued/api-client";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -160,7 +161,7 @@ function GradeDrawer({ assignment, submission: s, onClose }: { assignment: Assig
           {s.files.length === 0 ? <p className="text-sm text-neutral-500">No files.</p> : (
             <ul className="space-y-1.5">
               {s.files.map((f) => (
-                <li key={f.id}><a href={f.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-sm hover:border-primary-300"><Paperclip className="size-4 text-neutral-400" /><span className="flex-1 truncate font-semibold">{f.name}</span><span className="text-xs text-neutral-500">{fmtBytes(f.sizeBytes)}</span></a></li>
+                <li key={f.id}><a href={portalUrl(f.url)} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-sm hover:border-primary-300"><Paperclip className="size-4 text-neutral-400" /><span className="flex-1 truncate font-semibold">{f.name}</span><span className="text-xs text-neutral-500">{fmtBytes(f.sizeBytes)}</span></a></li>
               ))}
             </ul>
           )}

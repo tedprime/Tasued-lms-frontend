@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { api, errorMessage, isApiError } from "@tasued/api-client";
 import { Alert, Button, buttonClasses, useToast } from "@tasued/ui";
 import { AuthLayout } from "./AuthLayout";
-import { NewPasswordFields, newPasswordValid } from "./password";
+import { NewPasswordFields, newPasswordValid, usePasswordPolicy } from "./password";
 
 function BadLink() {
   return (
@@ -19,6 +19,7 @@ function BadLink() {
 }
 
 export default function ResetPasswordPage() {
+  const policy = usePasswordPolicy();
   const [params] = useSearchParams();
   const token = params.get("token") ?? "";
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function ResetPasswordPage() {
   const [tried, setTried] = useState(false);
 
   const reset = useMutation({
+    onError: () => { void policy.refetch(); },
     mutationFn: () => api.auth.resetPassword({ token, password }),
     onSuccess: () => {
       toast.success("Password changed", "Sign in with your new password.");
@@ -47,12 +49,12 @@ export default function ResetPasswordPage() {
           onSubmit={(e) => {
             e.preventDefault();
             setTried(true);
-            if (newPasswordValid(password, confirm)) reset.mutate();
+            if (policy.data && newPasswordValid(password, confirm, policy.data)) reset.mutate();
           }}
         >
-          <NewPasswordFields password={password} confirm={confirm} onPassword={setPassword} onConfirm={setConfirm} showErrors={tried} />
+          <NewPasswordFields password={password} confirm={confirm} onPassword={(value) => { setPassword(value); reset.reset(); }} onConfirm={(value) => { setConfirm(value); reset.reset(); }} showErrors={tried} />
           {reset.isError && <Alert tone="red">{errorMessage(reset.error)}</Alert>}
-          <Button type="submit" size="lg" className="w-full" loading={reset.isPending}>{reset.isPending ? "Saving…" : "Save new password"}</Button>
+          <Button disabled={!policy.data} type="submit" size="lg" className="w-full" loading={reset.isPending}>{reset.isPending ? "Saving…" : "Save new password"}</Button>
         </form>
       )}
       <Link to="/sign-in" className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-500 hover:underline">

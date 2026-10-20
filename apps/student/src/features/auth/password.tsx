@@ -1,11 +1,16 @@
+import { DEFAULT_PASSWORD_POLICY, passwordBytes, newPasswordValid, type PasswordPolicy } from './password-policy';
+export { newPasswordValid } from './password-policy';
 import { forwardRef, useId, useState, type InputHTMLAttributes } from "react";
 import { Check, Eye, EyeOff, X } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, errorMessage, isApiError, type Session } from "@tasued/api-client";
 import { Alert, Button, Field, Input, cn } from "@tasued/ui";
 import { SESSION_KEY } from "../../app/session";
 
 export const MIN_PASSWORD = 8;
+export function usePasswordPolicy() {
+ return useQuery({queryKey:['auth','password-policy'],queryFn:()=>api.auth.passwordPolicy(),staleTime:0,retry:1});
+}
 
 /** Password input with a show/hide toggle. */
 export const PasswordInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean }>(function PasswordInput(
@@ -30,15 +35,15 @@ export const PasswordInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HT
 });
 
 /** 0–4. Advisory only; the hard rule is the minimum length (the API may enforce more). */
-export function passwordScore(pw: string) {
+export function passwordScore(pw: string, minLength = MIN_PASSWORD) {
   if (!pw) return 0;
   let s = 0;
-  if (pw.length >= MIN_PASSWORD) s++;
+  if (pw.length >= minLength) s++;
   if (pw.length >= 12) s++;
   if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) s++;
   if (/\d/.test(pw) && /[^A-Za-z0-9]/.test(pw)) s++;
   else if (/\d/.test(pw) || /[^A-Za-z0-9]/.test(pw)) s += 0.5;
-  return pw.length < MIN_PASSWORD ? Math.min(s, 1) : Math.min(4, Math.floor(s));
+  return pw.length < minLength ? Math.min(s, 1) : Math.min(4, Math.floor(s));
 }
 
 const LEVELS = [
@@ -50,11 +55,12 @@ const LEVELS = [
 ];
 
 /** Strength bar + rule checklist for a new password. */
-export function PasswordRules({ password, confirm, id }: { password: string; confirm?: string; id?: string }) {
-  const score = password.length < MIN_PASSWORD ? 0 : Math.max(1, passwordScore(password));
-  const lvl = LEVELS[score]!;
+export function PasswordRules({ password, confirm, id, policy = DEFAULT_PASSWORD_POLICY }: { password: string; confirm?: string; id?: string; policy?: PasswordPolicy }) {
+  const score = password.length < policy.minLength || passwordBytes(password) > policy.maxBytes ? 0 : Math.max(1, passwordScore(password, policy.minLength));
+  const lvl = passwordBytes(password) > policy.maxBytes ? { label: 'Too long', bar: 'bg-danger', text: 'text-danger' } : LEVELS[score]!;
   const rules = [
-    { ok: password.length >= MIN_PASSWORD, text: `At least ${MIN_PASSWORD} characters` },
+    { ok: password.length >= policy.minLength, text: `At least ${policy.minLength} characters` },
+    { ok: passwordBytes(password) <= policy.maxBytes, text: "Password is within the supported length" },
     { ok: /[A-Za-z]/.test(password) && /\d/.test(password), text: "Mix letters and numbers (recommended)" },
     ...(confirm !== undefined ? [{ ok: !!confirm && confirm === password, text: "Both passwords match" }] : []),
   ];
@@ -104,37 +110,39 @@ export function NewPasswordFields({
   label?: string;
 }) {
   const ids = { pw: useId(), cf: useId(), rules: useId() };
-  const tooShort = password.length < MIN_PASSWORD;
+  const requirements = usePasswordPolicy();
+  const policy = requirements.data ?? DEFAULT_PASSWORD_POLICY;
+  const tooShort = password.length < policy.minLength;
+  const tooLong = passwordBytes(password) > policy.maxBytes;
   const mismatch = confirm !== password;
   return (
     <>
-      <Field label={label} htmlFor={ids.pw} error={showErrors && tooShort ? `Use at least ${MIN_PASSWORD} characters.` : undefined}>
+      <Field label={label} htmlFor={ids.pw} error={showErrors && tooShort ? `Use at least ${policy.minLength} characters.` : showErrors && tooLong ? "This password is too long. Shorten it; emoji and some special characters take more space." : undefined}>
         <PasswordInput
           id={ids.pw}
           autoComplete="new-password"
           value={password}
           onChange={(e) => onPassword(e.target.value)}
-          invalid={showErrors && tooShort}
+          invalid={showErrors && (tooShort || tooLong)}
           aria-describedby={ids.rules}
           required
-          minLength={MIN_PASSWORD}
+          minLength={policy.minLength}
         />
       </Field>
       <Field label={`Confirm ${label.toLowerCase()}`} htmlFor={ids.cf} error={showErrors && mismatch ? "The passwords don't match." : undefined}>
         <PasswordInput id={ids.cf} autoComplete="new-password" value={confirm} onChange={(e) => onConfirm(e.target.value)} invalid={showErrors && mismatch} required />
       </Field>
-      <PasswordRules id={ids.rules} password={password} confirm={confirm} />
+      {requirements.data ? <PasswordRules id={ids.rules} password={password} confirm={confirm} policy={policy} /> : requirements.isError ? <Alert tone="red">Could not load password requirements. <button type="button" className="underline" onClick={() => void requirements.refetch()}>Try again</button></Alert> : <p className="text-sm text-neutral-500">Loading password requirements…</p>}
     </>
   );
 }
 
-export function newPasswordValid(password: string, confirm: string) {
-  return password.length >= MIN_PASSWORD && password === confirm;
-}
+
 
 /** Current + new + confirm. Used by the forced /change-password page and the Settings section. */
 export function ChangePasswordForm({ onDone, submitLabel = "Change password" }: { onDone: (s: Session) => void; submitLabel?: string }) {
   const qc = useQueryClient();
+  const policy = usePasswordPolicy();
   const curId = useId();
   const [current, setCurrent] = useState("");
   const [password, setPassword] = useState("");
@@ -143,6 +151,7 @@ export function ChangePasswordForm({ onDone, submitLabel = "Change password" }: 
   const same = !!current && current === password;
 
   const change = useMutation({
+    onError: () => { void policy.refetch(); },
     mutationFn: () => api.auth.changePassword({ currentPassword: current, newPassword: password }),
     onSuccess: (session) => {
       qc.setQueryData(SESSION_KEY, session);
@@ -163,17 +172,17 @@ export function ChangePasswordForm({ onDone, submitLabel = "Change password" }: 
       onSubmit={(e) => {
         e.preventDefault();
         setTried(true);
-        if (!current || same || !newPasswordValid(password, confirm)) return;
+        if (!current || same || !policy.data || !newPasswordValid(password, confirm, policy.data)) return;
         change.mutate();
       }}
     >
       <Field label="Current password" htmlFor={curId} error={tried && !current ? "Enter your current password." : wrongCurrent ? "That isn't your current password." : undefined}>
         <PasswordInput id={curId} autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} invalid={(tried && !current) || wrongCurrent} required />
       </Field>
-      <NewPasswordFields password={password} confirm={confirm} onPassword={setPassword} onConfirm={setConfirm} showErrors={tried} />
+      <NewPasswordFields password={password} confirm={confirm} onPassword={(value) => { setPassword(value); change.reset(); }} onConfirm={(value) => { setConfirm(value); change.reset(); }} showErrors={tried} />
       {tried && same && <p className="text-xs text-danger">Choose a new password that's different from your current one.</p>}
       {change.isError && !wrongCurrent && <Alert tone="red">{errorMessage(change.error)}</Alert>}
-      <Button type="submit" loading={change.isPending} className="w-full sm:w-auto">{change.isPending ? "Saving…" : submitLabel}</Button>
+      <Button type="submit" disabled={!policy.data} loading={change.isPending} className="w-full sm:w-auto">{change.isPending ? "Saving…" : submitLabel}</Button>
     </form>
   );
 }

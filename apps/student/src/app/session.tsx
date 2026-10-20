@@ -22,10 +22,13 @@ async function fetchSession({
   try {
     const session = await api.auth.session();
     signal.throwIfAborted();
+    if (session.user.authMethod === 'microsoft' || !session.user.roles.some(r => r.role === 'student')) {
+      await clearDevice(false).catch(() => undefined); return null;
+    }
     await activateAccount(session.user.id).catch(() => undefined);
     return session;
   } catch (e) {
-    if (isApiError(e) && e.status === 401) {
+    if (isApiError(e) && (e.status === 401 || e.status === 403)) {
       await clearDevice(false).catch(() => undefined);
       return null;
     }

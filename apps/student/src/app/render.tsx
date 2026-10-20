@@ -12,6 +12,7 @@ import { SESSION_KEY } from "./session";
 export function renderApp(rootEl: HTMLElement) {
   // Any 401 from any endpoint means the cookie session has gone: drop it so the guard redirects.
   configureApi({
+    portal: 'student',
     onUnauthorized: () => {
       void clearDevice(false).catch(() => undefined);
       if (queryClient.getQueryData(SESSION_KEY))

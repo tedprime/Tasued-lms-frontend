@@ -124,6 +124,7 @@ function registerPasswordAuth(r: Router) {
 }
 
 export function registerAuth(r: Router) {
+  r.public.get('/auth/password-policy', c => ({ minLength: c.db.settings.minPasswordLength, maxBytes: 72 }));
   registerPasswordAuth(r);
   const demoIds = (): readonly string[] => (r.app === "student" ? DEMO_STUDENT_IDS : DEMO_STAFF_IDS);
 

@@ -6,7 +6,7 @@ import { api, errorMessage, fmtDateTime, isApiError } from "@tasued/api-client";
 import { Alert, Button, KeyValue, Skeleton, buttonClasses } from "@tasued/ui";
 import { SESSION_KEY } from "../../app/session";
 import { AuthLayout } from "./AuthLayout";
-import { NewPasswordFields, newPasswordValid } from "./password";
+import { NewPasswordFields, newPasswordValid, usePasswordPolicy } from "./password";
 
 function InviteProblem({ expired }: { expired: boolean }) {
   return (
@@ -26,6 +26,7 @@ function InviteProblem({ expired }: { expired: boolean }) {
 
 /** Opened from the LMS invitation email: choose a password, then go to /welcome. */
 export default function SetPasswordPage() {
+  const policy = usePasswordPolicy();
   const [params] = useSearchParams();
   const token = params.get("token") ?? "";
   const qc = useQueryClient();
@@ -42,6 +43,7 @@ export default function SetPasswordPage() {
   });
 
   const accept = useMutation({
+    onError: () => { void policy.refetch(); },
     mutationFn: () => api.auth.acceptInvite({ token, password }),
     onSuccess: (session) => {
       qc.setQueryData(SESSION_KEY, session);
@@ -86,7 +88,7 @@ export default function SetPasswordPage() {
           onSubmit={(e) => {
             e.preventDefault();
             setTried(true);
-            if (newPasswordValid(password, confirm)) accept.mutate();
+            if (policy.data && newPasswordValid(password, confirm, policy.data)) accept.mutate();
           }}
         >
           <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
@@ -100,9 +102,9 @@ export default function SetPasswordPage() {
           </div>
           {/* Lets password managers save the right username with the new password. */}
           <input type="email" name="username" autoComplete="username" value={info.data.email} readOnly hidden />
-          <NewPasswordFields password={password} confirm={confirm} onPassword={setPassword} onConfirm={setConfirm} showErrors={tried} label="Password" />
+          <NewPasswordFields password={password} confirm={confirm} onPassword={(value) => { setPassword(value); accept.reset(); }} onConfirm={(value) => { setConfirm(value); accept.reset(); }} showErrors={tried} label="Password" />
           {accept.isError && <Alert tone="red">{errorMessage(accept.error)}</Alert>}
-          <Button type="submit" size="lg" className="w-full" loading={accept.isPending}>
+          <Button disabled={!policy.data} type="submit" size="lg" className="w-full" loading={accept.isPending}>
             {accept.isPending ? "Setting your password…" : "Set password and continue"}
           </Button>
           <p className="text-center text-xs text-neutral-500">

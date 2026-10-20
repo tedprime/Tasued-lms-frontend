@@ -1,3 +1,4 @@
+import { portalUrl } from "@tasued/api-client";
 import { useEffect, useRef, useState } from "react";
 import { Link, useBlocker, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -188,7 +189,7 @@ function UnitEditor({ unit }: { unit: Unit }) {
                   <li key={a.id} className="flex items-center gap-3 px-5 py-3">
                     <Paperclip className="size-4 shrink-0 text-neutral-400" />
                     <div className="min-w-0 flex-1">
-                      <a href={a.url} target="_blank" rel="noreferrer" className="block truncate text-sm font-semibold text-tertiary-500 hover:text-primary-500">{a.name}</a>
+                      <a href={portalUrl(a.url)} target="_blank" rel="noreferrer" className="block truncate text-sm font-semibold text-tertiary-500 hover:text-primary-500">{a.name}</a>
                       <p className="text-xs text-neutral-500">{fmtBytes(a.sizeBytes)} · {a.scanStatus === "clean" ? "Scanned" : a.scanStatus === "pending" ? "Virus scan pending" : <span className="font-semibold text-danger">Infected — blocked</span>}</p>
                     </div>
                     {canEdit && <IconButton label={`Delete ${a.name}`} className="hover:text-danger" onClick={() => setDelAttachment(a)}><Trash2 className="size-4" /></IconButton>}

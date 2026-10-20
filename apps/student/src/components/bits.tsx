@@ -1,3 +1,4 @@
+import { portalUrl } from "@tasued/api-client";
 import { Link } from "react-router-dom";
 import { CheckCircle2, ChevronRight, Download, FileText, Paperclip, ShieldAlert, Video, ExternalLink } from "lucide-react";
 import { Badge, Button, buttonClasses, cn, type Tone } from "@tasued/ui";
@@ -170,7 +171,7 @@ export function AttachmentList({ items, onRemove, removing }: { items: Attachmen
           {a.scanStatus === "infected" ? (
             <Badge tone="red"><ShieldAlert className="size-3" /> Blocked</Badge>
           ) : (
-            <a href={a.url} download={a.name} target="_blank" rel="noopener noreferrer" className={buttonClasses("ghost", "xs")} aria-label={`Download ${a.name}`}>
+            <a href={portalUrl(a.url)} download={a.name} target="_blank" rel="noopener noreferrer" className={buttonClasses("ghost", "xs")} aria-label={`Download ${a.name}`}>
               <Download className="size-3.5" /> <span className="hidden sm:inline">Download</span>
             </a>
           )}

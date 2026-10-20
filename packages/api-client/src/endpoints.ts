@@ -1,3 +1,4 @@
+import { portalUrl } from "./client";
 import { request } from "./client";
 import type * as T from "./types";
 
@@ -11,6 +12,7 @@ const q = (o: object) => o as Record<string, string | number | boolean | undefin
 
 /* ── Auth ─────────────────────────────────────────────── */
 export const auth = {
+  passwordPolicy: () => request<{ minLength: number; maxBytes: number }>('/auth/password-policy'),
   teamsSetup: () => request<T.TeamsSetup>('/me/teams-invitation'),
   checkTeamsSetup: () => request<T.TeamsSetup>('/me/teams-invitation/check', { method: 'POST' }),
   /* ── Students: platform email + password ── */
@@ -142,7 +144,7 @@ export const attendance = {
   matchUnmatched: (classSessionId: T.ID, b: { displayName: string; userId: T.ID }) =>
     request<T.AttendanceSheet>(`/classes/${classSessionId}/attendance/match`, { method: "POST", body: b }),
   finalise: (classSessionId: T.ID) => request<T.AttendanceSheet>(`/classes/${classSessionId}/attendance/finalise`, { method: "POST" }),
-  exportCsvUrl: (base: string, classSessionId: T.ID) => `${base}/classes/${classSessionId}/attendance.csv`,
+  exportCsvUrl: (base: string, classSessionId: T.ID) => portalUrl(`${base}/classes/${classSessionId}/attendance.csv`),
   mine: () => request<T.StudentAttendanceSummary[]>("/me/attendance"),
 };
 
@@ -224,7 +226,7 @@ export const grades = {
   releaseItem: (courseId: T.ID, itemId: T.ID, released: boolean) =>
     request<T.GradebookItem>(`/courses/${courseId}/gradebook/items/${itemId}/release`, { method: "POST", body: { released } }),
   history: (courseId: T.ID) => request<T.GradeChange[]>(`/courses/${courseId}/gradebook/history`),
-  exportXlsxUrl: (base: string, courseId: T.ID) => `${base}/courses/${courseId}/gradebook.xlsx`,
+  exportXlsxUrl: (base: string, courseId: T.ID) => portalUrl(`${base}/courses/${courseId}/gradebook.xlsx`),
   mine: () => request<T.StudentGradeRow[]>("/me/grades"),
 };
 
@@ -323,7 +325,7 @@ export const people = {
 /* ── Reports, audit, integrations, settings ───────────── */
 export const reports = {
   course: (courseId: T.ID) => request<T.CourseReport>(`/reports/courses/${courseId}`),
-  exportCsvUrl: (base: string, courseId: T.ID) => `${base}/reports/courses/${courseId}.csv`,
+  exportCsvUrl: (base: string, courseId: T.ID) => portalUrl(`${base}/reports/courses/${courseId}.csv`),
 };
 
 export const audit = {

@@ -22,6 +22,7 @@ export function renderApp(rootEl: HTMLElement) {
 
   // A 401 anywhere means the cookie session has expired → drop to signed-out; RequireAuth redirects to /sign-in.
   configureApi({
+    portal: 'admin',
     onUnauthorized: () => {
       void clearDevice(false).catch(()=>undefined);
       if (!window.location.pathname.startsWith("/sign-in") && queryClient.getQueryData(SESSION_KEY)) {

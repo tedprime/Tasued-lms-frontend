@@ -15,6 +15,7 @@ export function weakPassword(db: DB, password: unknown): HttpError | null {
   if (typeof password !== "string" || password.length < min) {
     return new HttpError(422, "WEAK_PASSWORD", `Use at least ${min} characters.`, { password: `At least ${min} characters` });
   }
+  if (new TextEncoder().encode(password).length > 72) return new HttpError(422, "WEAK_PASSWORD", "This password is too long. Shorten it; emoji and some special characters take more space.");
   return null;
 }
 

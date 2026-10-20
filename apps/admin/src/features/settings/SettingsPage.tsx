@@ -50,7 +50,7 @@ function SettingsForm({ s }: { s: PlatformSettings }) {
       late: n(f.late) >= 0 && n(f.late) <= 120 ? undefined : "0–120",
       maxUploadMb: n(f.maxUploadMb) >= 1 && n(f.maxUploadMb) <= 2048 ? undefined : "1–2048",
       organiser: /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.organiser.trim()) ? undefined : "Enter the organiser account's email",
-      minPassword: Number.isInteger(n(f.minPassword)) && n(f.minPassword) >= 8 && n(f.minPassword) <= 128 ? undefined : "A whole number from 8 to 128",
+      minPassword: Number.isInteger(n(f.minPassword)) && n(f.minPassword) >= 8 && n(f.minPassword) <= 64 ? undefined : "A whole number from 8 to 64",
       supportEmail: /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.supportEmail.trim()) ? undefined : "Enter a valid email",
     };
     setErrors(e);
@@ -84,7 +84,7 @@ function SettingsForm({ s }: { s: PlatformSettings }) {
           <Field label="Meeting organiser account" required error={errors.organiser} htmlFor="st-org" hint="Class meetings are created under this account so every recording lands in one OneDrive."><Input id="st-org" type="email" value={f.organiser} onChange={set("organiser")} invalid={!!errors.organiser} placeholder="lms-classes@tedprimehub.org" /></Field>
         </SectionCard>
         <SectionCard title="Student sign-in" subtitle="Students sign in to the LMS with an email and password. Staff sign in with Microsoft." bodyClassName="space-y-4 p-5">
-          <Field label="Minimum password length" required error={errors.minPassword} htmlFor="st-pw" hint="At least 8 characters. Applies when students set or change their LMS password."><Input id="st-pw" type="number" min={8} max={128} value={f.minPassword} onChange={set("minPassword")} invalid={!!errors.minPassword} /></Field>
+          <Field label="Minimum password length" required error={errors.minPassword} htmlFor="st-pw" hint="At least 8 characters. Applies when students set or change their LMS password."><Input id="st-pw" type="number" min={8} max={64} value={f.minPassword} onChange={set("minPassword")} invalid={!!errors.minPassword} /></Field>
         </SectionCard>
       </div>
     </form>

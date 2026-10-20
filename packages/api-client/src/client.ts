@@ -7,10 +7,12 @@ import type { ApiError } from "./types";
  * - Errors are thrown as ApiError with the HTTP status attached.
  */
 
+let portal: 'admin' | 'student' = 'student';
 let baseUrl = "/api/v1";
 let onUnauthorized: (() => void) | null = null;
 
-export function configureApi(opts: { baseUrl?: string; onUnauthorized?: () => void }) {
+export function configureApi(opts: { portal?: 'admin' | 'student'; baseUrl?: string; onUnauthorized?: () => void }) {
+  if (opts.portal) portal = opts.portal;
   if (opts.baseUrl !== undefined) baseUrl = opts.baseUrl.replace(/\/$/, "");
   if (opts.onUnauthorized) onUnauthorized = opts.onUnauthorized;
 }
@@ -47,7 +49,7 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
   const res = await fetch(buildUrl(path, query), {
     method,
     credentials: "include",
-    headers: isForm ? { Accept: "application/json" } : { "Content-Type": "application/json", Accept: "application/json" },
+    headers: isForm ? { Accept: "application/json", "X-LMS-Portal": portal } : { "Content-Type": "application/json", Accept: "application/json", "X-LMS-Portal": portal },
     body: body === undefined ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
     signal,
   });
@@ -76,4 +78,13 @@ export function isApiError(e: unknown): e is ApiError {
 
 export function errorMessage(e: unknown, fallback = "Something went wrong. Please try again.") {
   return isApiError(e) ? e.message : e instanceof Error ? e.message : fallback;
+}
+
+/** Carries portal selection on downloads/new tabs, where custom headers are unavailable. */
+export function portalUrl(value: string): string {
+  const url = new URL(value, window.location.origin);
+  const api = new URL(baseUrl, window.location.origin);
+  if (url.origin !== api.origin || !url.pathname.startsWith(api.pathname.replace(/\/$/, '') + '/')) return value;
+  url.searchParams.set('portal', portal);
+  return url.toString();
 }

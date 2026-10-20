@@ -11,7 +11,11 @@ export const SESSION_KEY = ["auth", "session"] as const;
 
 async function fetchSession({signal}:{signal:AbortSignal}): Promise<Session | null> {
   try {
-    const session=await api.auth.session(); signal.throwIfAborted(); await activateAccount(session.user.id).catch(()=>undefined); return session;
+    const session=await api.auth.session(); signal.throwIfAborted();
+    if (session.user.authMethod !== 'microsoft' || !session.user.roles.some(r => r.role !== 'student')) {
+      await clearDevice(false).catch(()=>undefined); return null;
+    }
+    await activateAccount(session.user.id).catch(()=>undefined); return session;
   } catch (e) {
     if (isApiError(e) && (e.status === 401 || e.status === 403)) {await clearDevice(false).catch(()=>undefined); return null;}
     throw e;
@@ -86,7 +90,7 @@ export function RequireAuth() {
         />
       </div>
     );
-  if (!data) {
+  if (!data || data.user.authMethod !== 'microsoft' || !data.user.roles.some(r => r.role !== 'student')) {
     const returnTo = loc.pathname + loc.search;
     return <Navigate to={`/sign-in?returnTo=${encodeURIComponent(returnTo)}`} replace />;
   }
