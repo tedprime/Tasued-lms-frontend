@@ -183,6 +183,11 @@ export const assignments = {
 
 /* ── Quizzes ──────────────────────────────────────────── */
 export const quizzes = {
+  importQuestions: (bankId: T.ID, file: File, commit = false) => {
+    const body = new FormData(); body.append('file', file); body.append('commit', String(commit));
+    return request<T.QuestionImportPreview>(`/question-banks/${bankId}/import`, {method:'POST',body});
+  },
+  questionTemplateUrl: (base: string, bankId: T.ID, format: 'csv' | 'xlsx') => portalUrl(`${base}/question-banks/${bankId}/import-template?format=${format}`),
   list: (p: { courseId?: T.ID; state?: T.PublishState } = {}) => request<T.Quiz[]>("/quizzes", { query: q(p) }),
   get: (id: T.ID) => request<T.Quiz>(`/quizzes/${id}`),
   create: (b: Omit<T.Quiz, "id" | "courseCode" | "createdAt" | "attemptCount">) => request<T.Quiz>("/quizzes", { method: "POST", body: b }),

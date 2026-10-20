@@ -1,3 +1,4 @@
+import { BulkQuestionImport } from "./BulkQuestionImport";
 import { useState } from "react";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -120,6 +121,7 @@ function toPayload(d: Draft): Omit<Question, "id" | "bankId"> {
 
 function BankQuestions({ bankId, bankName, courseId }: { bankId: ID; bankName: string; courseId: ID }) {
   const q = useQuery({ queryKey: ["quizzes", "questions", bankId], queryFn: () => api.quizzes.questions(bankId) });
+  const [importing, setImporting] = useState(false);
   const [newKeys, setNewKeys] = useState<string[]>([]);
   const [tagFilter, setTagFilter] = useState("");
   const add = () => setNewKeys((k) => [...k, `new-${Date.now()}`]);
@@ -138,11 +140,13 @@ function BankQuestions({ bankId, bankName, courseId }: { bankId: ID; bankName: s
               {allTags.map((t) => <option key={t}>{t}</option>)}
             </Select>
           )}
+          <Button size="sm" variant="outline" onClick={()=>setImporting(true)}>Bulk upload</Button>
           <Button size="sm" icon={<Plus className="size-4" />} onClick={add} className="rounded-full">Add question</Button>
         </>
       }
       bodyClassName="space-y-4 p-4 sm:p-5"
     >
+      {importing && <BulkQuestionImport key={bankId} bankId={bankId} courseId={courseId} onClose={()=>setImporting(false)} />}
       <QueryView query={q} loading={<ListSkeleton rows={3} />}>
         {() => (
           <>

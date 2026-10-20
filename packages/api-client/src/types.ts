@@ -200,7 +200,7 @@ export interface Attachment {
   mimeType: string;
   sizeBytes: number;
   url: string;
-  scanStatus: "pending" | "clean" | "infected";
+  scanStatus: "pending" | "clean" | "infected" | "skipped";
 }
 
 /** Full unit page payload. Recording(s) first, course text underneath. */
@@ -832,4 +832,12 @@ export interface TeamsSetup {
  status: 'preparing' | 'action_required' | 'connected' | 'unavailable';
  invitationUrl?: string;
  checkedAt?: string;
+}
+
+export interface QuestionImportPreview {
+  rows: {row: number; prompt: string; type: string; status: 'ready' | 'duplicate' | 'error'; errors: string[]}[];
+  readyCount: number;
+  duplicateCount: number;
+  errorCount: number;
+  importedCount: number;
 }
