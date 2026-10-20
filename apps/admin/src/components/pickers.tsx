@@ -83,7 +83,7 @@ function useDebounced<T>(v: T, ms = 250) {
   return d;
 }
 
-export function PersonSearch({ role, onPick, excludeIds = [], placeholder = "Search by name, email or matric number" }: { role?: RoleKey; onPick: (p: PersonLite) => void; excludeIds?: ID[]; placeholder?: string }) {
+export function PersonSearch({ role, onPick, excludeIds = [], placeholder = "Search by name, email or matric number", inlineResults = false }: { inlineResults?: boolean; role?: RoleKey; onPick: (p: PersonLite) => void; excludeIds?: ID[]; placeholder?: string }) {
   const [term, setTerm] = useState("");
   const search = useDebounced(term);
   const id = useId();
@@ -97,7 +97,7 @@ export function PersonSearch({ role, onPick, excludeIds = [], placeholder = "Sea
     <div className="relative">
       <SearchInput value={term} onChange={(e) => setTerm(e.target.value)} placeholder={placeholder} aria-label={placeholder} aria-controls={id} />
       {search.trim().length >= 2 && (
-        <ul id={id} role="listbox" className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 shadow-pop">
+        <ul id={id} role="listbox" className={`${inlineResults ? "relative" : "absolute z-20"} mt-1 max-h-64 w-full overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 shadow-pop`}>
           {q.isFetching && !q.data && <li className="px-3 py-2 text-sm text-neutral-500">Searching…</li>}
           {q.data && !results.length && <li className="px-3 py-2 text-sm text-neutral-500">No matches</li>}
           {results.map((u) => (
@@ -126,10 +126,10 @@ export function PersonSearch({ role, onPick, excludeIds = [], placeholder = "Sea
   );
 }
 
-export function PeopleMultiPicker({ value, onChange, role, label }: { value: PersonLite[]; onChange: (v: PersonLite[]) => void; role?: RoleKey; label: string }) {
+export function PeopleMultiPicker({ value, onChange, role, label, inlineResults = false }: { inlineResults?: boolean; value: PersonLite[]; onChange: (v: PersonLite[]) => void; role?: RoleKey; label: string }) {
   return (
     <div className="space-y-2">
-      <PersonSearch role={role} excludeIds={value.map((v) => v.id)} onPick={(p) => onChange([...value, p])} placeholder={`Search ${label.toLowerCase()}`} />
+      <PersonSearch inlineResults={inlineResults} role={role} excludeIds={value.map((v) => v.id)} onPick={(p) => onChange([...value, p])} placeholder={`Search ${label.toLowerCase()}`} />
       {value.length > 0 && (
         <ul className="flex flex-wrap gap-2" aria-label={label}>
           {value.map((p) => (

@@ -85,7 +85,7 @@ function EnrolModal({ courseId, onClose }: { courseId: string; onClose: () => vo
   });
   return (
     <Modal open size="lg" onClose={onClose} title="Enrol students" description="Search existing student accounts. To create new accounts, use CSV import." footer={<><Button variant="outline" onClick={onClose}>Cancel</Button><Button onClick={() => (people.length ? enrol.mutate(undefined) : setError("Add at least one student"))} loading={enrol.isPending}>Enrol {people.length || ""}</Button></>}>
-      <PeopleMultiPicker label="Students" role="student" value={people} onChange={(v) => { setPeople(v); setError(undefined); }} />
+      <div className="min-h-[min(360px,45dvh)]"><PeopleMultiPicker inlineResults label="Students" role="student" value={people} onChange={(v) => { setPeople(v); setError(undefined); }} /></div>
       {error && <p className="mt-2 text-xs text-danger">{error}</p>}
     </Modal>
   );
