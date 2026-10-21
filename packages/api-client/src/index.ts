@@ -6,3 +6,5 @@ export type { SearchHit } from "./endpoints";
 export * from "./utils";
 
 export { logoutAndClearDevice } from "./logout";
+
+export { accountEvents } from "./account-events";

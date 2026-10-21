@@ -1,3 +1,4 @@
+import { accountEvents } from "@tasued/api-client";
 import { request } from "@tasued/api-client";
 import { owner, setOwner } from "./identity-store";
 let accountGeneration = 0;
@@ -48,7 +49,7 @@ export async function clearDevice(notifyServer = true) {
   try {
     await disablePush(notifyServer);
   } finally {
-    if (changed) channel?.postMessage("clear");
+    if (changed) channel?.postMessage(accountEvents.message("clear"));
     channel?.close();
   }
 }
@@ -63,7 +64,7 @@ export async function activateAccount(id: string) {
       typeof BroadcastChannel !== "undefined"
         ? new BroadcastChannel("lms-admin-account")
         : null;
-    channel?.postMessage("changed");
+    channel?.postMessage(accountEvents.message("changed"));
     channel?.close();
   }
 }

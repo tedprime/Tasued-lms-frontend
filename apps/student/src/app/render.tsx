@@ -1,3 +1,4 @@
+import { accountEvents } from "@tasued/api-client";
 import { clearDevice } from "../pwa/device";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -22,7 +23,8 @@ export function renderApp(rootEl: HTMLElement) {
 
   if (typeof BroadcastChannel !== "undefined") {
     const channel = new BroadcastChannel("lms-account");
-    channel.onmessage = () => {
+    channel.onmessage = (event) => {
+      if (!accountEvents.isExternal(event.data)) return;
       queryClient.clear();
       if (location.pathname !== "/offline") location.replace("/sign-in");
     };

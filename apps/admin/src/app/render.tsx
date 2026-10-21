@@ -1,3 +1,4 @@
+import { accountEvents } from "@tasued/api-client";
 import { refreshDefaults } from "@tasued/ui";
 import { clearDevice } from "../pwa/device";
 import { StrictMode } from "react";
@@ -31,7 +32,7 @@ export function renderApp(rootEl: HTMLElement) {
     },
   });
 
-  if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('lms-admin-account');channel.onmessage=()=>{queryClient.clear();location.replace('/sign-in');};}
+  if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('lms-admin-account');channel.onmessage=(event)=>{if(!accountEvents.isExternal(event.data)) return;queryClient.clear();location.replace('/sign-in');};}
   const router = createAppRouter();
 
   createRoot(rootEl).render(
