@@ -13,3 +13,4 @@ export * from "../../../../packages/ui/src/hooks/useMediaQuery";
 export { cn } from "../../../../packages/ui/src/lib/cn";
 
 export { DataRefresh, refreshDefaults } from "../../../../packages/ui/src/data-refresh";
+export { RequestErrorPage } from "../../../../packages/ui/src/components/RequestErrorPage";

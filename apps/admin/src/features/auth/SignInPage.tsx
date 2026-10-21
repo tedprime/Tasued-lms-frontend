@@ -1,3 +1,4 @@
+import { signInErrorMessage } from "./sign-in-errors";
 import { activateAccount } from "../../pwa/device";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -43,7 +44,7 @@ export function SignInPage() {
     },
   });
 
-  if (session.data) return <Navigate to={returnTo} replace />;
+  if (session.data && !error) return <Navigate to={returnTo} replace />;
 
   const signInWithMicrosoft = () => {
     window.location.href = api.auth.microsoftLoginUrl(apiBaseUrl(), returnTo);
@@ -83,7 +84,7 @@ export function SignInPage() {
           <h2 className="font-headline text-2xl font-extrabold text-tertiary-500">Sign in</h2>
           <p className="mt-1 mb-7 text-sm text-neutral-500">Use your TASFUED Microsoft 365 staff account.</p>
 
-          {error && <Alert tone="red" className="mb-4" title="Sign-in didn't complete">{error === "not_staff" ? "This account doesn't have a staff role in the LMS." : "Please try again. If it keeps failing, contact LMS support."}</Alert>}
+          {error && <Alert tone="red" className="mb-4" title="Sign-in didn't complete">{signInErrorMessage(error)}</Alert>}
 
           <Button size="lg" variant="inverted" className="w-full" onClick={signInWithMicrosoft} icon={<MicrosoftMark />}>
             Sign in with Microsoft

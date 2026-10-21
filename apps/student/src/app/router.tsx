@@ -5,7 +5,7 @@ import {
   type LazyExoticComponent,
 } from "react";
 import { createBrowserRouter, redirect } from "react-router-dom";
-import { PageLoader } from "@tasued/ui";
+import { PageLoader, RequestErrorPage } from "@tasued/ui";
 import { RequireAuth } from "./session";
 import { AppShell } from "../layout/AppShell";
 import { RouteErrorPage } from "../features/system/RouteErrorPage";
@@ -68,6 +68,7 @@ export const router = createBrowserRouter([
   {
     errorElement: <RouteErrorPage />,
     children: [
+      { path: "/request-error", element: <RequestErrorPage /> },
       { path: "/offline", element: page(() => import("../pwa/OfflinePage")) },
       { path: "/sign-in", element: page(SignInPage) },
       { path: "/set-password", element: page(SetPasswordPage) },

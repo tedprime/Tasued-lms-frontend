@@ -1,3 +1,4 @@
+import { RequestErrorPage } from "@tasued/ui";
 import { INTEGRATION_HEALTH_ENABLED } from "./features";
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
 import type { ComponentType } from "react";
@@ -69,6 +70,7 @@ const courseTabs: RouteObject[] = [
 
 export function createAppRouter() {
   const routes: RouteObject[] = [
+    { path: "/request-error", element: <RequestErrorPage /> },
     { path: "/sign-in", lazy: page(() => import("../features/auth/SignInPage"), (m) => m.SignInPage), errorElement: <RouteError /> },
     {
       element: <RequireAuth />,
