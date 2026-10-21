@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +22,7 @@ export function AssignmentEditorPage() {
   const settings = useQuery({ queryKey: ["settings"], queryFn: () => api.settings.get(), retry: false, enabled: !assignmentId });
   if (!can("assignments.manage")) return <NoAccess what="create or edit assignments" />;
   if (assignmentId && q.isPending) return <PageLoader />;
-  if (assignmentId && q.isError) return <ErrorState description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
+  if (assignmentId && q.isError && (q.data === undefined || blocksCachedData(q.error))) return <ErrorState description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   if (!assignmentId && settings.isPending) return <PageLoader />;
   return <Editor key={assignmentId ?? "new"} existing={q.data} defaultLatePolicy={settings.data?.defaultLatePolicy} maxUploadMb={settings.data?.maxUploadMb} />;
 }

@@ -1,3 +1,4 @@
+import { DataRefresh } from "@tasued/ui";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useMatch, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -217,6 +218,7 @@ export function Header({ onMenu }: { onMenu: () => void }) {
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <DataRefresh />
           <CourseSwitcher />
           <Notifications />
           <ProfileMenu />

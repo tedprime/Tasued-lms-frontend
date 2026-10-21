@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +17,7 @@ export function UserDetailPage() {
   const { userId } = useParams();
   const q = useQuery({ queryKey: ["people", "get", userId], queryFn: () => api.people.get(userId!), enabled: !!userId, refetchInterval: 15000 });
   if (q.isPending) return <PageLoader />;
-  if (q.isError) return <ErrorState title="Couldn't load this person" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
+  if (q.isError && (q.data === undefined || blocksCachedData(q.error))) return <ErrorState title="Couldn't load this person" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   return <UserDetail user={q.data} />;
 }
 

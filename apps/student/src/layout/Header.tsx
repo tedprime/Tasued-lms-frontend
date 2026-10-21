@@ -1,3 +1,4 @@
+import { DataRefresh } from "@tasued/ui";
 import { useNavigate } from "react-router-dom";
 import { Menu as MenuIcon, User, Settings, LogOut } from "lucide-react";
 import { Avatar, Menu } from "@tasued/ui";
@@ -20,6 +21,7 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
         <GlobalSearch />
       </div>
       <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <DataRefresh />
         <NotificationsPopover />
         <Menu
           trigger={

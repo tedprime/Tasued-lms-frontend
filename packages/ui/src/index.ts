@@ -6,3 +6,4 @@ export * from "./components/ErrorRecovery";
 export * from "./hooks/useCountdown";
 export * from "./hooks/useMediaQuery";
 export { cn } from "./lib/cn";
+export { DataRefresh, refreshDefaults } from './data-refresh';

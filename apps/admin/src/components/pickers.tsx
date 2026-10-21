@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useEffect, useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, X } from "lucide-react";
@@ -14,7 +15,7 @@ export function UnitCoveragePicker({ courseId, value, onChange, invalid }: { cou
   const selected = new Set(value);
 
   if (modules.isPending) return <div className="flex items-center gap-2 text-sm text-neutral-500"><Spinner className="size-4" /> Loading modules…</div>;
-  if (modules.isError) return <p className="text-sm text-danger">Couldn't load modules.</p>;
+  if (modules.isError && (modules.data === undefined || blocksCachedData(modules.error))) return <p className="text-sm text-danger">Couldn't load modules.</p>;
   if (!modules.data.length) return <p className="text-sm text-neutral-500">This course has no modules yet. Add modules and units under Content first.</p>;
 
   const toggle = (ids: ID[], on: boolean) => {

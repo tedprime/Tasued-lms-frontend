@@ -1,3 +1,4 @@
+import { INTEGRATION_HEALTH_ENABLED } from "../../app/features";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Activity, CalendarClock, ClipboardCheck, ExternalLink, FileText, Flag, BookOpen, GraduationCap, MailCheck, ScrollText, UserCog, Video } from "lucide-react";
@@ -41,7 +42,7 @@ export function DashboardPage() {
             <p className="mt-2 max-w-xl text-sm text-white/75">
               {teaches()
                 ? "Today's Teams classes, class recordings and work waiting for you."
-                : "Courses, people, invitations and platform health at a glance."}
+                : "Courses, people and invitations at a glance."}
             </p>
           </div>
           <div className="flex flex-col items-start gap-2 md:items-end">
@@ -50,7 +51,7 @@ export function DashboardPage() {
               <BookOpen className="size-4" aria-hidden /> Open {only.code}
             </Link>
           )}
-          {q.data && can("integrations.view") && (
+          {q.data && INTEGRATION_HEALTH_ENABLED && can("integrations.view") && (
             <Link to="/integrations" className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-primary-600 shadow-sm md:self-center">
               <span className={q.data.integrationOk ? "size-2 rounded-full bg-primary-500" : "size-2 rounded-full bg-danger"} aria-hidden />
               {q.data.integrationOk ? "Microsoft Teams integration healthy" : "Integration needs attention"}
@@ -220,7 +221,7 @@ function AdminPanels({ d }: { d: AdminDashboard }) {
       </div>
       <div className="space-y-4 lg:space-y-6">
         {can("people.manage") && <InvitationsCard />}
-        {can("integrations.view") && (
+        {INTEGRATION_HEALTH_ENABLED && can("integrations.view") && (
           <SectionCard title="Platform health" subtitle="Teams, OneDrive and email" action={<Link to="/integrations" className="text-sm font-semibold text-primary-500 hover:underline">Details</Link>}>
             <div className="flex items-center gap-3 px-5 py-5">
               <span className={d.integrationOk ? "flex size-10 items-center justify-center rounded-lg bg-success-50 text-success" : "flex size-10 items-center justify-center rounded-lg bg-danger-50 text-danger"}>

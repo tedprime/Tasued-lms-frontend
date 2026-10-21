@@ -139,7 +139,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
       </div>
     );
   if (isPending) return <PageLoader label="Checking your session…" />;
-  if (isError)
+  if (isError && data === undefined)
     return (
       <div className="p-6">
         <ErrorState

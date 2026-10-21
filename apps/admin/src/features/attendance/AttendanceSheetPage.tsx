@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -18,9 +19,9 @@ const MARKS: { key: AttendanceMark; label: string; tone: string }[] = [
 
 export function AttendanceSheetPage() {
   const { classId } = useParams();
-  const q = useQuery({ queryKey: ["attendance", "sheet", classId], queryFn: () => api.attendance.sheet(classId!), enabled: !!classId, refetchInterval: (query) => query.state.data?.status === "pending_import" ? 30000 : false });
+  const q = useQuery({ queryKey: ["attendance", "sheet", classId], queryFn: () => api.attendance.sheet(classId!), enabled: !!classId, refetchInterval: (query) => query.state.data?.status === "pending_import" ? 30000 : 60000 });
   if (q.isPending) return <PageLoader label="Loading attendance…" />;
-  if (q.isError) return <ErrorState title="Couldn't load the attendance sheet" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
+  if (q.isError && (q.data === undefined || blocksCachedData(q.error))) return <ErrorState title="Couldn't load the attendance sheet" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   return <Sheet sheet={q.data} />;
 }
 

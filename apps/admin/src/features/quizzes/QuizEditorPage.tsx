@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -18,7 +19,7 @@ export function QuizEditorPage() {
   const q = useQuery({ queryKey: ["quizzes", "get", quizId], queryFn: () => api.quizzes.get(quizId!), enabled: !!quizId });
   if (!can("quizzes.manage")) return <NoAccess what="create or edit quizzes" />;
   if (quizId && q.isPending) return <PageLoader />;
-  if (quizId && q.isError) return <ErrorState description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
+  if (quizId && q.isError && (q.data === undefined || blocksCachedData(q.error))) return <ErrorState description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   return <Editor key={quizId ?? "new"} existing={q.data} />;
 }
 

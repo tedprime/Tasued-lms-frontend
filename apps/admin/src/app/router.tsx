@@ -1,3 +1,4 @@
+import { INTEGRATION_HEALTH_ENABLED } from "./features";
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
 import type { ComponentType } from "react";
 import type { Permission } from "@tasued/api-client";
@@ -125,9 +126,9 @@ export function createAppRouter() {
               { path: "reports", lazy: page(() => import("../features/reports/ReportsPage"), (m) => m.ReportsPage) },
             ], "view reports"),
             guard("audit.view", [{ path: "audit", lazy: page(() => import("../features/audit/AuditPage"), (m) => m.AuditPage) }], "view the audit log"),
-            guard("integrations.view", [
+            INTEGRATION_HEALTH_ENABLED ? guard("integrations.view", [
               { path: "integrations", lazy: page(() => import("../features/integrations/IntegrationsPage"), (m) => m.IntegrationsPage) },
-            ], "view integration health"),
+            ], "view integration health") : { path: "integrations", element: <Navigate to="/" replace /> },
             guard("settings.manage", [
               { path: "settings", lazy: page(() => import("../features/settings/SettingsPage"), (m) => m.SettingsPage) },
             ], "change platform settings"),

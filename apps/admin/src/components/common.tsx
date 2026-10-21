@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useState, type ReactNode } from "react";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { Check, Copy } from "lucide-react";
@@ -20,7 +21,8 @@ export function QueryView<T>({
   empty?: ReactNode;
 }) {
   if (query.isPending) return <>{loading ?? <ListSkeleton />}</>;
-  if (query.isError) return <ErrorState description={errorMessage(query.error)} onRetry={() => query.refetch()} />;
+  if (query.data === undefined || blocksCachedData(query.error)) return <ErrorState description={errorMessage(query.error)} onRetry={() => query.refetch()} />;
+  if (query.data === undefined) return null;
   if (isEmpty?.(query.data) && empty) return <>{empty}</>;
   return <>{children(query.data)}</>;
 }

@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -26,7 +27,7 @@ export function QuizAttemptsPage() {
   const queue = useQuery({ queryKey: ["quizzes", "marking", quizId], queryFn: () => api.quizzes.markingQueue(quizId!), enabled: !!quizId && can("quizzes.grade") });
 
   if (quiz.isPending) return <PageLoader />;
-  if (quiz.isError) return <ErrorState description={errorMessage(quiz.error)} onRetry={() => quiz.refetch()} />;
+  if (quiz.isError && (quiz.data === undefined || blocksCachedData(quiz.error))) return <ErrorState description={errorMessage(quiz.error)} onRetry={() => quiz.refetch()} />;
   const pendingCount = queue.data?.reduce((n, a) => n + a.pendingManualMarks, 0) ?? 0;
 
   return (

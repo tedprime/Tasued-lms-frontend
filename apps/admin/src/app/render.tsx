@@ -1,3 +1,4 @@
+import { refreshDefaults } from "@tasued/ui";
 import { clearDevice } from "../pwa/device";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -12,8 +13,7 @@ export function renderApp(rootEl: HTMLElement) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 30_000,
-        refetchOnWindowFocus: false,
+        ...refreshDefaults,
         retry: (count, e) => !(isApiError(e) && e.status >= 400 && e.status < 500) && count < 2,
       },
       mutations: { retry: false },

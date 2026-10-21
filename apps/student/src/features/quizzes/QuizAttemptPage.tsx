@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, useBlocker, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -44,7 +45,7 @@ export default function QuizAttemptPage() {
   });
 
   if (attempt.isPending) return <PageLoader label="Loading your quiz…" />;
-  if (attempt.isError)
+  if (attempt.isError && (attempt.data === undefined || blocksCachedData(attempt.error)))
     return (
       <div className="flex min-h-dvh items-center justify-center bg-neutral p-6">
         <Card className="w-full max-w-md">

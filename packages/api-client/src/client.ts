@@ -1,4 +1,5 @@
 import type { ApiError } from "./types";
+import { notifyApiWrite } from './refresh-policy';
 
 /**
  * Minimal REST client.
@@ -69,6 +70,9 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
     };
     throw err;
   }
+  // Reading/video progress autosaves reconcile their server response locally.
+  const progressAutosave = path.endsWith('/progress') && body && typeof body === 'object' && !('completed' in body);
+  if (method !== 'GET' && !progressAutosave) notifyApiWrite(path);
   return data as T;
 }
 

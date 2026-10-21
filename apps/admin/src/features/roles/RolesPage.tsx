@@ -1,3 +1,4 @@
+import { INTEGRATION_HEALTH_ENABLED } from "../../app/features";
 import { useQuery } from "@tanstack/react-query";
 import { Check, Minus } from "lucide-react";
 import { api, ROLE_LABELS, type Permission, type RoleKey } from "@tasued/api-client";
@@ -61,7 +62,7 @@ export function RolesPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {(Object.keys(PERMISSION_LABELS) as Permission[]).map((p) => (
+                  {(Object.keys(PERMISSION_LABELS) as Permission[]).filter(p => INTEGRATION_HEALTH_ENABLED || p !== "integrations.view").map((p) => (
                     <tr key={p} className="hover:bg-neutral-50">
                       <th scope="row" className="sticky left-0 border-b border-neutral-100 bg-white px-4 py-2.5 text-left font-normal">
                         <span className="block font-semibold text-tertiary-500">{PERMISSION_LABELS[p]}</span>

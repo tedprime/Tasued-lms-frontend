@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { portalUrl } from "@tasued/api-client";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -18,7 +19,7 @@ export function SubmissionsPage() {
   const { assignmentId } = useParams();
   const q = useQuery({ queryKey: ["assignments", "get", assignmentId], queryFn: () => api.assignments.get(assignmentId!), enabled: !!assignmentId });
   if (q.isPending) return <PageLoader />;
-  if (q.isError) return <ErrorState description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
+  if (q.isError && (q.data === undefined || blocksCachedData(q.error))) return <ErrorState description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   return <Submissions assignment={q.data} />;
 }
 

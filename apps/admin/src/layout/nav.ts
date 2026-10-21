@@ -1,3 +1,4 @@
+import { INTEGRATION_HEALTH_ENABLED } from "../app/features";
 import type { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard, CalendarClock, Video, ClipboardCheck, FileText, ListChecks, Sheet,
@@ -19,7 +20,7 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-export const NAV: NavGroup[] = [
+const ALL_NAV: NavGroup[] = [
   {
     label: "Overview",
     items: [
@@ -64,3 +65,5 @@ export const NAV: NavGroup[] = [
   },
   { label: "System", items: [{ to: "/settings", label: "Settings", icon: Settings, perm: ["settings.manage"] }] },
 ];
+
+export const NAV = ALL_NAV.map(group => ({ ...group, items: group.items.filter(item => INTEGRATION_HEALTH_ENABLED || item.to !== "/integrations") }));

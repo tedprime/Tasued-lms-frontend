@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import type { ReactNode } from "react";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { EmptyState, ErrorState, Skeleton, cn } from "@tasued/ui";
@@ -26,7 +27,7 @@ export function Async<T>({
   if (query.isPending && query.fetchStatus === "paused")
     return <EmptyState icon={<WifiOff className="size-6" />} title="You're offline" description="This hasn't been saved for offline use yet. It will load when you're back online." />;
   if (query.isPending) return <>{skeleton ?? <ListSkeleton />}</>;
-  if (query.isError) {
+  if (query.data === undefined || blocksCachedData(query.error)) {
     const notFound = isApiError(query.error) && query.error.status === 404;
     return notFound ? (
       <EmptyState title="Not found" description="This item doesn't exist or is no longer available." />
@@ -34,6 +35,7 @@ export function Async<T>({
       <ErrorState title={errorTitle} description={errorMessage(query.error)} onRetry={() => void query.refetch()} />
     );
   }
+  if (query.data === undefined) return null;
   if (empty && isEmpty?.(query.data)) return <>{empty}</>;
   return <>{children(query.data)}</>;
 }

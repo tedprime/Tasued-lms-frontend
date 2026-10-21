@@ -82,7 +82,7 @@ export function RequireAuth() {
   const { data, isLoading, isError, refetch } = useSessionQuery();
   const loc = useLocation();
   if (isLoading) return <PageLoader label="Checking your session…" />;
-  if (isError)
+  if (isError && data === undefined)
     return (
       <div className="flex min-h-screen items-center justify-center">
         <EmptyState

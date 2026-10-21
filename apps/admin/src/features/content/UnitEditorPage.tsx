@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { portalUrl } from "@tasued/api-client";
 import { useEffect, useRef, useState } from "react";
 import { Link, useBlocker, useParams } from "react-router-dom";
@@ -16,7 +17,7 @@ export function UnitEditorPage() {
   const { unitId } = useParams();
   const q = useQuery({ queryKey: ["content", "unit", unitId], queryFn: () => api.content.unit(unitId!), enabled: !!unitId });
   if (q.isPending) return <PageLoader label="Loading unit…" />;
-  if (q.isError) return <ErrorState title="Couldn't load this unit" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
+  if (q.isError && (q.data === undefined || blocksCachedData(q.error))) return <ErrorState title="Couldn't load this unit" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   return <UnitEditor key={q.data.id} unit={q.data} />;
 }
 

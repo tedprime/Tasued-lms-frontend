@@ -1,11 +1,11 @@
+import { refreshDefaults } from "@tasued/ui";
 import { QueryClient } from "@tanstack/react-query";
 import { isApiError } from "@tasued/api-client";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30_000,
-      refetchOnWindowFocus: false,
+      ...refreshDefaults,
       // Always attempt the request so the service worker can answer from cache when offline.
       networkMode: "offlineFirst",
       retry: (count, err) => {

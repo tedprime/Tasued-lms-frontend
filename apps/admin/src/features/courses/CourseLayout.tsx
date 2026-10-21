@@ -1,3 +1,4 @@
+import { blocksCachedData } from "@tasued/api-client";
 import { useState } from "react";
 import { Link, NavLink, Outlet, useOutletContext } from "react-router-dom";
 import { ChevronRight, Settings2 } from "lucide-react";
@@ -43,7 +44,7 @@ export function CourseLayout() {
         <PageLoader />
       </div>
     );
-  if (q.isError) return <ErrorState title="Couldn't load this course" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
+  if (q.isError && (q.data === undefined || blocksCachedData(q.error))) return <ErrorState title="Couldn't load this course" description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
   const o = q.data;
   if (!canStaff(o.id)) return <NoAccess what="work on this course" />;
 

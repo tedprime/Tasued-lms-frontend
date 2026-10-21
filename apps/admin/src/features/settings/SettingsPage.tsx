@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { blocksCachedData } from "@tasued/api-client";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, errorMessage, type LatePolicy, type PlatformSettings } from "@tasued/api-client";
 import { Button, ErrorState, Field, Input, PageHeader, PageLoader, Select } from "../../components/ui";
@@ -8,8 +9,8 @@ import { hasErrors, useApiMutation, type Errors } from "../../components/mutatio
 export function SettingsPage() {
   const q = useQuery({ queryKey: ["settings"], queryFn: () => api.settings.get() });
   if (q.isPending) return <PageLoader />;
-  if (q.isError) return <ErrorState description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
-  return <SettingsForm key={JSON.stringify(q.data)} s={q.data} />;
+  if (q.isError && (q.data === undefined || blocksCachedData(q.error))) return <ErrorState description={errorMessage(q.error)} onRetry={() => q.refetch()} />;
+  return <SettingsForm s={q.data} />;
 }
 
 type F = { institutionName: string; threshold: string; late: string; defaultLatePolicy: LatePolicy; maxUploadMb: string; organiser: string; minPassword: string; supportEmail: string };
@@ -27,9 +28,14 @@ function SettingsForm({ s }: { s: PlatformSettings }) {
   };
   const [f, setF] = useState<F>(initial);
   const [errors, setErrors] = useState<Errors<keyof F>>({});
-  const dirty = JSON.stringify(f) !== JSON.stringify(initial);
+  const [baseline, setBaseline] = useState(initial);
+  const dirty = JSON.stringify(f) !== JSON.stringify(baseline);
+  const incoming = JSON.stringify(initial);
+  useEffect(() => {
+    if (!dirty) { const next = JSON.parse(incoming) as F; setF(next); setBaseline(next); }
+  }, [incoming, dirty]);
   const save = useApiMutation({
-    mutationFn: () =>
+    mutationFn: (f: F) =>
       api.settings.update({
         institutionName: f.institutionName.trim(),
         attendanceRule: { presentThresholdPercent: Number(f.threshold), lateAfterMinutes: Number(f.late) },
@@ -40,6 +46,7 @@ function SettingsForm({ s }: { s: PlatformSettings }) {
         supportEmail: f.supportEmail.trim(),
       }),
     success: "Settings saved",
+    onSuccess: (_result, submitted) => setBaseline(submitted),
     invalidate: [["settings"]],
   });
   const submit = () => {
@@ -54,13 +61,13 @@ function SettingsForm({ s }: { s: PlatformSettings }) {
       supportEmail: /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.supportEmail.trim()) ? undefined : "Enter a valid email",
     };
     setErrors(e);
-    if (!hasErrors(e)) save.mutate(undefined);
+    if (!hasErrors(e)) save.mutate({ ...f });
   };
   const set = (k: keyof F) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
 
   return (
     <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); submit(); }}>
-      <PageHeader title="Settings" description="Platform-wide defaults. Changes are recorded in the audit log." actions={<><Button variant="outline" disabled={!dirty} onClick={() => { setF(initial); setErrors({}); }}>Discard</Button><Button type="submit" disabled={!dirty} loading={save.isPending}>Save settings</Button></>} />
+      <PageHeader title="Settings" description="Platform-wide defaults. Changes are recorded in the audit log." actions={<><Button variant="outline" disabled={!dirty} onClick={() => { setF(initial); setBaseline(initial); setErrors({}); }}>Discard</Button><Button type="submit" disabled={!dirty} loading={save.isPending}>Save settings</Button></>} />
       <div className="grid gap-5 lg:grid-cols-2">
         <SectionCard title="Institution" bodyClassName="space-y-4 p-5">
           <Field label="Institution name" required error={errors.institutionName} htmlFor="st-name"><Input id="st-name" value={f.institutionName} onChange={set("institutionName")} invalid={!!errors.institutionName} /></Field>
