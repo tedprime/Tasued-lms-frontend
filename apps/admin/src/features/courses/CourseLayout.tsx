@@ -82,6 +82,11 @@ export function CourseLayout() {
         {can("courses.manage") && <Button variant="outline" size="sm" icon={<Settings2 className="size-4" />} onClick={() => setEditing(true)}>Course settings</Button>}
       </div>
 
+      {o.teamsSync && <div className="mb-4 rounded-xl border border-neutral-200 bg-white p-4 text-sm" role="status">
+        <p className="font-semibold">Microsoft Team: {o.teamsSync.status === "synced" ? "Membership synchronised" : o.teamsSync.status === "error" ? "Needs attention" : "Setting up membership"}</p>
+        <p className="mt-1 text-neutral-600">{o.teamsSync.message || (o.teamsSync.status === "synced" ? "The last membership sync completed. Microsoft may take time to make access available." : "The LMS is preparing course access. Updates run automatically in the background.")}</p>
+        {o.teamsSync.lastSyncedAt && <p className="mt-1 text-xs text-neutral-500">Last synced: {new Date(o.teamsSync.lastSyncedAt).toLocaleString()}</p>}
+      </div>}
       <nav aria-label="Course sections" className="-mx-3 mb-5 overflow-x-auto overflow-y-hidden px-3 shadow-[inset_0_-1px_0_var(--color-neutral-200)] sm:mx-0 sm:px-0">
         <ul className="flex gap-1">
           {TABS.filter((t) => (!t.perm || can(t.perm)) && (!t.teaching || teaches(o.id))).map((t) => (

@@ -130,6 +130,11 @@ export type CourseStatus = "draft" | "published" | "archived";
  * There are no faculties, departments, sessions, semesters or offerings.
  */
 export interface Course {
+  teamsSync?: {
+    status: 'pending' | 'synced' | 'error';
+    message?: string;
+    lastSyncedAt?: string;
+  };
   id: ID;
   code: string; // "AIIE 111"
   title: string;
