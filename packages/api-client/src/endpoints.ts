@@ -48,6 +48,7 @@ export const dashboards = {
 
 /* ── Courses (Course → Modules → Units), enrolment, staff ── */
 export const courses = {
+  retryTeamsSync: (id: T.ID) => request<{ queued: boolean }>(`/courses/${id}/teams-sync/retry`, { method: "POST" }),
   /** Students: courses they're enrolled in. Staff: courses they teach (super admins: all). */
   list: (p: T.ListQuery & { status?: T.CourseStatus } = {}) => request<T.Paginated<T.Course>>("/courses", { query: q(p) }),
   /** Students: every published course (any course, any time). */

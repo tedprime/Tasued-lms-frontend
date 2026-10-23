@@ -1,8 +1,9 @@
 import { blocksCachedData } from "@tasued/api-client";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, NavLink, Outlet, useOutletContext } from "react-router-dom";
 import { ChevronRight, Settings2 } from "lucide-react";
-import { errorMessage, type Course, type Permission } from "@tasued/api-client";
+import { api, errorMessage, type Course, type Permission } from "@tasued/api-client";
 import { Badge, Button, ErrorState, PageLoader, Skeleton, cn } from "../../components/ui";
 import { useCan, useCanStaffCourse, useTeaches } from "../../app/session";
 import { useCourse, useCourseId } from "../../components/queries";
@@ -35,6 +36,10 @@ export function CourseLayout() {
   const canStaff = useCanStaffCourse();
   const teaches = useTeaches();
   const [editing, setEditing] = useState(false);
+  const retryTeams = useMutation({
+    mutationFn: () => api.courses.retryTeamsSync(id),
+    onSuccess: () => q.refetch(),
+  });
 
   if (q.isPending)
     return (
@@ -86,6 +91,13 @@ export function CourseLayout() {
         <p className="font-semibold">Microsoft Team: {o.teamsSync.status === "synced" ? "Membership synchronised" : o.teamsSync.status === "error" ? "Needs attention" : "Setting up membership"}</p>
         <p className="mt-1 text-neutral-600">{o.teamsSync.message || (o.teamsSync.status === "synced" ? "The last membership sync completed. Microsoft may take time to make access available." : "The LMS is preparing course access. Updates run automatically in the background.")}</p>
         {o.teamsSync.lastSyncedAt && <p className="mt-1 text-xs text-neutral-500">Last synced: {new Date(o.teamsSync.lastSyncedAt).toLocaleString()}</p>}
+        {(can("courses.manage") || (can("classes.schedule") && teaches(o.id))) && <div className="mt-3">
+          <Button variant="outline" size="sm" disabled={retryTeams.isPending} onClick={() => retryTeams.mutate()}>
+            {retryTeams.isPending ? "Requesting retry…" : "Retry Team sync"}
+          </Button>
+          {retryTeams.isSuccess && o.teamsSync.status === "pending" && <p className="mt-2 text-xs text-neutral-600">Retry queued. The background worker will update this status shortly.</p>}
+          {retryTeams.isError && <p role="alert" className="mt-2 text-sm text-red-700">{errorMessage(retryTeams.error)}</p>}
+        </div>}
       </div>}
       <nav aria-label="Course sections" className="-mx-3 mb-5 overflow-x-auto overflow-y-hidden px-3 shadow-[inset_0_-1px_0_var(--color-neutral-200)] sm:mx-0 sm:px-0">
         <ul className="flex gap-1">
