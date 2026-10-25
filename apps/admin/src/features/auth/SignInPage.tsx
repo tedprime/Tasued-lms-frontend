@@ -1,5 +1,4 @@
 import { beginSignInDiagnostic } from "@tasued/api-client";
-import { SessionDiagnostic } from "@tasued/ui";
 import { signInErrorMessage } from "./sign-in-errors";
 import { activateAccount } from "../../pwa/device";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
@@ -87,7 +86,6 @@ export function SignInPage() {
           <h2 className="font-headline text-2xl font-extrabold text-tertiary-500">Sign in</h2>
           <p className="mt-1 mb-7 text-sm text-neutral-500">Use your TASFUED Microsoft 365 staff account.</p>
 
-          {!error && <SessionDiagnostic retry={() => session.refetch()} loading={session.isFetching} />}
           {error && <Alert tone="red" className="mb-4" title="Sign-in didn't complete">{signInErrorMessage(error)}</Alert>}
 
           <Button size="lg" variant="inverted" className="w-full" onClick={signInWithMicrosoft} icon={<MicrosoftMark />}>

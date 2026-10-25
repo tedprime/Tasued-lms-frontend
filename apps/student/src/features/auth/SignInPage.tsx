@@ -1,5 +1,4 @@
 import { beginSignInDiagnostic } from "@tasued/api-client";
-import { SessionDiagnostic } from "@tasued/ui";
 import { activateAccount } from '../../pwa/device';
 import { useId, useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
@@ -140,7 +139,6 @@ export default function SignInPage() {
 
   return (
     <AuthLayout title="Sign in" description="Sign in with your email and the password you set for TASFUED LMS.">
-      <SessionDiagnostic retry={() => session.refetch()} loading={session.isFetching || login.isPending} />
       <form
         noValidate
         className="mt-8 space-y-4"
