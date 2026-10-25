@@ -1,3 +1,5 @@
+import { beginSignInDiagnostic } from "@tasued/api-client";
+import { SessionDiagnostic } from "@tasued/ui";
 import { activateAccount } from '../../pwa/device';
 import { useId, useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
@@ -118,7 +120,12 @@ export default function SignInPage() {
   const [tried, setTried] = useState(false);
 
   const login = useMutation({
-    mutationFn: () => api.auth.passwordLogin({ email: email.trim(), password }),
+    mutationFn: async () => {
+      await api.auth.passwordLogin({ email: email.trim(), password });
+      beginSignInDiagnostic();
+      // Verify the cookie actually works before entering the authenticated portal.
+      return api.auth.session();
+    },
     onSuccess: async (s) => {
       await activateAccount(s.user.id).catch(()=>undefined);
       qc.setQueryData(SESSION_KEY, s);
@@ -133,6 +140,7 @@ export default function SignInPage() {
 
   return (
     <AuthLayout title="Sign in" description="Sign in with your email and the password you set for TASFUED LMS.">
+      <SessionDiagnostic retry={() => session.refetch()} loading={session.isFetching || login.isPending} />
       <form
         noValidate
         className="mt-8 space-y-4"

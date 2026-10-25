@@ -1,3 +1,4 @@
+import { clearSignInDiagnostic, recordSessionDiagnostic, sessionDiagnosticSucceeded } from './session-diagnostics';
 import type { ApiError } from "./types";
 import { notifyApiWrite } from './refresh-policy';
 
@@ -47,17 +48,24 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
   const { method = "GET", body, query, signal } = opts;
   const isForm = typeof FormData !== "undefined" && body instanceof FormData;
 
+  if (path === "/auth/logout") clearSignInDiagnostic();
   const res = await fetch(buildUrl(path, query), {
     method,
     credentials: "include",
     headers: isForm ? { Accept: "application/json", "X-LMS-Portal": portal } : { "Content-Type": "application/json", Accept: "application/json", "X-LMS-Portal": portal },
     body: body === undefined ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
     signal,
+  }).catch((error: unknown) => {
+    if (path === '/auth/session' && !signal?.aborted) recordSessionDiagnostic(portal, 'NETWORK');
+    throw error;
   });
 
   const data = res.status === 204 ? null : await res.json().catch(() => null);
 
+  if (res.ok && path === '/auth/session') sessionDiagnosticSucceeded();
   if (!res.ok) {
+    if (path === '/auth/session' || (res.status === 401 && !path.startsWith('/auth/')))
+      recordSessionDiagnostic(portal, res.status);
     if (res.status === 401 && onUnauthorized) onUnauthorized();
     const err: ApiError = {
       status: res.status,

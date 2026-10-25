@@ -9,3 +9,5 @@ export { cn } from "./lib/cn";
 export { DataRefresh, refreshDefaults } from './data-refresh';
 
 export { RequestErrorPage } from "./components/RequestErrorPage";
+
+export { SessionDiagnostic } from "./components/SessionDiagnostic";

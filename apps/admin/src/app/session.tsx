@@ -1,3 +1,4 @@
+import { recordSessionDiagnostic } from "@tasued/api-client";
 import { activateAccount, clearDevice } from "../pwa/device";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navigate, Outlet, useLocation, useOutletContext, useParams } from "react-router-dom";
@@ -13,6 +14,7 @@ async function fetchSession({signal}:{signal:AbortSignal}): Promise<Session | nu
   try {
     const session=await api.auth.session(); signal.throwIfAborted();
     if (session.user.authMethod !== 'microsoft' || !session.user.roles.some(r => r.role !== 'student')) {
+      recordSessionDiagnostic('admin', 403);
       await clearDevice(false).catch(()=>undefined); return null;
     }
     await activateAccount(session.user.id).catch(()=>undefined); signal.throwIfAborted(); return session;

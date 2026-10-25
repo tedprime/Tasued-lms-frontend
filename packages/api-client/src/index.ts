@@ -8,3 +8,5 @@ export * from "./utils";
 export { logoutAndClearDevice } from "./logout";
 
 export { accountEvents } from "./account-events";
+
+export * from "./session-diagnostics";

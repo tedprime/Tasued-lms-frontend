@@ -1,3 +1,4 @@
+import { recordSessionDiagnostic } from "@tasued/api-client";
 import { useOnline } from "../layout/OfflineBanner";
 import { activateAccount, clearDevice } from "../pwa/device";
 import { useEffect, type ReactNode } from "react";
@@ -25,6 +26,7 @@ async function fetchSession({
     const session = await api.auth.session();
     signal.throwIfAborted();
     if (session.user.authMethod === 'microsoft' || !session.user.roles.some(r => r.role === 'student')) {
+      recordSessionDiagnostic('student', 403);
       await clearDevice(false).catch(() => undefined); return null;
     }
     await activateAccount(session.user.id).catch(() => undefined);
