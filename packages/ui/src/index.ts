@@ -11,3 +11,5 @@ export { DataRefresh, refreshDefaults } from './data-refresh';
 export { RequestErrorPage } from "./components/RequestErrorPage";
 
 export { SessionDiagnostic } from "./components/SessionDiagnostic";
+
+export { createAccountRecheck } from "./recheck-account";

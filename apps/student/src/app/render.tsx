@@ -1,3 +1,4 @@
+import { createAccountRecheck } from "@tasued/ui";
 import { accountEvents } from "@tasued/api-client";
 import { clearDevice } from "../pwa/device";
 import { StrictMode } from "react";
@@ -21,12 +22,12 @@ export function renderApp(rootEl: HTMLElement) {
     },
   });
 
+  const recheckAccount = createAccountRecheck(queryClient);
   if (typeof BroadcastChannel !== "undefined") {
     const channel = new BroadcastChannel("lms-account");
     channel.onmessage = (event) => {
       if (!accountEvents.isExternal(event.data)) return;
-      queryClient.clear();
-      if (location.pathname !== "/offline") location.replace("/sign-in");
+      if (location.pathname !== "/offline") void recheckAccount().catch(() => undefined);
     };
   }
   createRoot(rootEl).render(

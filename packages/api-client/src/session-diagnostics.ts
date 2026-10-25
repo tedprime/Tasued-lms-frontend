@@ -1,11 +1,25 @@
 // Only a timestamp survives the Microsoft redirect. Never store credentials or account data.
 const key = 'lms-sign-in-attempt';
+const diagnosticKey = 'lms-sign-in-diagnostic';
 const windowMs = 15 * 60_000;
 let attempt = 0;
-let diagnostic = '';
+function readDiagnostic() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(diagnosticKey) || 'null');
+    if (saved && /^LMS-(ADMIN|STUDENT)-SESSION-(\d{3}|NETWORK)$/.test(saved.code) &&
+      typeof saved.at === 'number' && Date.now() >= saved.at && Date.now() - saved.at < windowMs)
+      return saved.code as string;
+  } catch { /* Storage is optional and untrusted. */ }
+  return '';
+}
+let diagnostic = readDiagnostic();
 const listeners = new Set<() => void>();
 function publish(value: string) {
   diagnostic = value;
+  try {
+    if (value) sessionStorage.setItem(diagnosticKey, JSON.stringify({ code: value, at: Date.now() }));
+    else sessionStorage.removeItem(diagnosticKey);
+  } catch { /* Keep the in-memory message when storage is unavailable. */ }
   listeners.forEach(fn => fn());
 }
 export function beginSignInDiagnostic() {

@@ -16,3 +16,5 @@ export { DataRefresh, refreshDefaults } from "../../../../packages/ui/src/data-r
 export { RequestErrorPage } from "../../../../packages/ui/src/components/RequestErrorPage";
 
 export { SessionDiagnostic } from "../../../../packages/ui/src/components/SessionDiagnostic";
+
+export { createAccountRecheck } from "../../../../packages/ui/src/recheck-account";
