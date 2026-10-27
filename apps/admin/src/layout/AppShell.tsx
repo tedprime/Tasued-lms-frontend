@@ -1,3 +1,4 @@
+import { useSession } from '../app/session';
 import { Suspense, useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigation } from "react-router-dom";
 import { PageLoader, DeveloperCredit, LmsAssistant } from "@tasued/ui";
@@ -5,7 +6,7 @@ import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 
 /** Ported from SLAN admin's DashboardLayout (App.tsx): fixed sidebar + sticky header + scrolling main. */
-export function AppShell() {
+export function AppShell() { const session = useSession();
   const [open, setOpen] = useState(false);
   const nav = useNavigation();
   const { pathname } = useLocation();
@@ -27,7 +28,8 @@ export function AppShell() {
           <DeveloperCredit />
         </footer>
       </div>
-      <LmsAssistant />
+      <LmsAssistant key={session.user.id} />
     </div>
   );
 }
+

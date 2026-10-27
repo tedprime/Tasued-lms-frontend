@@ -360,3 +360,14 @@ export interface SearchHit {
 export const search = {
   query: (term: string) => request<SearchHit[]>("/search", { query: { q: term } }),
 };
+export interface AssistantMessage {
+  id: string;
+  text: string;
+  links: { title: string; url: string }[];
+  suggestions: { title: string; value: string }[];
+}
+export const assistant = {
+  start: (signal?: AbortSignal) => request<{ ticket: string }>('/assistant/conversations', { method: 'POST', signal }),
+  send: (ticket: string, text: string, signal?: AbortSignal) => request<{ ticket: string; id: string }>('/assistant/messages', { method: 'POST', body: { ticket, text }, signal }),
+  poll: (ticket: string, watermark?: string, signal?: AbortSignal) => request<{ ticket: string; watermark?: string; messages: AssistantMessage[] }>('/assistant/activities', { method: 'POST', body: { ticket, watermark }, signal }),
+};

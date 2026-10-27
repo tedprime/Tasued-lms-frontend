@@ -2,7 +2,7 @@
 export function affectedQueryRoots(path: string): string[] {
   const parts = path.split('?')[0].split('/').filter(Boolean);
   const root = parts[0];
-  if (root === 'auth' || root === 'push' || root === 'integrations') return [];
+  if (root === 'assistant' || root === 'auth' || root === 'push' || root === 'integrations') return [];
   // High-frequency answer/video autosaves have their own local reconciliation.
   if (parts.includes('answers') || parts.includes('position') || parts.at(-1) === 'draft' || parts.at(-1) === 'preview') return [];
   const related: Record<string, string[]> = {
@@ -52,3 +52,4 @@ export function blocksCachedData(error: unknown): boolean {
   return !!error && typeof error === 'object' && 'status' in error &&
     [401, 403, 404, 410].includes(Number(error.status));
 }
+

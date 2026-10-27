@@ -1,3 +1,4 @@
+import { useSession } from '../app/session';
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { cn, useIsMobile, DeveloperCredit, LmsAssistant } from "@tasued/ui";
@@ -17,7 +18,7 @@ function readCollapsed() {
 }
 
 /** SLAN dashboard shell: fixed white sidebar (drawer < 768px), sticky header, #fafafa content. */
-export function AppShell() {
+export function AppShell() { const session = useSession();
   const isMobile = useIsMobile();
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -88,7 +89,8 @@ export function AppShell() {
         </footer>
       </div>
       {isMobile && <MobileTabBar onMore={() => setDrawerOpen(true)} />}
-      <LmsAssistant aboveMobileNavigation />
+      <LmsAssistant key={session.user.id} aboveMobileNavigation />
     </div>
   );
 }
+
