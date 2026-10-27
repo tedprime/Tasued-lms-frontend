@@ -11,6 +11,7 @@ export function useAssistantChat(open: boolean) {
   const [slow, setSlow] = useState(false);
   const session = useRef<{ ticket: string; watermark?: string } | null>(null);
   const running = useRef(false);
+  const sending = useRef(false);
   const blocked = useRef(false);
   const request = useRef<AbortController | null>(null);
   const waitingSince = useRef(0);
@@ -25,12 +26,13 @@ export function useAssistantChat(open: boolean) {
     setExpired(isApiError(e) && e.code === 'CHAT_EXPIRED');
   }, []);
   const poll = useCallback(async () => {
-    if (running.current || blocked.current || !session.current) return;
+    if (running.current || sending.current || blocked.current || !session.current) return;
     running.current = true;
     const gen = generation.current;
     const controller = new AbortController(); request.current = controller;
+    const timer = window.setTimeout(() => controller.abort(), 45000);
     try {
-      const result = await api.assistant.poll(session.current.ticket, session.current.watermark, AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]));
+      const result = await api.assistant.poll(session.current.ticket, session.current.watermark, controller.signal);
       if (gen !== generation.current) return;
       session.current = { ticket: result.ticket, watermark: result.watermark };
       setMessages(old => {
@@ -41,8 +43,8 @@ export function useAssistantChat(open: boolean) {
       nextPoll.current = Date.now() + (waitingSince.current ? 2000 : 10000);
       if (waitingSince.current && Date.now() - waitingSince.current > 45000) setSlow(true);
       if (waitingSince.current && Date.now() - waitingSince.current > 120000) { waitingSince.current = 0; setWaiting(false); blocked.current = true; setError('The assistant has not replied yet. Check again, or start a new conversation.'); }
-    } catch (e) { if (gen === generation.current && !controller.signal.aborted) fail(e); }
-    finally { if (gen === generation.current) running.current = false; }
+    } catch (e) { if (gen === generation.current) fail(e); }
+    finally { window.clearTimeout(timer); if (gen === generation.current) running.current = false; }
   }, [fail]);
   useEffect(() => {
     if (!open) return;
@@ -53,11 +55,16 @@ export function useAssistantChat(open: boolean) {
 
   const send = async (raw: string) => {
     const text = raw.trim();
-    if (!text || text.length > 4000 || running.current || expired || waitingSince.current) return false;
-    running.current = true; blocked.current = false; setBusy(true); setError(''); setSlow(false);
+    if (!text || text.length > 4000 || sending.current || expired || waitingSince.current) return false;
+    sending.current = true; setBusy(true);
     const gen = generation.current;
+    // Finish the in-flight read before sending so refreshed conversation tickets stay ordered.
+    while (running.current && gen === generation.current) await new Promise(resolve => window.setTimeout(resolve, 50));
+    if (gen !== generation.current) return false;
+    running.current = true; blocked.current = false; setError(''); setSlow(false);
     const controller = new AbortController(); request.current = controller;
-    const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(45000)]);
+    const timer = window.setTimeout(() => controller.abort(), 45000);
+    const signal = controller.signal;
     try {
       if (!session.current) { const started = await api.assistant.start(signal); if (gen !== generation.current) return false; session.current = started; }
       if (gen !== generation.current) return false;
@@ -67,15 +74,14 @@ export function useAssistantChat(open: boolean) {
       setMessages(old => [...old, { id: result.id, text, role: 'user' }]);
       waitingSince.current = Date.now(); setWaiting(true); nextPoll.current = 0;
       return true;
-    } catch (e) { if (gen === generation.current && !controller.signal.aborted) fail(e); return false; }
-    finally { if (gen === generation.current) { running.current = false; setBusy(false); } }
+    } catch (e) { if (gen === generation.current) fail(e); return false; }
+    finally { window.clearTimeout(timer); if (gen === generation.current) { running.current = false; sending.current = false; setBusy(false); } }
   };
   const reset = () => {
     generation.current++; request.current?.abort(); session.current = null;
-    running.current = false; blocked.current = false; waitingSince.current = 0; nextPoll.current = 0;
+    running.current = false; sending.current = false; blocked.current = false; waitingSince.current = 0; nextPoll.current = 0;
     setMessages([]); setBusy(false); setWaiting(false); setError(''); setExpired(false); setSlow(false);
   };
   const retry = () => { blocked.current = false; setError(''); setWaiting(!!waitingSince.current); nextPoll.current = 0; if (session.current) void poll(); };
-  return { messages, busy, waiting, error, expired, slow, send, reset, retry };
+  return { messages, busy, waiting, error, expired, slow, locked: busy || waiting || expired || waitingSince.current > 0, send, reset, retry };
 }
-
