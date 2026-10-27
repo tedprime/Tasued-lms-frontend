@@ -13,3 +13,4 @@ export { RequestErrorPage } from "./components/RequestErrorPage";
 export { SessionDiagnostic } from "./components/SessionDiagnostic";
 
 export { createAccountRecheck } from "./recheck-account";
+export { LmsAssistant } from "./components/LmsAssistant";

@@ -93,7 +93,7 @@ function TeachingPanels({ d }: { d: AdminDashboard }) {
   return (
     <>
 
-      <div className="grid gap-4 lg:grid-cols-3 lg:gap-6">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
         <SectionCard className="lg:col-span-2" title="Today's classes" subtitle="Teams meetings with automatic recording" action={<Link to="/classes" className="text-sm font-semibold text-primary-500 hover:underline">All classes</Link>}>
           {d.todayClasses.length === 0 ? (
             <EmptyState icon={<CalendarClock className="size-6" />} title="No classes today" description="Scheduled classes in your courses will appear here." />
@@ -124,7 +124,7 @@ function TeachingPanels({ d }: { d: AdminDashboard }) {
           )}
         </SectionCard>
 
-        <div className="space-y-4 lg:space-y-6">
+        <div className="min-w-0 space-y-4 lg:space-y-6">
         <SectionCard title="Recording queue" subtitle="Linked from the organiser's OneDrive" action={can("recordings.manage") ? <Link to="/recordings" className="text-sm font-semibold text-primary-500 hover:underline">Open</Link> : undefined}>
           <ul className="divide-y divide-neutral-100">
             {([
@@ -147,7 +147,7 @@ function TeachingPanels({ d }: { d: AdminDashboard }) {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3 lg:gap-6">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
         <SectionCard title="Attendance to review" action={can("attendance.manage") ? <Link to="/attendance" className="text-sm font-semibold text-primary-500 hover:underline">All</Link> : undefined}>
           {d.attendanceToReview.length === 0 ? (
             <EmptyState icon={<ClipboardCheck className="size-6" />} title="Nothing to review" />
@@ -157,7 +157,7 @@ function TeachingPanels({ d }: { d: AdminDashboard }) {
                 <li key={c.id}>
                   <Link to={`/courses/${c.courseId}/classes/${c.id}/attendance`} className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-neutral-50">
                     <span className="min-w-0">
-                      <span className="block truncate text-sm font-semibold text-tertiary-500">{c.courseCode} · {c.title}</span>
+                      <span className="block break-words text-sm font-semibold text-tertiary-500">{c.courseCode} · {c.title}</span>
                       <span className="text-xs text-neutral-500">{fmtDate(c.startsAt)}</span>
                     </span>
                     <AttendanceStatusBadge status={c.attendanceStatus} />
@@ -177,7 +177,7 @@ function TeachingPanels({ d }: { d: AdminDashboard }) {
                 <li key={s.assignmentId}>
                   <SubmissionLink assignmentId={s.assignmentId}>
                     <span className="min-w-0">
-                      <span className="block truncate text-sm font-semibold text-tertiary-500">{s.title}</span>
+                      <span className="block break-words text-sm font-semibold text-tertiary-500">{s.title}</span>
                       <span className="text-xs text-neutral-500">{s.courseCode}</span>
                     </span>
                     <Badge tone="amber">{s.ungraded} ungraded</Badge>
@@ -214,12 +214,12 @@ function TeachingPanels({ d }: { d: AdminDashboard }) {
 function AdminPanels({ d }: { d: AdminDashboard }) {
   const can = useCan();
   return (
-    <div className="grid gap-4 lg:grid-cols-3 lg:gap-6">
-      <div className="space-y-4 lg:col-span-2 lg:space-y-6">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
+      <div className="min-w-0 space-y-4 lg:col-span-2 lg:space-y-6">
         <CoursesCard />
         {can("audit.view") && <RecentActivityCard />}
       </div>
-      <div className="space-y-4 lg:space-y-6">
+      <div className="min-w-0 space-y-4 lg:space-y-6">
         {can("people.manage") && <InvitationsCard />}
         {INTEGRATION_HEALTH_ENABLED && can("integrations.view") && (
           <SectionCard title="Platform health" subtitle="Teams, OneDrive and email" action={<Link to="/integrations" className="text-sm font-semibold text-primary-500 hover:underline">Details</Link>}>
@@ -256,13 +256,13 @@ function CoursesCard() {
             <li key={c.id}>
               <Link to={`/courses/${c.id}/content`} className="flex flex-col gap-1 px-5 py-3.5 hover:bg-neutral-50 sm:flex-row sm:items-center sm:justify-between">
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-semibold text-tertiary-500"><span className="text-primary-500">{c.code}</span> {c.title}</span>
+                  <span className="block break-words text-sm font-semibold text-tertiary-500"><span className="text-primary-500">{c.code}</span> {c.title}</span>
                   <span className="text-xs text-neutral-500">
                     Lecturer: {c.lecturers.map((l) => l.fullName).join(", ") || "not assigned"}
                     {c.assistants.length > 0 && <> · TAs: {c.assistants.map((l) => l.fullName).join(", ")}</>}
                   </span>
                 </span>
-                <span className="flex shrink-0 items-center gap-2 text-xs text-neutral-500">
+                <span className="flex shrink-0 flex-wrap items-center gap-2 text-xs text-neutral-500">
                   {c.enrolledCount} students · {c.unitCount} units
                   <Badge tone={COURSE_STATUS_TONE[c.status]}>{COURSE_STATUS_LABEL[c.status]}</Badge>
                 </span>
@@ -286,7 +286,7 @@ function RecentActivityCard() {
       ) : (
         <ul className="divide-y divide-neutral-100">
           {q.data.items.map((e) => (
-            <li key={e.id} className="px-5 py-3">
+            <li key={e.id} className="break-words px-5 py-3">
               <p className="text-sm text-tertiary-500">{e.summary}</p>
               <p className="text-xs text-neutral-500">{e.actor} · {fmtDateTime(e.at)}</p>
             </li>

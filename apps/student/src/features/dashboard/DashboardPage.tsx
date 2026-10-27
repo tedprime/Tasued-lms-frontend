@@ -67,8 +67,8 @@ export default function DashboardPage() {
 
 function DashboardSkeleton() {
   return (
-    <div className="grid gap-6 lg:grid-cols-3" aria-busy="true" aria-label="Loading dashboard">
-      <div className="space-y-6 lg:col-span-2">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3" aria-busy="true" aria-label="Loading dashboard">
+      <div className="min-w-0 space-y-6 lg:col-span-2">
         <Skeleton className="h-24 rounded-xl" />
         <ListSkeleton rows={3} />
       </div>
@@ -83,7 +83,7 @@ function DashboardBody({ d }: { d: StudentDashboard }) {
   const classes = [...d.upcomingClasses].sort((a, b) => (a.status === "live" ? -1 : b.status === "live" ? 1 : a.startsAt.localeCompare(b.startsAt))).slice(0, 4);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="min-w-0 space-y-6 lg:col-span-2">
         {live.length > 0 && (
           <div role="status" className="flex flex-col gap-3 rounded-xl border border-danger/30 bg-danger-50 p-4 sm:flex-row sm:flex-wrap sm:items-center">
@@ -146,7 +146,7 @@ function DashboardBody({ d }: { d: StudentDashboard }) {
           {d.latestRecordings.length === 0 ? (
             <EmptyState className="py-8" icon={<Video className="size-6" />} title="No recordings yet" description="Class recordings appear here shortly after Teams saves them." />
           ) : (
-            <ul className="grid gap-3 p-4 sm:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2">
               {d.latestRecordings.slice(0, 4).map((r) => (
                 <li key={r.id}>
                   <Link

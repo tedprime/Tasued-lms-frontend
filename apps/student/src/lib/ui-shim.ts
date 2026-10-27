@@ -18,3 +18,4 @@ export { RequestErrorPage } from "../../../../packages/ui/src/components/Request
 export { SessionDiagnostic } from "../../../../packages/ui/src/components/SessionDiagnostic";
 
 export { createAccountRecheck } from "../../../../packages/ui/src/recheck-account";
+export { LmsAssistant } from "../../../../packages/ui/src/components/LmsAssistant";

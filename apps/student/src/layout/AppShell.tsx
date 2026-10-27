@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { cn, useIsMobile, DeveloperCredit } from "@tasued/ui";
+import { cn, useIsMobile, DeveloperCredit, LmsAssistant } from "@tasued/ui";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { OfflineBanner } from "./OfflineBanner";
@@ -80,7 +80,7 @@ export function AppShell() {
       <div className={cn("flex min-h-dvh flex-col transition-[padding] duration-200", !isMobile && (collapsed ? "pl-[68px]" : "pl-[264px]"))}>
         <Header onMenuClick={() => setDrawerOpen(true)} />
         <OfflineBanner />
-        <main id="main" tabIndex={-1} className={cn("flex-1 outline-none", isMobile && "pb-16")}>
+        <main id="main" tabIndex={-1} className={cn("min-w-0 flex-1 pb-24 outline-none", isMobile && "pb-40")}>
           <Outlet />
         </main>
         <footer className={cn("border-t border-neutral-200 bg-white px-4 py-3", isMobile && "mb-[calc(4rem+env(safe-area-inset-bottom))]")}>
@@ -88,6 +88,7 @@ export function AppShell() {
         </footer>
       </div>
       {isMobile && <MobileTabBar onMore={() => setDrawerOpen(true)} />}
+      <LmsAssistant aboveMobileNavigation />
     </div>
   );
 }

@@ -74,7 +74,7 @@ export function IconButton({ label, className, children, ...rest }: ButtonHTMLAt
 /* ───────────── Card ───────────── */
 
 export function Card({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("rounded-xl border border-neutral-200 bg-white shadow-card", className)} {...rest} />;
+  return <div className={cn("min-w-0 max-w-full rounded-xl border border-neutral-200 bg-white shadow-card", className)} {...rest} />;
 }
 
 export function CardHeader({ title, subtitle, action, className }: { title: ReactNode; subtitle?: ReactNode; action?: ReactNode; className?: string }) {
