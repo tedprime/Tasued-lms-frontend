@@ -1,18 +1,10 @@
-import { Fragment, useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowUp, MessageCircle, Plus, Sparkles, X, LoaderCircle } from 'lucide-react';
 import { cn } from '../lib/cn';
 import { useAssistantChat } from './useAssistantChat';
 
-// React escapes text. Provider HTML is never inserted into the document.
-function MessageText({ text }: { text: string }) {
-  return <div className="whitespace-pre-wrap break-words [overflow-wrap:anywhere]">{text.split(/(\[[^\]\n]+\]\(https:\/\/[^\s)]+\)|\*\*[^*\n]+\*\*)/g).map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
-    const link = /^\[([^\]]+)\]\((https:\/\/[^\s)]+)\)$/.exec(part);
-    if (link) { try { const url = new URL(link[2]); if (!url.username && !url.password) return <a key={i} href={url.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">{link[1]}</a>; } catch { /* Render malformed links as text. */ } }
-    return <Fragment key={i}>{part}</Fragment>;
-  })}</div>;
-}
+import { AssistantMessage } from './AssistantMessage';
 const prompts = ['How do I join a class?', 'Help me understand a topic', 'How do I submit an assignment?'];
 export function LmsAssistant({ aboveMobileNavigation = false }: { aboveMobileNavigation?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -44,7 +36,7 @@ export function LmsAssistant({ aboveMobileNavigation = false }: { aboveMobileNav
       {confirmReset && <div role="alert" className="shrink-0 border-b border-neutral-200 bg-neutral-50 p-3 text-sm">Start a new conversation? This clears the current chat.<div className="mt-2 flex gap-3"><button onClick={newChat} className="font-semibold text-primary-500">Start new</button><button onClick={() => setConfirmReset(false)}>Keep chatting</button></div></div>}
       <div ref={transcript} onScroll={e => { const el = e.currentTarget; follow.current = el.scrollHeight - el.scrollTop - el.clientHeight < 60; }} className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain bg-neutral-50/60 p-4">
         {!chat.messages.length && <div className="py-3"><span className="mb-3 flex size-11 items-center justify-center rounded-2xl bg-primary-50 text-primary-500"><Sparkles className="size-6" /></span><h3 className="text-lg font-bold">What can I help you learn?</h3><p className="mt-2 text-sm leading-relaxed text-neutral-500">Ask about a topic or get help finding your way around the LMS.</p><div className="mt-5 space-y-2">{prompts.map(p => <button key={p} disabled={chat.locked} onClick={() => void send(p)} className="block w-full rounded-xl border border-neutral-200 bg-white px-3 py-3 text-left text-sm transition hover:border-primary-300 hover:bg-primary-50 disabled:opacity-50">{p}</button>)}</div></div>}
-        <div role="log" aria-label="Conversation" aria-live="polite" aria-relevant="additions" className="space-y-4">{chat.messages.map(m => <div key={m.id} className={cn('flex', m.role === 'user' ? 'justify-end' : 'justify-start')}><div className={cn('max-w-[92%] rounded-2xl px-3.5 py-3 text-sm leading-relaxed', m.role === 'user' ? 'rounded-br-md bg-primary-500 text-white' : 'rounded-bl-md border border-neutral-200 bg-white')}><span className="sr-only">{m.role === 'user' ? 'You: ' : 'Assistant: '}</span><MessageText text={m.text} />{!!m.links?.length && <div className="mt-3 border-t border-neutral-200 pt-2 text-xs">{m.links.map((link, i) => <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="mr-3 inline-block underline">{link.title}</a>)}</div>}</div></div>)}</div>
+        <div role="log" aria-label="Conversation" aria-live="polite" aria-relevant="additions" className="space-y-4">{chat.messages.map(m => <div key={m.id} className={cn('flex', m.role === 'user' ? 'justify-end' : 'justify-start')}><div className={cn('max-w-[92%] rounded-2xl px-3.5 py-3 text-sm leading-relaxed', m.role === 'user' ? 'rounded-br-md bg-primary-500 text-white' : 'rounded-bl-md border border-neutral-200 bg-white')}><span className="sr-only">{m.role === 'user' ? 'You: ' : 'Assistant: '}</span><AssistantMessage text={m.text} /></div></div>)}</div>
         {(chat.busy || chat.waiting) && <p role="status" className="flex items-center gap-2 text-xs text-neutral-500"><LoaderCircle className="size-4 animate-spin" />{chat.busy ? 'Sending…' : chat.slow ? 'Still working on your answer…' : 'Thinking…'}</p>}
         {!!suggestions.length && !chat.waiting && !chat.busy && <div className="flex flex-wrap gap-2">{suggestions.map((s, i) => <button key={i} disabled={chat.locked} onClick={() => void send(s.value)} className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-left text-xs text-primary-600">{s.title}</button>)}</div>}
         {chat.error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">{chat.error}<button type="button" onClick={chat.expired ? newChat : chat.retry} className="mt-2 block font-semibold underline">{chat.expired ? 'Start new conversation' : 'Try again'}</button></div>}
