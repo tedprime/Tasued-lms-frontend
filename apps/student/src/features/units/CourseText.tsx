@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BookOpenText, Target, Paperclip } from "lucide-react";
-import { api, portalUrl, type ID, type Unit, type UnitProgress } from "@tasued/api-client";
+import { BookOpenText, Target, Paperclip, Play } from "lucide-react";
+import { api, portalUrl, fmtBytes, type Attachment, type ID, type Unit, type UnitProgress } from "@tasued/api-client";
 import { VideoPlayer } from "../../lib/video-player";
-import { Card, Progress, RichContent } from "@tasued/ui";
+import { Button, Card, Modal, Progress, RichContent } from "@tasued/ui";
 import { usePreferences } from "../../app/session";
 import { AttachmentList } from "../../components/bits";
+
+const isVideoAttachment = (a: Attachment) =>
+  ['video/mp4', 'video/webm'].includes(a.mimeType.toLowerCase().split(';')[0].trim()) || /\.(mp4|webm)$/i.test(a.name);
 
 /**
  * Course text (manual reading) with scroll-based reading progress.
@@ -13,6 +16,10 @@ import { AttachmentList } from "../../components/bits";
  */
 export function CourseText({ unit, courseId, initialPercent }: { unit: Unit; courseId: ID; initialPercent: number }) {
   const prefs = usePreferences();
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const closeVideo = useCallback(() => setPlayingId(null), []);
+  const playingVideo = unit.attachments.find(a => a.id === playingId && isVideoAttachment(a) && ['clean', 'skipped'].includes(a.scanStatus));
+  useEffect(() => { setPlayingId(null); }, [unit.id]);
   const ref = useRef<HTMLElement>(null);
   const [pct, setPct] = useState(initialPercent);
   const maxRef = useRef(initialPercent);
@@ -105,20 +112,27 @@ export function CourseText({ unit, courseId, initialPercent }: { unit: Unit; cou
             <div className="mt-8">
               <p className="mb-2 flex items-center gap-2 text-sm font-bold text-tertiary-500"><Paperclip className="size-4" /> Unit resources</p>
               <div className="space-y-4">
-                {unit.attachments.filter(a => ['video/mp4', 'video/webm'].includes(a.mimeType)).map(a => (
-                  <div key={a.id} className="min-w-0 space-y-2">
-                    <p className="break-words text-sm font-semibold">{a.name}</p>
+                {unit.attachments.filter(isVideoAttachment).map(a => (
+                  <div key={a.id} className="flex min-w-0 flex-wrap items-center gap-3 rounded-xl border border-neutral-200 p-4">
+                    <Play className="size-5 shrink-0 text-primary-500" aria-hidden />
+                    <div className="min-w-0 flex-1">
+                      <p className="break-words text-sm font-semibold">{a.name}</p>
+                      <p className="text-xs text-neutral-500">Video - {fmtBytes(a.sizeBytes)}</p>
+                    </div>
                     {['clean', 'skipped'].includes(a.scanStatus)
-                      ? <VideoPlayer src={portalUrl(a.url)} title={a.name} preload="none" restrictDownload />
+                      ? <Button size="sm" variant="outline" onClick={() => setPlayingId(a.id)} aria-label={`Watch ${a.name}`}><Play className="size-4" aria-hidden /> Watch video</Button>
                       : <p className="text-sm text-neutral-500">This video is not available for playback yet.</p>}
                   </div>
                 ))}
-                <AttachmentList items={unit.attachments.filter(a => !['video/mp4', 'video/webm'].includes(a.mimeType))} />
+                <AttachmentList items={unit.attachments.filter(a => !isVideoAttachment(a))} />
               </div>
             </div>
           )}
         </div>
       </Card>
+      <Modal open={!!playingVideo} onClose={closeVideo} title={<span className="break-all">{playingVideo?.name || 'Watch video'}</span>} size="xl">
+        {playingVideo && <VideoPlayer key={playingVideo.id} src={portalUrl(playingVideo.url)} title={playingVideo.name} preload="metadata" restrictDownload />}
+      </Modal>
     </section>
   );
 }
