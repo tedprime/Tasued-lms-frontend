@@ -12,6 +12,7 @@ import { OneDriveFileInfo, RecordingPreview } from "../recordings/RecordingsTabl
 import { useApiMutation } from "../../components/mutation";
 import { useCourseId } from "../../components/queries";
 import { useCan, useTeaches } from "../../app/session";
+import { VideoPlayer } from "@tasued/ui";
 
 export function UnitEditorPage() {
   const { unitId } = useParams();
@@ -177,16 +178,27 @@ function UnitEditor({ unit }: { unit: Unit }) {
             title="Attachments"
             action={canEdit && (
               <>
-                <input ref={fileRef} type="file" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) upload.mutate(f); e.target.value = ""; }} />
+                <input ref={fileRef} type="file" accept=".pdf,.docx,.xlsx,.pptx,.txt,.csv,.png,.jpg,.jpeg,.webp,.mp4,.webm" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) upload.mutate(f); e.target.value = ""; }} />
                 <Button size="xs" variant="outline" icon={<FileUp className="size-3.5" />} loading={upload.isPending} onClick={() => fileRef.current?.click()}>Upload</Button>
               </>
             )}
           >
             {unit.attachments.length === 0 ? (
-              <p className="px-5 py-4 text-sm text-neutral-500">No attachments. Slides, worksheets and readings go here.</p>
+              <p className="px-5 py-4 text-sm text-neutral-500">Add slides, worksheets, readings or videos. MP4 (H.264/AAC) is recommended for video playback across devices; WebM is also supported.</p>
             ) : (
               <ul className="divide-y divide-neutral-100">
-                {unit.attachments.map((a) => (
+                {unit.attachments.map((a) => ['video/mp4', 'video/webm'].includes(a.mimeType) ? (
+                  <li key={a.id} className="min-w-0 space-y-3 px-5 py-3">
+                    <div className="flex items-center gap-3">
+                      <Video className="size-4 shrink-0 text-neutral-400" />
+                      <div className="min-w-0 flex-1"><p className="break-words text-sm font-semibold">{a.name}</p><p className="text-xs text-neutral-500">Video · {fmtBytes(a.sizeBytes)}</p></div>
+                      {canEdit && <IconButton label={`Delete ${a.name}`} className="hover:text-danger" onClick={() => setDelAttachment(a)}><Trash2 className="size-4" /></IconButton>}
+                    </div>
+                    {['clean', 'skipped'].includes(a.scanStatus)
+                      ? <VideoPlayer src={portalUrl(a.url)} title={a.name} preload="none" restrictDownload />
+                      : <p className="text-sm text-neutral-500">This video is not available for playback yet.</p>}
+                  </li>
+                ) : (
                   <li key={a.id} className="flex items-center gap-3 px-5 py-3">
                     <Paperclip className="size-4 shrink-0 text-neutral-400" />
                     <div className="min-w-0 flex-1">

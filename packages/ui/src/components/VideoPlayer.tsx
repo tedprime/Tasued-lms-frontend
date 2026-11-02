@@ -16,6 +16,8 @@ export interface PlayerSource {
 }
 
 export interface VideoPlayerProps {
+  /** Hide browser download affordances; this is not DRM. */
+  restrictDownload?: boolean;
   /** A fixed URL (MP4 or HLS). Use `resolveSource` instead for expiring OneDrive links. */
   src?: string;
   /** Fetches a fresh playback link. Called on load and again whenever the current link fails or expires. */
@@ -49,7 +51,7 @@ function fmt(t: number) {
  * with resume, speed and chapters. When the short-lived link expires mid-playback the player
  * fetches a new one and continues from the same position. HLS sources also work (hls.js).
  */
-export function VideoPlayer({ src: fixedSrc, resolveSource, poster, title, chapters = [], startAt = 0, initialSpeed = 1, preload = "metadata", onProgress, onEnded, className }: VideoPlayerProps) {
+export function VideoPlayer({ src: fixedSrc, resolveSource, poster, title, chapters = [], startAt = 0, initialSpeed = 1, preload = "metadata", onProgress, onEnded, className, restrictDownload = false }: VideoPlayerProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -217,6 +219,8 @@ export function VideoPlayer({ src: fixedSrc, resolveSource, poster, title, chapt
         poster={poster}
         muted={muted}
         playsInline
+        controlsList={restrictDownload ? "nodownload" : undefined}
+        onContextMenu={restrictDownload ? e => e.preventDefault() : undefined}
         preload={preload}
         onLoadedMetadata={applySpeed}
         className="size-full object-contain"

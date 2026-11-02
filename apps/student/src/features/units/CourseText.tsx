@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { BookOpenText, Target, Paperclip } from "lucide-react";
-import { api, type ID, type Unit, type UnitProgress } from "@tasued/api-client";
+import { api, portalUrl, type ID, type Unit, type UnitProgress } from "@tasued/api-client";
+import { VideoPlayer } from "../../lib/video-player";
 import { Card, Progress, RichContent } from "@tasued/ui";
 import { usePreferences } from "../../app/session";
 import { AttachmentList } from "../../components/bits";
@@ -102,8 +103,18 @@ export function CourseText({ unit, courseId, initialPercent }: { unit: Unit; cou
           </article>
           {unit.attachments.length > 0 && (
             <div className="mt-8">
-              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-tertiary-500"><Paperclip className="size-4" /> Downloads</p>
-              <AttachmentList items={unit.attachments} />
+              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-tertiary-500"><Paperclip className="size-4" /> Unit resources</p>
+              <div className="space-y-4">
+                {unit.attachments.filter(a => ['video/mp4', 'video/webm'].includes(a.mimeType)).map(a => (
+                  <div key={a.id} className="min-w-0 space-y-2">
+                    <p className="break-words text-sm font-semibold">{a.name}</p>
+                    {['clean', 'skipped'].includes(a.scanStatus)
+                      ? <VideoPlayer src={portalUrl(a.url)} title={a.name} preload="none" restrictDownload />
+                      : <p className="text-sm text-neutral-500">This video is not available for playback yet.</p>}
+                  </div>
+                ))}
+                <AttachmentList items={unit.attachments.filter(a => !['video/mp4', 'video/webm'].includes(a.mimeType))} />
+              </div>
             </div>
           )}
         </div>
